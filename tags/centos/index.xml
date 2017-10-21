@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Centos on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/centos/</link>
+    <description>Recent content in Centos on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 21 Oct 2017 17:01:53 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/centos/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Add epel for centos</title>
+      <link>http://www.recall704.com/raspberry/add-epel-for-centos/</link>
+      <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/raspberry/add-epel-for-centos/</guid>
+      <description>cat &amp;gt; /etc/yum.repos.d/epel.repo &amp;lt;&amp;lt; EOF [epel] name=Epel rebuild for armhfp baseurl=https://armv7.dev.centos.org/repodir/epel-pass-1/ enabled=1 gpgcheck=0 EOF  </description>
+    </item>
+    
+    <item>
+      <title>centos 安装指定版本的 docker</title>
+      <link>http://www.recall704.com/ops/install-docker-on-centos/</link>
+      <pubDate>Sat, 21 Oct 2017 16:56:06 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/ops/install-docker-on-centos/</guid>
+      <description>增加 docker 源
+cat &amp;gt;/etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
+# yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.</description>
+    </item>
+    
+  </channel>
+</rss>

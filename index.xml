@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/</link>
+    <description>Recent content on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 21 Oct 2017 17:01:53 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Add epel for centos</title>
+      <link>http://www.recall704.com/raspberry/add-epel-for-centos/</link>
+      <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/raspberry/add-epel-for-centos/</guid>
+      <description>cat &amp;gt; /etc/yum.repos.d/epel.repo &amp;lt;&amp;lt; EOF [epel] name=Epel rebuild for armhfp baseurl=https://armv7.dev.centos.org/repodir/epel-pass-1/ enabled=1 gpgcheck=0 EOF  </description>
+    </item>
+    
+    <item>
+      <title>debian 安装指定版本的 docker</title>
+      <link>http://www.recall704.com/ops/install-docker-on-debian/</link>
+      <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/ops/install-docker-on-debian/</guid>
+      <description>1. 加入软件源 cat &amp;gt;&amp;gt; /etc/apt/sources.list &amp;lt;&amp;lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
+apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.</description>
+    </item>
+    
+    <item>
+      <title>centos 安装指定版本的 docker</title>
+      <link>http://www.recall704.com/ops/install-docker-on-centos/</link>
+      <pubDate>Sat, 21 Oct 2017 16:56:06 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/ops/install-docker-on-centos/</guid>
+      <description>增加 docker 源
+cat &amp;gt;/etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
+# yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.</description>
+    </item>
+    
+    <item>
+      <title>权限、RBAC 和 ObjectPermission</title>
+      <link>http://www.recall704.com/developer/permission-rbac-and-objectpermission/</link>
+      <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/developer/permission-rbac-and-objectpermission/</guid>
+      <description>一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
+{:class=&amp;ldquo;img-responsive&amp;rdquo;}
+系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass  2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
+我们的数据库变成了这样
+   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断
+def func(): user = User.objects.get(id=1) if user.is_add_allowed: do_something1() if user.</description>
+    </item>
+    
+    <item>
+      <title>初恋</title>
+      <link>http://www.recall704.com/about/</link>
+      <pubDate>Sat, 21 Oct 2017 14:08:35 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/about/</guid>
+      <description>你让我站也不是
+你让我坐也不是
+你说着感兴趣的
+你笑时，我的眼神
+在你的远处闪烁
+就像不需要风的时候
+树无奈地因为风儿走进了骚动
+也好像在奢望着明月时
+月儿滑入了没有生气的梦境
+做一个万端信息的接收器
+你的呼吸乃至思维使我波动
+你告诉我的话号我不想拨打
+我担心一开口就变了意思
+宛如没有什么存在一样
+你把长凳坐出你特有的体香
+不曾接到你的一点暗示
+我的视点，始终游离于你的
+鬓发和你的双肩
+街这边街那边是咫尺又是天涯
+长凳空出来了，但人的思念塞满了
+你那欢悦的笑语和快乐的肢体
+是要告诉我，我要分享你的幸福么
+在梦里我不敢握你的手
+就像卑微的人不敢面对偶像的高贵和神圣
+你是翻飞在九霄的精灵
+激动着我把你洒落的羽毛举向阳光</description>
+    </item>
+    
+  </channel>
+</rss>

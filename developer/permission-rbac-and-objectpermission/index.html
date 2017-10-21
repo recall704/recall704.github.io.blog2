@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>权限、RBAC 和 ObjectPermission</title>
+  <meta property="og:title" content="权限、RBAC 和 ObjectPermission" />
+  <meta name="twitter:title" content="权限、RBAC 和 ObjectPermission" />
+  <meta name="description" content="一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
+{:class=&ldquo;img-responsive&rdquo;}
+系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass  2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
+我们的数据库变成了这样
+   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断
+def func(): user = User.objects.get(id=1) if user.is_add_allowed: do_something1() if user.">
+  <meta property="og:description" content="一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
+{:class=&ldquo;img-responsive&rdquo;}
+系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass  2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
+我们的数据库变成了这样
+   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断
+def func(): user = User.objects.get(id=1) if user.is_add_allowed: do_something1() if user.">
+  <meta name="twitter:description" content="一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
+{:class=&ldquo;img-responsive&rdquo;}
+系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="http://www.recall704.com/developer/permission-rbac-and-objectpermission/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RECALL&#39;s Blog" />
+
+  <meta name="generator" content="Hugo 0.30.2" />
+  <link rel="canonical" href="http://www.recall704.com/developer/permission-rbac-and-objectpermission/" />
+  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="home" href="/">home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="categories" href="/categories/">categories</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="series" href="/series/">series</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about" href="/about/">about</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>权限、RBAC 和 ObjectPermission</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on October 21, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="一-从简单权限控制到-rbac">一. 从简单权限控制到 RBAC</h2>
+
+<h3 id="1-只有一个权限">1. 只有一个权限</h3>
+
+<p>在系统初期，我们的用户是这样的</p>
+
+<p><img src="/assets/img/001.png" alt="img1" />{:class=&ldquo;img-responsive&rdquo;}</p>
+
+<p>系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下</p>
+
+<pre><code class="language-python">def func():
+	user = User.objects.get(id=1)
+	if user.is_admin:
+	    do_someting()
+	else:
+	    pass
+</code></pre>
+
+<h3 id="2-少量权限">2. 少量权限</h3>
+
+<p>再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。</p>
+
+<p>我们的数据库变成了这样</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>用户名</th>
+<th align="center">密码</th>
+<th align="center">是否允许发布文章</th>
+<th align="center">是否允许修改文章</th>
+<th align="center">是否允许删除文章</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>test1</td>
+<td align="center">123123</td>
+<td align="center">True</td>
+<td align="center">False</td>
+<td align="center">False</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>test2</td>
+<td align="center">123123</td>
+<td align="center">False</td>
+<td align="center">True</td>
+<td align="center">False</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>test3</td>
+<td align="center">123123</td>
+<td align="center">False</td>
+<td align="center">False</td>
+<td align="center">True</td>
+</tr>
+</tbody>
+</table>
+
+<p>同样的，我们的代码也会多一些判断</p>
+
+<pre><code class="language-python">
+def func():
+	user = User.objects.get(id=1)
+	if user.is_add_allowed:
+	    do_something1()
+	if user.is_edit_allowed:
+	    do_something2()
+	if user.is_delete_allowed:
+	    do_something3()
+
+</code></pre>
+
+<h3 id="3-多个权限">3. 多个权限</h3>
+
+<p>当我们的权限越来越多，增加字段已经无法满足了， 我们需要新的方式来完成这个功能</p>
+
+<p>用户表：</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>用户名</th>
+<th>密码</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>test1</td>
+<td>123123</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>test2</td>
+<td>123123</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>test3</td>
+<td>123123</td>
+</tr>
+</tbody>
+</table>
+
+<p>权限表</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th align="center">用户id</th>
+<th align="center">权限</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td align="center">1</td>
+<td align="center">add</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td align="center">1</td>
+<td align="center">edit</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td align="center">2</td>
+<td align="center">edit</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td align="center">2</td>
+<td align="center">delete</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-python">def func():
+	user = User.objects.get(id=1)
+	permission_list = Permission.objects.get(user_id=user.id).values_list(&quot;permission&quot;)
+
+	# sql : select permission_name from table_permission where user_id = 1;
+	# permission_list = ['add', 'edit', ...]
+
+	if 'add' in permission_list:
+		do_add_action()
+	if 'edit' in permission_list:
+		do_edit_action()
+	...
+
+</code></pre>
+
+<h3 id="4-rbac">4. RBAC</h3>
+
+<p>RBAC 的全名叫做 Role-Based Access Control， 中文翻译为 <code>基于角色的访问控制</code>。</p>
+
+<p>从使用的角度来看，上面我们的用户和权限表已经完全够用了。</p>
+
+<p>但是：
+1. 当我们的权限特别多的时候（不只有 add, view, delete, edit, 还有很多其他权限的时候），用户的增长会给权限表带来指数级的增长。
+2. 很多用户的权限其实是一样的（user1 和 user2 都有同样的权限， user3 又和 user4 有相同的权限），权限表中包含了大量的冗余数据。</p>
+
+<p>这个时候，我们就很自然的想到 <code>分组</code> 这样一个概念。
+权限1 和 权限2 分为一个组 r1；
+权限3 和 权限4 分为一个组 r2；</p>
+
+<p>如果用户属于 组r1 ，那么，他就拥有权限1 和 权限2
+如果用户属于 组r2 ，那么，他就拥有权限3 和 权限4</p>
+
+<ul>
+<li>user1
+
+<ul>
+<li>role1
+
+<ul>
+<li>permission1</li>
+<li>permission2</li>
+<li>permission3</li>
+</ul></li>
+<li>role2
+
+<ul>
+<li>permission4</li>
+<li>permission5</li>
+</ul></li>
+<li>role3
+
+<ul>
+<li>permission6</li>
+</ul></li>
+</ul></li>
+<li>user2
+
+<ul>
+<li>role2
+
+<ul>
+<li>permission4</li>
+<li>permission5</li>
+</ul></li>
+<li>role3
+
+<ul>
+<li>permission6</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>这样，用户的权限，就是用户角色下的权限之和。</p>
+
+<p>除了对权限进行分组外，我们还有对用户进行分组的需求，</p>
+
+<p>这样，我们可以把角色的授权加入到用户组上。</p>
+
+<ul>
+<li>group1
+
+<ul>
+<li>role1
+
+<ul>
+<li>permission1</li>
+<li>permission2</li>
+<li>permission3</li>
+</ul></li>
+<li>role2
+
+<ul>
+<li>permission4</li>
+<li>permission5</li>
+</ul></li>
+<li>role3
+
+<ul>
+<li>permission6</li>
+</ul></li>
+</ul></li>
+<li>group2
+
+<ul>
+<li>role2
+
+<ul>
+<li>permission4</li>
+<li>permission5</li>
+</ul></li>
+<li>role3
+
+<ul>
+<li>permission6</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>只要我们的用户属于某个用户组，那么他就拥有该用户组的所有权限</p>
+
+<h2 id="二-objectpermission">二、ObjectPermission</h2>
+
+<p>前面谈论的权限，基本上都是 <code>一对多</code>， 或者 <code>多对多</code> 的关系。</p>
+
+<p>在开发过程中，我们还会遇到一种特别的需求，那就是 <code>一个用户(或者一个对象)对于一个具体对象的权限</code>，而且在程序运行过程中，权限会动态添加和删除。</p>
+
+<p>这个时候，我们就会需要 ObjectPermission</p>
+
+<p>表示方式大概如下：</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th align="center">用户id</th>
+<th align="center">对象</th>
+<th align="center">权限</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td align="center">1</td>
+<td align="center">car1</td>
+<td align="center">drive</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td align="center">1</td>
+<td align="center">dog2</td>
+<td align="center">walk</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td align="center">2</td>
+<td align="center">cat3</td>
+<td align="center">kiss</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td align="center">2</td>
+<td align="center">teacher4</td>
+<td align="center">teach</td>
+</tr>
+</tbody>
+</table>
+
+<p>但我们都知道，对象是无法直接存储到数据库的，特别是对象的类型还不一样的时候。</p>
+
+<h3 id="1-简单原型">1. 简单原型</h3>
+
+<p>我们可以尝试把对象类型也存储在数据库中，比如</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th align="center">用户id</th>
+<th align="center">对象id</th>
+<th align="center">对象类型</th>
+<th align="center">权限</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">car</td>
+<td align="center">drive</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">dog</td>
+<td align="center">walk</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">cat</td>
+<td align="center">kiss</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">teacher</td>
+<td align="center">teach</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-python">    user = User.objects.get(id=1)
+    car = Car.objects.get(id=1)
+    check_permisson(user, car, 'drive')
+</code></pre>
+
+<p>假设我们在定义 数据模型的时候， Car 有一个 name 属性，值为 car
+那我们就可以直接查数据库，判断 user 对 car 是否有 drive 权限。</p>
+
+<pre><code class="language-python">
+&quot;SELECT * FROM Permissions WHERE uid={user_id} AND object_id={object_id} AND object_type={object_type} \
+
+AND permission_name={permission_name}&quot;.format(
+    user_id=user.id,
+    object_id=car.id,
+    object_type = getattr(car, 'name'),
+    permission_name='drive'
+)
+
+</code></pre>
+
+<h3 id="2-django-原型">2. django 原型</h3>
+
+<p>在 django 中，有一种叫做 content_type 的概念，我们可以参考来实现一个 <code>对象权限控制</code>。</p>
+
+<p>具体可以参考  <code>django-guardian</code></p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+          
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.30.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/main.js"></script>
+<script src="http://www.recall704.com/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+
+  </body>
+</html>
+
