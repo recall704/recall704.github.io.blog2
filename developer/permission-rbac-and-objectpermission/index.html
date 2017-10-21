@@ -9,23 +9,18 @@
   <meta property="og:title" content="权限、RBAC 和 ObjectPermission" />
   <meta name="twitter:title" content="权限、RBAC 和 ObjectPermission" />
   <meta name="description" content="一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
-{:class=&ldquo;img-responsive&rdquo;}
-系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+   id 用户名 密码 是否管理员     1 admin 123456 True   2 test1 123123 False   3 test2 123123 False    系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
 def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass  2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
 我们的数据库变成了这样
-   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断
-def func(): user = User.objects.get(id=1) if user.is_add_allowed: do_something1() if user.">
+   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断">
   <meta property="og:description" content="一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
-{:class=&ldquo;img-responsive&rdquo;}
-系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+   id 用户名 密码 是否管理员     1 admin 123456 True   2 test1 123123 False   3 test2 123123 False    系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
 def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass  2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
 我们的数据库变成了这样
-   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断
-def func(): user = User.objects.get(id=1) if user.is_add_allowed: do_something1() if user.">
+   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断">
   <meta name="twitter:description" content="一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
-{:class=&ldquo;img-responsive&rdquo;}
-系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
-def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass …">
+   id 用户名 密码 是否管理员     1 admin 123456 True   2 test1 123123 False   3 test2 123123 False    系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+def func(): user = …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
   <meta property="og:url" content="http://www.recall704.com/developer/permission-rbac-and-objectpermission/" />
@@ -210,7 +205,39 @@ def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: 
 
 <p>在系统初期，我们的用户是这样的</p>
 
-<p><img src="/assets/img/001.png" alt="img1" />{:class=&ldquo;img-responsive&rdquo;}</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>用户名</th>
+<th>密码</th>
+<th>是否管理员</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>admin</td>
+<td>123456</td>
+<td>True</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>test1</td>
+<td>123123</td>
+<td>False</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>test2</td>
+<td>123123</td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
 
 <p>系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下</p>
 
