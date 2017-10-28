@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>云计算 on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/</link>
+    <description>Recent content in 云计算 on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 28 Oct 2017 20:46:54 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>部署一个带有基础认证的 docker 镜像仓库</title>
+      <link>http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/</link>
+      <pubDate>Sat, 28 Oct 2017 20:46:54 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/</guid>
+      <description>一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
+$ mkdir auth  二、生成认证文件 $ docker run \ --entrypoint htpasswd \ registry:2 -Bbn testuser testpassword &amp;gt; auth/htpasswd  生成了一个用户名为 testuser，密码为 testpassword 的认证文件
+三、启动镜像仓库 docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &amp;quot;REGISTRY_AUTH=htpasswd&amp;quot; \ -e &amp;quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&amp;quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ registry:2  将认证文件挂载到容器中即可。
+如果有证书
+$ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &amp;quot;REGISTRY_AUTH=htpasswd&amp;quot; \ -e &amp;quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&amp;quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ -v `pwd`/certs:/certs \ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.</description>
+    </item>
+    
+  </channel>
+</rss>
