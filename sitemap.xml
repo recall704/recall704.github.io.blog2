@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://www.recall704.com/ansible/ansible-template-demo/</loc>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/</loc>
     <lastmod>2017-10-28T20:46:54+08:00</lastmod>
   </url>
@@ -47,6 +52,24 @@
   <url>
     <loc>http://www.recall704.com/series/about/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/ansible/</loc>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/categories/ansible/</loc>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/ansible/</loc>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -118,7 +141,7 @@
   
   <url>
     <loc>http://www.recall704.com/</loc>
-    <lastmod>2017-10-28T20:46:54+08:00</lastmod>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -155,6 +178,12 @@
   <url>
     <loc>http://www.recall704.com/tags/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/template/</loc>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
