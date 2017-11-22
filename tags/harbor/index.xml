@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Harbor on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/harbor/</link>
+    <description>Recent content in Harbor on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 22 Nov 2017 11:14:50 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/harbor/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>harbor 源码分析： 用户认证</title>
+      <link>http://www.recall704.com/cloud/harbor-authenticate.md/</link>
+      <pubDate>Wed, 22 Nov 2017 11:14:50 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/harbor-authenticate.md/</guid>
+      <description>接口定义 代码在 src/ui/auth/authenticator.go
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，这要对应的结构体实现了该函数，就能完成认证。
+我们通过其中的数据库认证方式，来简单分析。
+接口实现 代码在 src/ui/auth/db/db.go
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.</description>
+    </item>
+    
+  </channel>
+</rss>
