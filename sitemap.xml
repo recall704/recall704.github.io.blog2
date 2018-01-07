@@ -58,12 +58,6 @@
   </url>
   
   <url>
-    <loc>http://www.recall704.com/tags/about/</loc>
-    <lastmod>2017-10-21T14:08:35+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>http://www.recall704.com/categories/about/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
     <priority>0</priority>
@@ -76,13 +70,19 @@
   </url>
   
   <url>
-    <loc>http://www.recall704.com/tags/ansible/</loc>
-    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
+    <loc>http://www.recall704.com/tags/about/</loc>
+    <lastmod>2017-10-21T14:08:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.recall704.com/categories/ansible/</loc>
+    <lastmod>2017-11-03T11:08:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/ansible/</loc>
     <lastmod>2017-11-03T11:08:09+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -286,12 +286,6 @@
   </url>
   
   <url>
-    <loc>http://www.recall704.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
-    <lastmod>2017-10-21T17:01:53+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>http://www.recall704.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
     <lastmod>2017-10-21T17:01:53+08:00</lastmod>
     <priority>0</priority>
@@ -299,6 +293,12 @@
   
   <url>
     <loc>http://www.recall704.com/series/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
+    <lastmod>2017-10-21T17:01:53+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
     <lastmod>2017-10-21T17:01:53+08:00</lastmod>
     <priority>0</priority>
   </url>
