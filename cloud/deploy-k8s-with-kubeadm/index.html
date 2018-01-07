@@ -11,11 +11,11 @@
   <meta name="description" content="一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
 node1： 192.168.88.50
 node2： 192.168.88.51
-二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启动 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname hostnamectl set-hostname node1  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.">
+二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname hostnamectl set-hostname node1  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.">
   <meta property="og:description" content="一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
 node1： 192.168.88.50
 node2： 192.168.88.51
-二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启动 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname hostnamectl set-hostname node1  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.">
+二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname hostnamectl set-hostname node1  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.">
   <meta name="twitter:description" content="一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
 node1： 192.168.88.50
 node2： 192.168.88.51
@@ -208,7 +208,7 @@ node2： 192.168.88.51
 <li><a href="#1-关闭防火墙">1. 关闭防火墙</a></li>
 <li><a href="#2-sysctl-配置">2. sysctl 配置</a></li>
 <li><a href="#3-时间同步">3. 时间同步</a></li>
-<li><a href="#4-启动-epel">4. 启动 epel</a></li>
+<li><a href="#4-启用-epel">4. 启用 epel</a></li>
 <li><a href="#5-禁用虚拟内存">5. 禁用虚拟内存</a></li>
 <li><a href="#6-设置-hostname">6. 设置 hostname</a></li>
 </ul></li>
@@ -253,7 +253,7 @@ sysctl --system
 ntpdate cn.ntp.org.cn
 </code></pre>
 
-<h3 id="4-启动-epel">4. 启动 epel</h3>
+<h3 id="4-启用-epel">4. 启用 epel</h3>
 
 <pre><code class="language-bash">yum install -y epel-release
 </code></pre>
