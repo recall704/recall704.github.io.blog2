@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Scan on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/scan/</link>
+    <description>Recent content in Scan on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 20 Dec 2017 20:24:42 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/scan/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Clair 源码简要分析</title>
+      <link>http://www.recall704.com/cloud/clair/</link>
+      <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/clair/</guid>
+      <description>概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
+在开始分析 clair 之前，我们明白几点：
+1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。 2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。 3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
+clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
+比如 debian，NodeJS。
+2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
+比如： Name: OpenSSL, Version: 1.0, VersionFormat: dpkg
+3. NamespacedFeature 和 Feature 类似，同时检测到了 namespace。
+比如： OpenSSL 1.0 dpkg Debian:7
+4. Vulnerability Vulnerability 是应用对应的漏洞描述。
+代码分析 我们直接从镜像扫描开始分析代码
+代码在 github.com/coreos/clair/worker.go 中
+func processLayers(datastore database.Datastore, imageFormat string, requests []LayerRequest) ([]database.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</loc>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/cloud/clair/</loc>
+    <lastmod>2017-12-20T20:24:42+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/cloud/harbor-job.md/</loc>
     <lastmod>2017-12-19T18:45:17+08:00</lastmod>
   </url>
@@ -48,6 +58,12 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/categories/about/</loc>
+    <lastmod>2017-10-21T14:08:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/series/about/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
     <priority>0</priority>
@@ -60,19 +76,13 @@
   </url>
   
   <url>
-    <loc>http://www.recall704.com/categories/about/</loc>
-    <lastmod>2017-10-21T14:08:35+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.recall704.com/tags/ansible/</loc>
+    <loc>http://www.recall704.com/categories/ansible/</loc>
     <lastmod>2017-11-03T11:08:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.recall704.com/categories/ansible/</loc>
+    <loc>http://www.recall704.com/tags/ansible/</loc>
     <lastmod>2017-11-03T11:08:09+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -102,14 +112,26 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/tags/clair/</loc>
+    <lastmod>2017-12-20T20:24:42+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/cloud/</loc>
-    <lastmod>2017-12-19T18:45:17+08:00</lastmod>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.recall704.com/tags/debian/</loc>
     <lastmod>2017-10-21T16:56:20+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/deploy/</loc>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -150,6 +172,18 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/tags/kubeadm/</loc>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/kubernetes/</loc>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/ops/</loc>
     <lastmod>2017-10-21T16:56:20+08:00</lastmod>
     <priority>0</priority>
@@ -169,7 +203,7 @@
   
   <url>
     <loc>http://www.recall704.com/</loc>
-    <lastmod>2017-12-19T18:45:17+08:00</lastmod>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -198,6 +232,12 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/tags/scan/</loc>
+    <lastmod>2017-12-20T20:24:42+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/series/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
     <priority>0</priority>
@@ -217,13 +257,19 @@
   
   <url>
     <loc>http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/</loc>
-    <lastmod>2017-12-19T18:45:17+08:00</lastmod>
+    <lastmod>2018-01-07T20:32:40+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://www.recall704.com/tags/%E5%88%9D%E6%81%8B/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2017-12-20T20:24:42+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -240,6 +286,12 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
+    <lastmod>2017-10-21T17:01:53+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/series/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
     <lastmod>2017-10-21T17:01:53+08:00</lastmod>
     <priority>0</priority>
@@ -252,14 +304,14 @@
   </url>
   
   <url>
-    <loc>http://www.recall704.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
-    <lastmod>2017-10-21T17:01:53+08:00</lastmod>
+    <loc>http://www.recall704.com/categories/%E8%BF%90%E7%BB%B4/</loc>
+    <lastmod>2017-10-21T16:56:20+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.recall704.com/categories/%E8%BF%90%E7%BB%B4/</loc>
-    <lastmod>2017-10-21T16:56:20+08:00</lastmod>
+    <loc>http://www.recall704.com/tags/%E9%95%9C%E5%83%8F/</loc>
+    <lastmod>2017-12-20T20:24:42+08:00</lastmod>
     <priority>0</priority>
   </url>
   

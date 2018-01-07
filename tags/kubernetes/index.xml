@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/kubernetes/</link>
+    <description>Recent content in Kubernetes on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 07 Jan 2018 20:32:40 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Deploy K8s With Kubeadm</title>
+      <link>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</link>
+      <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</guid>
+      <description>一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
+node1： 192.168.88.50
+node2： 192.168.88.51
+二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启动 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname hostnamectl set-hostname node1  三、安装 docker yum install -y docker systemctl enable docker &amp;amp;&amp;amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum.</description>
+    </item>
+    
+  </channel>
+</rss>
