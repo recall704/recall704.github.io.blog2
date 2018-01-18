@@ -5,33 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Deploy K8s With Kubeadm</title>
-  <meta property="og:title" content="Deploy K8s With Kubeadm" />
-  <meta name="twitter:title" content="Deploy K8s With Kubeadm" />
-  <meta name="description" content="一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
-node1： 192.168.88.50
-node2： 192.168.88.51
-二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname node1 上执行
-hostnamectl set-hostname node1  node2 上执行
-hostnamectl set-hostname node2  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.">
-  <meta property="og:description" content="一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
-node1： 192.168.88.50
-node2： 192.168.88.51
-二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname node1 上执行
-hostnamectl set-hostname node1  node2 上执行
-hostnamectl set-hostname node2  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.">
-  <meta name="twitter:description" content="一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
-node1： 192.168.88.50
-node2： 192.168.88.51
-二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; …">
+  <title>Update</title>
+  <meta property="og:title" content="Update" />
+  <meta name="twitter:title" content="Update" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" />
+  <meta property="og:url" content="http://www.recall704.com/tags/update/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" />
+  <link rel="canonical" href="http://www.recall704.com/tags/update/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -160,33 +144,14 @@ node2： 192.168.88.51
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="post-heading">
-              <h1>Deploy K8s With Kubeadm</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on January 7, 2018
-  
-</span>
-
-
-                
+            <div class="page-heading">
+              <h1>#Update</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -194,150 +159,48 @@ node2： 192.168.88.51
     </div>
   </header>
 
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
-      <hr />
-      <aside>
-        <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#一-环境准备">一、环境准备</a></li>
-<li><a href="#二-环境预处理在两台机器上都执行下面的命令">二、环境预处理在两台机器上都执行下面的命令</a>
-<ul>
-<li><a href="#1-关闭防火墙">1. 关闭防火墙</a></li>
-<li><a href="#2-sysctl-配置">2. sysctl 配置</a></li>
-<li><a href="#3-时间同步">3. 时间同步</a></li>
-<li><a href="#4-启用-epel">4. 启用 epel</a></li>
-<li><a href="#5-禁用虚拟内存">5. 禁用虚拟内存</a></li>
-<li><a href="#6-设置-hostname">6. 设置 hostname</a></li>
-</ul></li>
-<li><a href="#三-安装-docker">三、安装 docker</a></li>
-<li><a href="#四-安装-kubeadm-kubelet-and-kubectl">四、安装 kubeadm, kubelet and kubectl</a></li>
-<li><a href="#五-运行-kubeadm">五、运行 kubeadm</a></li>
-<li><a href="#六-部署网络插件-calico">六、部署网络插件 calico</a></li>
-<li><a href="#七-对应视频">七、对应视频</a></li>
-</ul></li>
-</ul>
-</nav>
-      </aside>
-      <hr />
-
-      <article role="main" class="blog-post">
+  <div class="container" role="main">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
+        <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/">
+                <h2 class="post-title">Fix Alpine Update Failed</h2>
 
-<h2 id="一-环境准备">一、环境准备</h2>
+                
+              </a>
 
-<p>两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络<br />
-node1： 192.168.88.50<br />
-node2： 192.168.88.51</p>
+              <p class="post-meta">
+                Posted on January 18, 2018
+              </p>
+              <div class="post-entry">
+                  <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" class="post-read-more">[Read More]</a>
+              </div>
 
-<h2 id="二-环境预处理在两台机器上都执行下面的命令">二、环境预处理在两台机器上都执行下面的命令</h2>
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/docker/">docker</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/alpine/">alpine</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/apk/">apk</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/update/">update</a>&nbsp;
+                  
+                </span>
+              
 
-<h3 id="1-关闭防火墙">1. 关闭防火墙</h3>
-
-<pre><code class="language-bash">systemctl stop firewalld
-</code></pre>
-
-<h3 id="2-sysctl-配置">2. sysctl 配置</h3>
-
-<pre><code class="language-bash">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-EOF
-sysctl --system
-</code></pre>
-
-<h3 id="3-时间同步">3. 时间同步</h3>
-
-<pre><code class="language-bash">yum install -y ntpdate
-ntpdate cn.ntp.org.cn
-</code></pre>
-
-<h3 id="4-启用-epel">4. 启用 epel</h3>
-
-<pre><code class="language-bash">yum install -y epel-release
-</code></pre>
-
-<h3 id="5-禁用虚拟内存">5. 禁用虚拟内存</h3>
-
-<pre><code class="language-bash">swapoff -a
-</code></pre>
-
-<h3 id="6-设置-hostname">6. 设置 hostname</h3>
-
-<p>node1 上执行</p>
-
-<pre><code class="language-bash">hostnamectl set-hostname node1
-</code></pre>
-
-<p>node2 上执行</p>
-
-<pre><code class="language-bash">hostnamectl set-hostname node2
-</code></pre>
-
-<h2 id="三-安装-docker">三、安装 docker</h2>
-
-<pre><code class="language-bash">yum install -y docker
-systemctl enable docker &amp;&amp; systemctl start docker
-</code></pre>
-
-<h2 id="四-安装-kubeadm-kubelet-and-kubectl">四、安装 kubeadm, kubelet and kubectl</h2>
-
-<pre><code class="language-bash">cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOF
-setenforce 0
-yum install -y kubelet kubeadm kubectl
-systemctl enable kubelet &amp;&amp; systemctl start kubelet
-</code></pre>
-
-<h2 id="五-运行-kubeadm">五、运行 kubeadm</h2>
-
-<pre><code class="language-bash">kubeadm init --pod-network-cidr=172.20.0.0/16
-</code></pre>
-
-<h2 id="六-部署网络插件-calico">六、部署网络插件 calico</h2>
-
-<pre><code class="language-bash">kubectl apply -f https://docs.projectcalico.org/v2.6/getting-started/kubernetes/installation/hosted/kubeadm/1.6/calico.yaml
-</code></pre>
-
-<h2 id="七-对应视频">七、对应视频</h2>
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_PCJPJdEIUE" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+            </article>
+          
+        </div>
         
-          <li class="previous">
-            <a href="http://www.recall704.com/cloud/clair/" data-toggle="tooltip" data-placement="top" title="Clair 源码简要分析（未完待续）">&larr; Previous Post</a>
-          </li>
-        
-        
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" data-toggle="tooltip" data-placement="top" title="Fix Alpine Update Failed">Next Post &rarr;</a>
-          </li>
-        
-      </ul>
-
-      
-
+      </div>
     </div>
   </div>
-</div>
 
     <footer>
   <div class="container">
