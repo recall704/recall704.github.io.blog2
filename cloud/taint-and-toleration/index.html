@@ -9,13 +9,19 @@
   <meta property="og:title" content="k8s 中的污染 Taint 与容忍 Toleration" />
   <meta name="twitter:title" content="k8s 中的污染 Taint 与容忍 Toleration" />
   <meta name="description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
+bbb 代表 taint 的 value
+NoSchedule 代码这个 taint 对应的影响，它可以有三个值
    值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。">
   <meta property="og:description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
+bbb 代表 taint 的 value
+NoSchedule 代码这个 taint 对应的影响，它可以有三个值
    值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。">
   <meta name="twitter:description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可 …">
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
+bbb 代表 taint 的 value
+NoSchedule 代码这个 taint 对应的影响，它可 …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
   <meta property="og:url" content="http://www.recall704.com/cloud/taint-and-toleration/" />
@@ -208,8 +214,8 @@ kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
 </code></pre>
 
 <p>其中：
-aaa 代表 taint 的 key
-bbb 代表 taint 的 value
+aaa 代表 taint 的 key<br />
+bbb 代表 taint 的 value<br />
 NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 
 <table>
@@ -260,7 +266,7 @@ NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 <tbody>
 <tr>
 <td>Equal</td>
-<td>只有 key-value 都和 taint 一致，才算满足容忍条件</td>
+<td>只有 key-value 都和 taint 一致，才算满足容忍条件，pod 才能跑在上面</td>
 </tr>
 
 <tr>
