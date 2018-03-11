@@ -5,27 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Fix Alpine Update Failed</title>
-  <meta property="og:title" content="Fix Alpine Update Failed" />
-  <meta name="twitter:title" content="Fix Alpine Update Failed" />
-  <meta name="description" content="之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
-docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
-/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.">
-  <meta property="og:description" content="之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
-docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
-/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.">
-  <meta name="twitter:description" content="之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; …">
+  <title>Toleration</title>
+  <meta property="og:title" content="Toleration" />
+  <meta name="twitter:title" content="Toleration" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/fix-alpine-update-failed/" />
+  <meta property="og:url" content="http://www.recall704.com/tags/toleration/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/fix-alpine-update-failed/" />
+  <link rel="canonical" href="http://www.recall704.com/tags/toleration/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -154,33 +144,14 @@ FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 R
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="post-heading">
-              <h1>Fix Alpine Update Failed</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on January 18, 2018
-  
-</span>
-
-
-                
+            <div class="page-heading">
+              <h1>#Toleration</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -188,90 +159,46 @@ FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 R
     </div>
   </header>
 
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
-      <hr />
-      
-
-      
-
-      <article role="main" class="blog-post">
-        <p>之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下</p>
-
-<pre><code>FROM golang:1.8.5-alpine3.6
-MAINTAINER @recall704 https://github.com/recall704
-
-RUN apk update &amp;&amp; \
-    apk add gcc linux-headers musl-dev &amp;&amp; \
-    rm -rf /var/cache/* &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories
-</code></pre>
-
-<p>正常跑着没问题，但是</p>
-
-<pre><code>docker run --rm -it win7/golang:v1.8.5-gcc sh
-</code></pre>
-
-<p>进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 </p>
-
-<pre><code>apk update
-apk add git
-</code></pre>
-
-<p>但是</p>
-
-<pre><code>/go # apk update
-fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz
-ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor
-WARNING: Ignoring APKINDEX.c71de075.tar.gz: Bad file descriptor
-1 errors; 26 distinct packages available
-</code></pre>
-
-<p>这神了个奇了，随手 google 了下。</p>
-
-<p>修改 Dockerfile 为</p>
-
-<pre><code>FROM golang:1.8.5-alpine3.6
-MAINTAINER @recall704 https://github.com/recall704
-
-RUN apk update &amp;&amp; \
-    apk add gcc linux-headers musl-dev &amp;&amp; \
-    rm -rf /var/cache/* &amp;&amp; \
-    mkdir -p /var/cache/apk/ &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories
-</code></pre>
-
-<p>就加了一行</p>
-
-<pre><code>mkdir -p /var/cache/apk/
-</code></pre>
-
-<p>然后就可以正常更新了， 不信的可以自己试试。</p>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+  <div class="container" role="main">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
-          <li class="previous">
-            <a href="http://www.recall704.com/cloud/taint-and-toleration/" data-toggle="tooltip" data-placement="top" title="k8s 中的污染 Taint 与容忍 Toleration">&larr; Previous Post</a>
-          </li>
-        
-        
-      </ul>
+        <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/taint-and-toleration/">
+                <h2 class="post-title">k8s 中的污染 Taint 与容忍 Toleration</h2>
 
-      
+                
+              </a>
 
+              <p class="post-meta">
+                Posted on January 18, 2018
+              </p>
+              <div class="post-entry">
+                  <a href="http://www.recall704.com/cloud/taint-and-toleration/" class="post-read-more">[Read More]</a>
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/taint/">taint</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/toleration/">toleration</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+        </div>
+        
+      </div>
     </div>
   </div>
-</div>
 
     <footer>
   <div class="container">

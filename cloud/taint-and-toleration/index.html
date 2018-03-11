@@ -5,27 +5,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Fix Alpine Update Failed</title>
-  <meta property="og:title" content="Fix Alpine Update Failed" />
-  <meta name="twitter:title" content="Fix Alpine Update Failed" />
-  <meta name="description" content="之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
-docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
-/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.">
-  <meta property="og:description" content="之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
-docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
-/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.">
-  <meta name="twitter:description" content="之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; …">
+  <title>k8s 中的污染 Taint 与容忍 Toleration</title>
+  <meta property="og:title" content="k8s 中的污染 Taint 与容忍 Toleration" />
+  <meta name="twitter:title" content="k8s 中的污染 Taint 与容忍 Toleration" />
+  <meta name="description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。">
+  <meta property="og:description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。">
+  <meta name="twitter:description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可 …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/fix-alpine-update-failed/" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/taint-and-toleration/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/fix-alpine-update-failed/" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/taint-and-toleration/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -171,7 +169,7 @@ FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 R
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Fix Alpine Update Failed</h1>
+              <h1>k8s 中的污染 Taint 与容忍 Toleration</h1>
                 
                 
                   <span class="post-meta">
@@ -200,59 +198,90 @@ FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 R
       
 
       <article role="main" class="blog-post">
-        <p>之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下</p>
+        
 
-<pre><code>FROM golang:1.8.5-alpine3.6
-MAINTAINER @recall704 https://github.com/recall704
+<h1 id="一-taint-污染">一、 taint 污染</h1>
 
-RUN apk update &amp;&amp; \
-    apk add gcc linux-headers musl-dev &amp;&amp; \
-    rm -rf /var/cache/* &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories
+<p>taint 其实和 k8s 中的 label 概念很相似，它有一个类似 <code>label</code> 一样的 key-value 键值对以及对应的属性。</p>
+
+<pre><code>kubectl taint nodes node1 aaa=bbb:NoSchedule
 </code></pre>
 
-<p>正常跑着没问题，但是</p>
+<p>其中：
+aaa 代表 taint 的 key
+bbb 代表 taint 的 value
+NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 
-<pre><code>docker run --rm -it win7/golang:v1.8.5-gcc sh
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>NoSchedule</td>
+<td>不允许新的 pod 调度到该 node 上，除非 toleration 条件满足</td>
+</tr>
+
+<tr>
+<td>PreferNoSchedule</td>
+<td>尽可能不要调度到该 node 上，除非 toleration 条件满足</td>
+</tr>
+
+<tr>
+<td>NoExecute</td>
+<td>驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="二-toleration-容忍">二、toleration 容忍</h1>
+
+<p>增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。</p>
+
+<pre><code>tolerations:
+- key: &quot;aaa&quot;
+  operator: &quot;Equal&quot;
+  value: &quot;bbb&quot;
+  effect: &quot;NoSchedule&quot;
 </code></pre>
 
-<p>进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 </p>
+<table>
+<thead>
+<tr>
+<th>operator 值</th>
+<th>含义</th>
+</tr>
+</thead>
 
-<pre><code>apk update
-apk add git
-</code></pre>
+<tbody>
+<tr>
+<td>Equal</td>
+<td>只有 key-value 都和 taint 一致，才算满足容忍条件</td>
+</tr>
 
-<p>但是</p>
+<tr>
+<td>Exists</td>
+<td>只要 key 存在，就算满足容忍条件，value 可以为空</td>
+</tr>
+</tbody>
+</table>
 
-<pre><code>/go # apk update
-fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz
-ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor
-WARNING: Ignoring APKINDEX.c71de075.tar.gz: Bad file descriptor
-1 errors; 26 distinct packages available
-</code></pre>
+<h1 id="三-常用使用案例">三、常用使用案例</h1>
 
-<p>这神了个奇了，随手 google 了下。</p>
+<ol>
+<li>为了保证 master 节点的稳定性，我们可以对 master 节点添加 taint，除了日志和监控需要的 pod 添加了对应的 toleration 之外，不允许别的 pod 运行在 master 节点上</li>
+<li>节点升级维护，当节点需要维护时，可以给节点增加 taint 且 effect 的值为 NoExecute，pod 调度到其它节点之后再开始升级维护。</li>
+</ol>
 
-<p>修改 Dockerfile 为</p>
+<p>Q：taint 会影响到 daemonset 吗？
+A：会，taint 是针对所有 pod 的，daemonset 最终也会生成对应的 pod，所以 daemonset 配置的时候需要设置对应的 toleration。</p>
 
-<pre><code>FROM golang:1.8.5-alpine3.6
-MAINTAINER @recall704 https://github.com/recall704
-
-RUN apk update &amp;&amp; \
-    apk add gcc linux-headers musl-dev &amp;&amp; \
-    rm -rf /var/cache/* &amp;&amp; \
-    mkdir -p /var/cache/apk/ &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \
-    echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories
-</code></pre>
-
-<p>就加了一行</p>
-
-<pre><code>mkdir -p /var/cache/apk/
-</code></pre>
-
-<p>然后就可以正常更新了， 不信的可以自己试试。</p>
+<p>Q: 如何删除 taint
+A: <code>kubectl taint nodes node1 key:NoSchedule-</code></p>
 
       </article>
 
@@ -261,9 +290,13 @@ RUN apk update &amp;&amp; \
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="http://www.recall704.com/cloud/taint-and-toleration/" data-toggle="tooltip" data-placement="top" title="k8s 中的污染 Taint 与容忍 Toleration">&larr; Previous Post</a>
+            <a href="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" data-toggle="tooltip" data-placement="top" title="Deploy K8s With Kubeadm">&larr; Previous Post</a>
           </li>
         
+        
+          <li class="next">
+            <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" data-toggle="tooltip" data-placement="top" title="Fix Alpine Update Failed">Next Post &rarr;</a>
+          </li>
         
       </ul>
 

@@ -24,6 +24,17 @@ docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一
     </item>
     
     <item>
+      <title>k8s 中的污染 Taint 与容忍 Toleration</title>
+      <link>http://www.recall704.com/cloud/taint-and-toleration/</link>
+      <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/taint-and-toleration/</guid>
+      <description>一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key bbb 代表 taint 的 value NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。</description>
+    </item>
+    
+    <item>
       <title>Deploy K8s With Kubeadm</title>
       <link>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</link>
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
@@ -45,7 +56,9 @@ hostnamectl set-hostname node2  三、安装 docker yum install -y docker system
       <guid>http://www.recall704.com/cloud/clair/</guid>
       <description>概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
 在开始分析 clair 之前，我们明白几点：
-1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。 2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。 3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
+1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。
+2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。
+3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
 clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
 比如 debian，NodeJS。
 2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
