@@ -283,10 +283,10 @@ NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 <li>节点升级维护，当节点需要维护时，可以给节点增加 taint 且 effect 的值为 NoExecute，pod 调度到其它节点之后再开始升级维护。</li>
 </ol>
 
-<p>Q：taint 会影响到 daemonset 吗？
+<p>Q：taint 会影响到 daemonset 吗？<br />
 A：会，taint 是针对所有 pod 的，daemonset 最终也会生成对应的 pod，所以 daemonset 配置的时候需要设置对应的 toleration。</p>
 
-<p>Q: 如何删除 taint
+<p>Q: 如何删除 taint<br />
 A: <code>kubectl taint nodes node1 key:NoSchedule-</code></p>
 
       </article>
