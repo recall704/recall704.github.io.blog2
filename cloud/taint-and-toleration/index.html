@@ -8,20 +8,23 @@
   <title>k8s 中的污染 Taint 与容忍 Toleration</title>
   <meta property="og:title" content="k8s 中的污染 Taint 与容忍 Toleration" />
   <meta name="twitter:title" content="k8s 中的污染 Taint 与容忍 Toleration" />
-  <meta name="description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
-bbb 代表 taint 的 value
-NoSchedule 代码这个 taint 对应的影响，它可以有三个值
-   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。">
-  <meta property="og:description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
-bbb 代表 taint 的 value
-NoSchedule 代码这个 taint 对应的影响，它可以有三个值
-   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod    二、toleration 容忍 增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。">
-  <meta name="twitter:description" content="一、 taint 污染 taint 其实和 k8s 中的 label 概念很相似，它有一个类似 label 一样的 key-value 键值对以及对应的属性。
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中： aaa 代表 taint 的 key
-bbb 代表 taint 的 value
-NoSchedule 代码这个 taint 对应的影响，它可 …">
+  <meta name="description" content="之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
+1. aaa 代表 taint 的 key
+2. bbb 代表 taint 的 value
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。">
+  <meta property="og:description" content="之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
+1. aaa 代表 taint 的 key
+2. bbb 代表 taint 的 value
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。">
+  <meta name="twitter:description" content="之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
   <meta property="og:url" content="http://www.recall704.com/cloud/taint-and-toleration/" />
@@ -179,7 +182,7 @@ NoSchedule 代码这个 taint 对应的影响，它可 …">
                 
                 
                   <span class="post-meta">
-  Posted on January 18, 2018
+  Posted on March 11, 2018
   
 </span>
 
@@ -206,17 +209,24 @@ NoSchedule 代码这个 taint 对应的影响，它可 …">
       <article role="main" class="blog-post">
         
 
-<h1 id="一-taint-污染">一、 taint 污染</h1>
+<p>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？
+<img src="/static/images/15208671290222.jpg" alt="" /></p>
 
-<p>taint 其实和 k8s 中的 label 概念很相似，它有一个类似 <code>label</code> 一样的 key-value 键值对以及对应的属性。</p>
+<blockquote>
+<p>taint 和 toleration 了解一下。</p>
+</blockquote>
+
+<h2 id="一-taint-污染">一、 taint （污染）</h2>
+
+<p>首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下</p>
 
 <pre><code>kubectl taint nodes node1 aaa=bbb:NoSchedule
 </code></pre>
 
-<p>其中：
-aaa 代表 taint 的 key<br />
-bbb 代表 taint 的 value<br />
-NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
+<p>其中：<br />
+1. aaa 代表 taint 的 key<br />
+2. bbb 代表 taint 的 value<br />
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 
 <table>
 <thead>
@@ -229,24 +239,28 @@ NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 <tbody>
 <tr>
 <td>NoSchedule</td>
-<td>不允许新的 pod 调度到该 node 上，除非 toleration 条件满足</td>
+<td>不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod</td>
 </tr>
 
 <tr>
 <td>PreferNoSchedule</td>
-<td>尽可能不要调度到该 node 上，除非 toleration 条件满足</td>
+<td>尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod</td>
 </tr>
 
 <tr>
 <td>NoExecute</td>
-<td>驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod</td>
+<td>驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod</td>
 </tr>
 </tbody>
 </table>
 
-<h1 id="二-toleration-容忍">二、toleration 容忍</h1>
+<p>我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。</p>
 
-<p>增加了 taint 的 node，不再允许调度 pod 到上面运行，但是有时候我们又希望自己的 pod 能运行在上面，那这个时候，只要我们的 pod 增加对应的容忍的参数，与 taint 的 key-value 对应，就行了。</p>
+<h2 id="二-toleration-容忍">二、toleration （容忍）</h2>
+
+<p>同样的，toleration 是对 pod 而言的。<br />
+在上面我们给 node 增加 taint，pod 已经不会调度到上面了，那么如果我们想把需要的 pod 运行在这个 node 上，我们怎么做呢？
+答案就是： <strong>给 pod 增加 toleration，容忍 node 上添加的 taint 条件。</strong></p>
 
 <pre><code>tolerations:
 - key: &quot;aaa&quot;
@@ -276,12 +290,34 @@ NoSchedule 代码这个 taint 对应的影响，它可以有三个值</p>
 </tbody>
 </table>
 
-<h1 id="三-常用使用案例">三、常用使用案例</h1>
+<h2 id="三-常用使用案例">三、常用使用案例</h2>
 
-<ol>
-<li>为了保证 master 节点的稳定性，我们可以对 master 节点添加 taint，除了日志和监控需要的 pod 添加了对应的 toleration 之外，不允许别的 pod 运行在 master 节点上</li>
-<li>节点升级维护，当节点需要维护时，可以给节点增加 taint 且 effect 的值为 NoExecute，pod 调度到其它节点之后再开始升级维护。</li>
-</ol>
+<p>说了这么多，这个 taint 和 toleration 到底有什么用呢？</p>
+
+<h4 id="1-保证-master-的稳定性">1. 保证 master 的稳定性：</h4>
+
+<p>为了保证 master 节点的稳定性，我们尽可能不让 pod 运行在上面，除了必须的 pod （比如 <code>日志 agent</code> 和 <code>监控 agent</code>）。
+我们给 master01 增加 taint</p>
+
+<pre><code>kubectl taint nodes master01 node-master=true:NoSchedule
+</code></pre>
+
+<p>我们给 <code>日志 agent</code> 和 <code>监控 agent</code> 增加对应的 toleration</p>
+
+<pre><code>tolerations:
+- key: &quot;node-master&quot;
+  operator: &quot;Equal&quot;
+  value: &quot;true&quot;
+  effect: &quot;NoSchedule&quot;
+</code></pre>
+
+<p>这样，master 上就会只运行这些必须的 pod，而不会运行其它应用的 pod 了。</p>
+
+<h4 id="2-节点升级维护">2. 节点升级维护：</h4>
+
+<p>当节点需要维护时，可以给节点增加 taint 且 effect 的值为 NoExecute，由于没有对应的 toleration 存在，pod 会被驱逐到其它节点运行，这个时候我们就可以对这个节点进行维护了。</p>
+
+<h2 id="四-常见问题">四、常见问题</h2>
 
 <p>Q：taint 会影响到 daemonset 吗？<br />
 A：会，taint 是针对所有 pod 的，daemonset 最终也会生成对应的 pod，所以 daemonset 配置的时候需要设置对应的 toleration。</p>
@@ -296,13 +332,9 @@ A: <code>kubectl taint nodes node1 key:NoSchedule-</code></p>
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" data-toggle="tooltip" data-placement="top" title="Deploy K8s With Kubeadm">&larr; Previous Post</a>
+            <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" data-toggle="tooltip" data-placement="top" title="Fix Alpine Update Failed">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" data-toggle="tooltip" data-placement="top" title="Fix Alpine Update Failed">Next Post &rarr;</a>
-          </li>
         
       </ul>
 
