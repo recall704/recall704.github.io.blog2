@@ -6,7 +6,7 @@
     <description>Recent content in Toleration on RECALL&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 11 Mar 2018 21:54:53 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 11 Mar 2018 22:36:53 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/tags/toleration/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>k8s 中的污染 Taint 与容忍 Toleration</title>
       <link>http://www.recall704.com/cloud/taint-and-toleration/</link>
-      <pubDate>Sun, 11 Mar 2018 21:54:53 +0800</pubDate>
+      <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
       
       <guid>http://www.recall704.com/cloud/taint-and-toleration/</guid>
       <description>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。

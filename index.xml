@@ -6,15 +6,30 @@
     <description>Recent content on RECALL&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 11 Mar 2018 21:54:53 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 14 Mar 2018 14:22:53 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>k8s 中 node 的 roles</title>
+      <link>http://www.recall704.com/cloud/k8s-node-roles/</link>
+      <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s-node-roles/</guid>
+      <description> k8s 中 node 的 roles 部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
+kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
+那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
+通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&amp;lt;role&amp;gt;=&amp;quot;&amp;quot; 和 kubernetes.io/role=&amp;quot;&amp;lt;role&amp;gt;&amp;quot; 来定义角色。
+所以 master 可以这样
+kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
+kubectl label node 192.168.88.201 kubernetes.io/role=master  </description>
+    </item>
+    
+    <item>
       <title>k8s 中的污染 Taint 与容忍 Toleration</title>
       <link>http://www.recall704.com/cloud/taint-and-toleration/</link>
-      <pubDate>Sun, 11 Mar 2018 21:54:53 +0800</pubDate>
+      <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
       
       <guid>http://www.recall704.com/cloud/taint-and-toleration/</guid>
       <description>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
