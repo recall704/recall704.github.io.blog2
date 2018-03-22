@@ -73,6 +73,11 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/python/some-django-tips/</loc>
+    <lastmod>2016-03-14T14:22:53+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/tags/about/</loc>
     <lastmod>2017-10-21T14:08:35+08:00</lastmod>
     <priority>0</priority>
@@ -169,6 +174,12 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/tags/django/</loc>
+    <lastmod>2016-03-14T14:22:53+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/tags/docker/</loc>
     <lastmod>2018-01-18T17:54:53+08:00</lastmod>
     <priority>0</priority>
@@ -237,6 +248,18 @@
   <url>
     <loc>http://www.recall704.com/tags/permission/</loc>
     <lastmod>2017-10-21T14:39:44+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/python/</loc>
+    <lastmod>2016-03-14T14:22:53+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/python/</loc>
+    <lastmod>2016-03-14T14:22:53+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -363,6 +386,12 @@
   <url>
     <loc>http://www.recall704.com/series/%E6%A0%91%E8%8E%93%E6%B4%BE/</loc>
     <lastmod>2017-10-21T17:01:53+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/categories/%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2016-03-14T14:22:53+08:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -8,21 +8,21 @@
   <title>k8s 中 node 的 roles</title>
   <meta property="og:title" content="k8s 中 node 的 roles" />
   <meta name="twitter:title" content="k8s 中 node 的 roles" />
-  <meta name="description" content=" k8s 中 node 的 roles 部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
+  <meta name="description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
 kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
 那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
 通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&quot;&quot; 和 kubernetes.io/role=&quot;&lt;role&gt;&quot; 来定义角色。
 所以 master 可以这样
 kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
 kubectl label node 192.168.88.201 kubernetes.io/role=master  ">
-  <meta property="og:description" content=" k8s 中 node 的 roles 部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
+  <meta property="og:description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
 kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
 那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
 通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&quot;&quot; 和 kubernetes.io/role=&quot;&lt;role&gt;&quot; 来定义角色。
 所以 master 可以这样
 kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
 kubectl label node 192.168.88.201 kubernetes.io/role=master  ">
-  <meta name="twitter:description" content=" k8s 中 node 的 roles 部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
+  <meta name="twitter:description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
 kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
 那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
 通过代码，我们可以知道，k8s 把 label …">
@@ -206,13 +206,14 @@ kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这�
       
 
       
+      <aside>
+        
+      </aside>
+      <hr />
+      
 
       <article role="main" class="blog-post">
-        
-
-<h1 id="k8s-中-node-的-roles">k8s 中 node 的 roles</h1>
-
-<p><img src="/static/images/15210086580054.jpg" alt="" /></p>
+        <p><img src="/static/images/15210086580054.jpg" alt="" /></p>
 
 <p>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是</p>
 
