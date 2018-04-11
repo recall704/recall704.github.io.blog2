@@ -5,35 +5,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>k8s 中 node 的 roles</title>
-  <meta property="og:title" content="k8s 中 node 的 roles" />
-  <meta name="twitter:title" content="k8s 中 node 的 roles" />
-  <meta name="description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&quot;&quot; 和 kubernetes.io/role=&quot;&lt;role&gt;&quot; 来定义角色。
-所以 master 可以这样
-kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
-kubectl label node 192.168.88.201 kubernetes.io/role=master  ">
-  <meta property="og:description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&quot;&quot; 和 kubernetes.io/role=&quot;&lt;role&gt;&quot; 来定义角色。
-所以 master 可以这样
-kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
-kubectl label node 192.168.88.201 kubernetes.io/role=master  ">
-  <meta name="twitter:description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label …">
+  <title>创建 client （一）： token 方式访问 k8s API</title>
+  <meta property="og:title" content="创建 client （一）： token 方式访问 k8s API" />
+  <meta name="twitter:title" content="创建 client （一）： token 方式访问 k8s API" />
+  <meta name="description" content="0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
+3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
+0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？ 和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息） 我们在 rook 的代码中，可以看到下面这样类似的代码">
+  <meta property="og:description" content="0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
+3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
+0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？ 和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息） 我们在 rook 的代码中，可以看到下面这样类似的代码">
+  <meta name="twitter:description" content="0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-node-roles/" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-authentication-with-token/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-node-roles/" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-authentication-with-token/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -179,11 +174,11 @@ kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这�
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>k8s 中 node 的 roles</h1>
+              <h1>创建 client （一）： token 方式访问 k8s API</h1>
                 
                 
                   <span class="post-meta">
-  Posted on March 14, 2018
+  Posted on April 11, 2018
   
 </span>
 
@@ -203,35 +198,125 @@ kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这�
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
       
+      <hr />
+      <aside>
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#0x1-概述">0x1 概述</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-ca-认证">1. ca 认证</a></li>
+<li><a href="#2-token-认证">2. token 认证</a></li>
+<li><a href="#3-http-basic-认证">3. http basic 认证</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#0x2-token-认证详解">0x2 token 认证详解</a></li>
+</ul>
+</nav>
+      </aside>
+      <hr />
+      
 
       <article role="main" class="blog-post">
-        <p><img src="/static/images/15210086580054.jpg" alt="" /></p>
+        
 
-<p>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是</p>
+<h1 id="0x1-概述">0x1 概述</h1>
 
-<pre><code>kubectl get nodes 192.168.88.201 -o yaml
+<p>k8s 提供了三种认证方式访问 API Server，分别是：</p>
+
+<h3 id="1-ca-认证">1. ca 认证</h3>
+
+<p>k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。</p>
+
+<h3 id="2-token-认证">2. token 认证</h3>
+
+<p>rook （<a href="https://github.com/rook/rook）">https://github.com/rook/rook）</a> 、dashboard （<a href="https://github.com/kubernetes/dashboard）">https://github.com/kubernetes/dashboard）</a> 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源，
+运行的时候需要指定 ServiceAccount ，ServiceAccount  又配置了指定的角色和权限。</p>
+
+<h3 id="3-http-basic-认证">3. http basic 认证</h3>
+
+<p>使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。</p>
+
+<h1 id="0x2-token-认证详解">0x2 token 认证详解</h1>
+
+<p>像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount  和 k8s API Server 进行通信的呢？
+和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
+我们在 rook 的代码中，可以看到下面这样类似的代码</p>
+
+<pre><code class="language-go">func getClientset() (kubernetes.Interface, apiextensionsclient.Interface, rookclient.Interface, error) {
+	// create the k8s client
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf(&quot;failed to get k8s config. %+v&quot;, err)
+	}
+    ...
+}
 </code></pre>
 
-<p>在里面却没有发现有 ROLES 这样的字段？</p>
+<p>通过 rest.InClusterConfig() 读取对应的配置信息，我们来详细看一下</p>
 
-<p>那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？</p>
+<pre><code class="language-go">func InClusterConfig() (*Config, error) {
+	host, port := os.Getenv(&quot;KUBERNETES_SERVICE_HOST&quot;), os.Getenv(&quot;KUBERNETES_SERVICE_PORT&quot;)
+	if len(host) == 0 || len(port) == 0 {
+		return nil, fmt.Errorf(&quot;unable to load in-cluster configuration, KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT must be defined&quot;)
+	}
 
-<p><img src="/static/images/15210089063257.jpg" alt="" /></p>
+	token, err := ioutil.ReadFile(&quot;/var/run/secrets/kubernetes.io/serviceaccount/&quot; + v1.ServiceAccountTokenKey)
+	if err != nil {
+		return nil, err
+	}
+	tlsClientConfig := TLSClientConfig{}
+	rootCAFile := &quot;/var/run/secrets/kubernetes.io/serviceaccount/&quot; + v1.ServiceAccountRootCAKey
+	if _, err := certutil.NewPool(rootCAFile); err != nil {
+		glog.Errorf(&quot;Expected to load root CA config from %s, but got err: %v&quot;, rootCAFile, err)
+	} else {
+		tlsClientConfig.CAFile = rootCAFile
+	}
 
-<p>通过代码，我们可以知道，k8s 把 label
-<code>node-role.kubernetes.io/&lt;role&gt;=&quot;&quot;</code> 和
-<code>kubernetes.io/role=&quot;&lt;role&gt;&quot;</code>
-来定义角色。</p>
-
-<p>所以 master 可以这样</p>
-
-<pre><code>kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true
+	return &amp;Config{
+		// TODO: switch to using cluster DNS.
+		Host:            &quot;https://&quot; + net.JoinHostPort(host, port),
+		BearerToken:     string(token),
+		TLSClientConfig: tlsClientConfig,
+	}, nil
+}
 </code></pre>
 
-<p>或者</p>
+<p>通过上面的代码我们可以知道:<br />
+ 1. 程序读取了当前容器的环境变量，获得 API Server 的地址和端口。<br />
+ 2. 程序从指定目录 /var/run/secrets/kubernetes.io/serviceaccount/ 读取 token 及 ca 信息<br />
+k8s 在容器启动的时候，会自动将 token 和 环境变量注入到容器里。</p>
 
-<pre><code>kubectl label node 192.168.88.201 kubernetes.io/role=master
+<p>示例如下</p>
+
+<pre><code class="language-shell">/var/run/secrets/kubernetes.io/serviceaccount $ ls -la
+total 0
+drwxrwxrwt    3 root     root           140 Mar 27 06:24 .
+drwxr-xr-x    3 root     root            28 Mar 27 06:24 ..
+lrwxrwxrwx    1 root     root            13 Mar 27 06:24 ca.crt -&gt; ..data/ca.crt
+lrwxrwxrwx    1 root     root            16 Mar 27 06:24 namespace -&gt; ..data/namespace
+lrwxrwxrwx    1 root     root            12 Mar 27 06:24 token -&gt; ..data/token
 </code></pre>
+
+<p>读取了 token 之后，通过设置 config，然后开始初始化</p>
+
+<pre><code>func getClientset() (kubernetes.Interface, apiextensionsclient.Interface, rookclient.Interface, error) {
+	// create the k8s client
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf(&quot;failed to get k8s config. %+v&quot;, err)
+	}
+
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, nil, nil, fmt.Errorf(&quot;failed to create k8s clientset. %+v&quot;, err)
+	}
+	...
+}
+</code></pre>
+
+<p>只要有了这个 clientset ，我们就可以和 k8s 进行交互了。</p>
 
       </article>
 
@@ -240,13 +325,9 @@ kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这�
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="http://www.recall704.com/cloud/taint-and-toleration/" data-toggle="tooltip" data-placement="top" title="k8s 中的污染 Taint 与容忍 Toleration">&larr; Previous Post</a>
+            <a href="http://www.recall704.com/cloud/k8s-node-roles/" data-toggle="tooltip" data-placement="top" title="k8s 中 node 的 roles">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" data-toggle="tooltip" data-placement="top" title="创建 client （一）： token 方式访问 k8s API">Next Post &rarr;</a>
-          </li>
         
       </ul>
 

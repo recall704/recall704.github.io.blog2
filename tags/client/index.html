@@ -5,35 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>k8s 中 node 的 roles</title>
-  <meta property="og:title" content="k8s 中 node 的 roles" />
-  <meta name="twitter:title" content="k8s 中 node 的 roles" />
-  <meta name="description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&quot;&quot; 和 kubernetes.io/role=&quot;&lt;role&gt;&quot; 来定义角色。
-所以 master 可以这样
-kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
-kubectl label node 192.168.88.201 kubernetes.io/role=master  ">
-  <meta property="og:description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&quot;&quot; 和 kubernetes.io/role=&quot;&lt;role&gt;&quot; 来定义角色。
-所以 master 可以这样
-kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
-kubectl label node 192.168.88.201 kubernetes.io/role=master  ">
-  <meta name="twitter:description" content="部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label …">
+  <title>Client</title>
+  <meta property="og:title" content="Client" />
+  <meta name="twitter:title" content="Client" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-node-roles/" />
+  <meta property="og:url" content="http://www.recall704.com/tags/client/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-node-roles/" />
+  <link rel="canonical" href="http://www.recall704.com/tags/client/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -162,33 +144,14 @@ kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这�
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="post-heading">
-              <h1>k8s 中 node 的 roles</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on March 14, 2018
-  
-</span>
-
-
-                
+            <div class="page-heading">
+              <h1>#Client</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -196,65 +159,46 @@ kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这�
     </div>
   </header>
 
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
-      
-
-      <article role="main" class="blog-post">
-        <p><img src="/static/images/15210086580054.jpg" alt="" /></p>
-
-<p>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是</p>
-
-<pre><code>kubectl get nodes 192.168.88.201 -o yaml
-</code></pre>
-
-<p>在里面却没有发现有 ROLES 这样的字段？</p>
-
-<p>那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？</p>
-
-<p><img src="/static/images/15210089063257.jpg" alt="" /></p>
-
-<p>通过代码，我们可以知道，k8s 把 label
-<code>node-role.kubernetes.io/&lt;role&gt;=&quot;&quot;</code> 和
-<code>kubernetes.io/role=&quot;&lt;role&gt;&quot;</code>
-来定义角色。</p>
-
-<p>所以 master 可以这样</p>
-
-<pre><code>kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true
-</code></pre>
-
-<p>或者</p>
-
-<pre><code>kubectl label node 192.168.88.201 kubernetes.io/role=master
-</code></pre>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+  <div class="container" role="main">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
-          <li class="previous">
-            <a href="http://www.recall704.com/cloud/taint-and-toleration/" data-toggle="tooltip" data-placement="top" title="k8s 中的污染 Taint 与容忍 Toleration">&larr; Previous Post</a>
-          </li>
-        
-        
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" data-toggle="tooltip" data-placement="top" title="创建 client （一）： token 方式访问 k8s API">Next Post &rarr;</a>
-          </li>
-        
-      </ul>
+        <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/">
+                <h2 class="post-title">创建 client （一）： token 方式访问 k8s API</h2>
 
-      
+                
+              </a>
 
+              <p class="post-meta">
+                Posted on April 11, 2018
+              </p>
+              <div class="post-entry">
+                  <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" class="post-read-more">[Read More]</a>
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/client/">client</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/token/">token</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+        </div>
+        
+      </div>
     </div>
   </div>
-</div>
 
     <footer>
   <div class="container">
