@@ -177,7 +177,15 @@
                 Posted on January 7, 2018
               </p>
               <div class="post-entry">
+                
+                  一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
+node1： 192.168.88.50
+node2： 192.168.88.51
+二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname node1 上执行
+hostnamectl set-hostname node1  node2 上执行
+hostnamectl set-hostname node2  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.
                   <a href="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               

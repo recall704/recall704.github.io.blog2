@@ -177,7 +177,11 @@
                 Posted on November 3, 2017
               </p>
               <div class="post-entry">
+                
+                  - name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker  会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.
                   <a href="http://www.recall704.com/ansible/ansible-template-demo/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               

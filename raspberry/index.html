@@ -177,7 +177,18 @@
                 Posted on October 21, 2017
               </p>
               <div class="post-entry">
-                  <a href="http://www.recall704.com/raspberry/add-epel-for-centos/" class="post-read-more">[Read More]</a>
+                
+                  <pre><code>cat &gt; /etc/yum.repos.d/epel.repo &lt;&lt; EOF
+[epel]
+name=Epel rebuild for armhfp
+baseurl=https://armv7.dev.centos.org/repodir/epel-pass-1/
+enabled=1
+gpgcheck=0
+
+EOF
+</code></pre>
+
+                
               </div>
 
               

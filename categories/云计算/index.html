@@ -167,6 +167,48 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/k8s-operator/">
+                <h2 class="post-title">k8s operator 简介</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on April 13, 2018
+              </p>
+              <div class="post-entry">
+                
+                  0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
+ 2. 监听(watch)自定义资源
+ 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
+ 4. 当监听到资源变化之后，调用对应的 handler 进行处理
+  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
+比如 deployment ，只是 deployment 资源是内置资源，
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。
+                  <a href="http://www.recall704.com/cloud/k8s-operator/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/operator/">operator</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/">
                 <h2 class="post-title">创建 client （一）： token 方式访问 k8s API</h2>
 
@@ -177,7 +219,16 @@
                 Posted on April 11, 2018
               </p>
               <div class="post-entry">
+                
+                  0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
+3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
+0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？
+和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
+我们在 rook 的代码中，可以看到下面这样类似的代码
                   <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -205,7 +256,48 @@
                 Posted on March 14, 2018
               </p>
               <div class="post-entry">
-                  <a href="http://www.recall704.com/linux/apt-usage/" class="post-read-more">[Read More]</a>
+                
+                  
+
+<h3 id="一-安装软件">一、安装软件</h3>
+
+<pre><code>apt install &lt;package_name&gt;
+</code></pre>
+
+<h3 id="二-删除软件">二、删除软件</h3>
+
+<pre><code>apt remove &lt;package_name&gt;
+</code></pre>
+
+<h3 id="三-查找软件">三、查找软件</h3>
+
+<pre><code>apt-cache search &lt;package_name&gt;
+</code></pre>
+
+<h3 id="四-显示软件版本">四、显示软件版本</h3>
+
+<pre><code>apt-cache policy vim
+vim:
+  Installed: 2:7.4.488-7+deb8u2
+  Candidate: 2:7.4.488-7+deb8u3
+  Version table:
+     2:7.4.488-7+deb8u3 0
+        500 http://mirrordirector.raspbian.org/raspbian/ jessie/main armhf Packages
+ *** 2:7.4.488-7+deb8u2 0
+        100 /var/lib/dpkg/status
+</code></pre>
+
+<p>使用 debian 系列系统安装软件的时候，经常会出现下面类似的错误：</p>
+
+<pre><code>flex : 依赖: m4 但是它将不会被安装 
+        依赖: libfl-dev (= 2.5.35-10ubuntu3) 但是它将不会被安装 
+ libc6 : 依赖: libc-bin (= 2.15-0ubuntu10) 但是 2.15-0ubuntu10.3 正要被安装 
+ libc6-dev : 依赖: libc6 (= 2.15-0ubuntu10.3) 但是 2.15-0ubuntu10 正要被安装
+</code></pre>
+
+<p>如果是显示依赖的版本不对，我们就可以通过指定版本来解决对应的依赖问题。</p>
+
+                
               </div>
 
               
@@ -233,7 +325,36 @@
                 Posted on March 14, 2018
               </p>
               <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/k8s-node-roles/" class="post-read-more">[Read More]</a>
+                
+                  <p><img src="/static/images/15210086580054.jpg" alt="" /></p>
+
+<p>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是</p>
+
+<pre><code>kubectl get nodes 192.168.88.201 -o yaml
+</code></pre>
+
+<p>在里面却没有发现有 ROLES 这样的字段？</p>
+
+<p>那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？</p>
+
+<p><img src="/static/images/15210089063257.jpg" alt="" /></p>
+
+<p>通过代码，我们可以知道，k8s 把 label
+<code>node-role.kubernetes.io/&lt;role&gt;=&quot;&quot;</code> 和
+<code>kubernetes.io/role=&quot;&lt;role&gt;&quot;</code>
+来定义角色。</p>
+
+<p>所以 master 可以这样</p>
+
+<pre><code>kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true
+</code></pre>
+
+<p>或者</p>
+
+<pre><code>kubectl label node 192.168.88.201 kubernetes.io/role=master
+</code></pre>
+
+                
               </div>
 
               
@@ -261,7 +382,16 @@
                 Posted on March 11, 2018
               </p>
               <div class="post-entry">
+                
+                  之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
+1. aaa 代表 taint 的 key
+2. bbb 代表 taint 的 value
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。
                   <a href="http://www.recall704.com/cloud/taint-and-toleration/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -289,7 +419,13 @@
                 Posted on January 18, 2018
               </p>
               <div class="post-entry">
+                
+                  之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
+FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
+docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
+/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.
                   <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -319,7 +455,15 @@
                 Posted on January 7, 2018
               </p>
               <div class="post-entry">
+                
+                  一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
+node1： 192.168.88.50
+node2： 192.168.88.51
+二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &lt;&lt;EOF &gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname node1 上执行
+hostnamectl set-hostname node1  node2 上执行
+hostnamectl set-hostname node2  三、安装 docker yum install -y docker systemctl enable docker &amp;&amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &lt;&lt;EOF &gt; /etc/yum.
                   <a href="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -347,7 +491,24 @@
                 Posted on December 20, 2017
               </p>
               <div class="post-entry">
+                
+                  概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
+在开始分析 clair 之前，我们明白几点：
+1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。
+2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。
+3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
+clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
+比如 debian，NodeJS。
+2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
+比如： Name: OpenSSL, Version: 1.0, VersionFormat: dpkg
+3. NamespacedFeature 和 Feature 类似，同时检测到了 namespace。
+比如： OpenSSL 1.0 dpkg Debian:7
+4. Vulnerability Vulnerability 是应用对应的漏洞描述。
+代码分析 我们直接从镜像扫描开始分析代码
+代码在 github.com/coreos/clair/worker.go 中
+func processLayers(datastore database.Datastore, imageFormat string, requests []LayerRequest) ([]database.
                   <a href="http://www.recall704.com/cloud/clair/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -377,7 +538,14 @@
                 Posted on December 19, 2017
               </p>
               <div class="post-entry">
+                
+                  概述 harbor 中有两个常用的功能，镜像复制和镜像扫描，而这两个操作都是比较耗时的任务，在 harbor 中，被设计为 job 来完成。
+接口定义 同样的，我们先来看 Job 的接口定义
+代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
+type Job interface { // job 的 id，通过 id 可以查看对应的信息 ID() int64 // job 类型，目前只有 Scan 和 Replication 两种 Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态 LogPath() string // 更新 job 状态 UpdateStatus(status string) error // 初始化一个 job Init() error }  镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
+type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 Digest string }  镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。
                   <a href="http://www.recall704.com/cloud/harbor-job.md/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -405,7 +573,14 @@
                 Posted on November 22, 2017
               </p>
               <div class="post-entry">
+                
+                  接口定义 代码在 src/ui/auth/authenticator.go
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
+我们通过其中的数据库认证方式，来简单分析。
+接口实现 代码在 src/ui/auth/db/db.go
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.
                   <a href="http://www.recall704.com/cloud/harbor-authenticate.md/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -422,33 +597,16 @@
 
             </article>
           
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/">
-                <h2 class="post-title">部署一个带有基础认证的 docker 镜像仓库</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on October 28, 2017
-              </p>
-              <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/" class="post-read-more">[Read More]</a>
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/docker/">docker</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/registry/">registry</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
         </div>
+        
+          <ul class="pager main-pager">
+            
+            
+              <li class="next">
+                <a href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/page/2">Older Posts &rarr;</a>
+              </li>
+            
+          </ul>
         
       </div>
     </div>

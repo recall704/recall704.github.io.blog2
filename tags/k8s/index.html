@@ -167,6 +167,48 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/k8s-operator/">
+                <h2 class="post-title">k8s operator 简介</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on April 13, 2018
+              </p>
+              <div class="post-entry">
+                
+                  0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
+ 2. 监听(watch)自定义资源
+ 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
+ 4. 当监听到资源变化之后，调用对应的 handler 进行处理
+  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
+比如 deployment ，只是 deployment 资源是内置资源，
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。
+                  <a href="http://www.recall704.com/cloud/k8s-operator/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/operator/">operator</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/">
                 <h2 class="post-title">创建 client （一）： token 方式访问 k8s API</h2>
 
@@ -177,7 +219,16 @@
                 Posted on April 11, 2018
               </p>
               <div class="post-entry">
+                
+                  0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
+3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
+0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？
+和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
+我们在 rook 的代码中，可以看到下面这样类似的代码
                   <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -205,7 +256,36 @@
                 Posted on March 14, 2018
               </p>
               <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/k8s-node-roles/" class="post-read-more">[Read More]</a>
+                
+                  <p><img src="/static/images/15210086580054.jpg" alt="" /></p>
+
+<p>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是</p>
+
+<pre><code>kubectl get nodes 192.168.88.201 -o yaml
+</code></pre>
+
+<p>在里面却没有发现有 ROLES 这样的字段？</p>
+
+<p>那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？</p>
+
+<p><img src="/static/images/15210089063257.jpg" alt="" /></p>
+
+<p>通过代码，我们可以知道，k8s 把 label
+<code>node-role.kubernetes.io/&lt;role&gt;=&quot;&quot;</code> 和
+<code>kubernetes.io/role=&quot;&lt;role&gt;&quot;</code>
+来定义角色。</p>
+
+<p>所以 master 可以这样</p>
+
+<pre><code>kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true
+</code></pre>
+
+<p>或者</p>
+
+<pre><code>kubectl label node 192.168.88.201 kubernetes.io/role=master
+</code></pre>
+
+                
               </div>
 
               
@@ -233,7 +313,16 @@
                 Posted on March 11, 2018
               </p>
               <div class="post-entry">
+                
+                  之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
+1. aaa 代表 taint 的 key
+2. bbb 代表 taint 的 value
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。
                   <a href="http://www.recall704.com/cloud/taint-and-toleration/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               

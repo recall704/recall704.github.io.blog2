@@ -177,7 +177,48 @@
                 Posted on March 14, 2018
               </p>
               <div class="post-entry">
-                  <a href="http://www.recall704.com/linux/apt-usage/" class="post-read-more">[Read More]</a>
+                
+                  
+
+<h3 id="一-安装软件">一、安装软件</h3>
+
+<pre><code>apt install &lt;package_name&gt;
+</code></pre>
+
+<h3 id="二-删除软件">二、删除软件</h3>
+
+<pre><code>apt remove &lt;package_name&gt;
+</code></pre>
+
+<h3 id="三-查找软件">三、查找软件</h3>
+
+<pre><code>apt-cache search &lt;package_name&gt;
+</code></pre>
+
+<h3 id="四-显示软件版本">四、显示软件版本</h3>
+
+<pre><code>apt-cache policy vim
+vim:
+  Installed: 2:7.4.488-7+deb8u2
+  Candidate: 2:7.4.488-7+deb8u3
+  Version table:
+     2:7.4.488-7+deb8u3 0
+        500 http://mirrordirector.raspbian.org/raspbian/ jessie/main armhf Packages
+ *** 2:7.4.488-7+deb8u2 0
+        100 /var/lib/dpkg/status
+</code></pre>
+
+<p>使用 debian 系列系统安装软件的时候，经常会出现下面类似的错误：</p>
+
+<pre><code>flex : 依赖: m4 但是它将不会被安装 
+        依赖: libfl-dev (= 2.5.35-10ubuntu3) 但是它将不会被安装 
+ libc6 : 依赖: libc-bin (= 2.15-0ubuntu10) 但是 2.15-0ubuntu10.3 正要被安装 
+ libc6-dev : 依赖: libc6 (= 2.15-0ubuntu10.3) 但是 2.15-0ubuntu10 正要被安装
+</code></pre>
+
+<p>如果是显示依赖的版本不对，我们就可以通过指定版本来解决对应的依赖问题。</p>
+
+                
               </div>
 
               
@@ -205,7 +246,11 @@
                 Posted on October 21, 2017
               </p>
               <div class="post-entry">
+                
+                  1. 加入软件源 cat &gt;&gt; /etc/apt/sources.list &lt;&lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
+apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.
                   <a href="http://www.recall704.com/ops/install-docker-on-debian/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               

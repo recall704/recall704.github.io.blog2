@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Operator on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/operator/</link>
+    <description>Recent content in Operator on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 13 Apr 2018 10:03:03 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/operator/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>k8s operator 简介</title>
+      <link>http://www.recall704.com/cloud/k8s-operator/</link>
+      <pubDate>Fri, 13 Apr 2018 10:03:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s-operator/</guid>
+      <description>0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
+ 2. 监听(watch)自定义资源
+ 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
+ 4. 当监听到资源变化之后，调用对应的 handler 进行处理
+  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
+比如 deployment ，只是 deployment 资源是内置资源，
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。</description>
+    </item>
+    
+  </channel>
+</rss>

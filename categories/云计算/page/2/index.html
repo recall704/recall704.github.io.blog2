@@ -5,17 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Clair</title>
-  <meta property="og:title" content="Clair" />
-  <meta name="twitter:title" content="Clair" />
+  <title>云计算</title>
+  <meta property="og:title" content="云计算" />
+  <meta name="twitter:title" content="云计算" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/tags/clair/" />
+  <meta property="og:url" content="http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/tags/clair/" />
+  <link rel="canonical" href="http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -150,7 +150,7 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Clair</h1>
+              <h1>#云计算</h1>
               <hr class="small">
             </div>
           </div>
@@ -167,46 +167,32 @@
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/clair/">
-                <h2 class="post-title">Clair 源码简要分析（未完待续）</h2>
+              <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/">
+                <h2 class="post-title">部署一个带有基础认证的 docker 镜像仓库</h2>
 
                 
               </a>
 
               <p class="post-meta">
-                Posted on December 20, 2017
+                Posted on October 28, 2017
               </p>
               <div class="post-entry">
                 
-                  概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
-在开始分析 clair 之前，我们明白几点：
-1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。
-2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。
-3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
-clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
-比如 debian，NodeJS。
-2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
-比如： Name: OpenSSL, Version: 1.0, VersionFormat: dpkg
-3. NamespacedFeature 和 Feature 类似，同时检测到了 namespace。
-比如： OpenSSL 1.0 dpkg Debian:7
-4. Vulnerability Vulnerability 是应用对应的漏洞描述。
-代码分析 我们直接从镜像扫描开始分析代码
-代码在 github.com/coreos/clair/worker.go 中
-func processLayers(datastore database.Datastore, imageFormat string, requests []LayerRequest) ([]database.
-                  <a href="http://www.recall704.com/cloud/clair/" class="post-read-more">[Read More]</a>
+                  一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
+$ mkdir auth  二、生成认证文件 $ docker run \ --entrypoint htpasswd \ registry:2 -Bbn testuser testpassword &gt; auth/htpasswd  生成了一个用户名为 testuser，密码为 testpassword 的认证文件
+三、启动镜像仓库 docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ registry:2  将认证文件挂载到容器中即可。
+如果有证书
+$ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ -v `pwd`/certs:/certs \ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.
+                  <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/" class="post-read-more">[Read More]</a>
                 
               </div>
 
               
                 <span class="post-meta">
                   
-                    #<a href="http://www.recall704.com/tags/scan/">scan</a>&nbsp;
+                    #<a href="http://www.recall704.com/tags/docker/">docker</a>&nbsp;
                   
-                    #<a href="http://www.recall704.com/tags/clair/">clair</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/">容器</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/%E9%95%9C%E5%83%8F/">镜像</a>&nbsp;
+                    #<a href="http://www.recall704.com/tags/registry/">registry</a>&nbsp;
                   
                 </span>
               
@@ -214,6 +200,15 @@ func processLayers(datastore database.Datastore, imageFormat string, requests []
             </article>
           
         </div>
+        
+          <ul class="pager main-pager">
+            
+              <li class="previous">
+                <a href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/page/1">&larr; Newer Posts</a>
+              </li>
+            
+            
+          </ul>
         
       </div>
     </div>

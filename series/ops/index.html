@@ -177,7 +177,11 @@
                 Posted on October 21, 2017
               </p>
               <div class="post-entry">
+                
+                  1. 加入软件源 cat &gt;&gt; /etc/apt/sources.list &lt;&lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
+apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.
                   <a href="http://www.recall704.com/ops/install-docker-on-debian/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
@@ -205,7 +209,12 @@
                 Posted on October 21, 2017
               </p>
               <div class="post-entry">
+                
+                  增加 docker 源
+cat &gt;/etc/yum.repos.d/docker.repo &lt;&lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
+# yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.
                   <a href="http://www.recall704.com/ops/install-docker-on-centos/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               

@@ -5,17 +5,53 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Clair</title>
-  <meta property="og:title" content="Clair" />
-  <meta name="twitter:title" content="Clair" />
+  <title>k8s operator 简介</title>
+  <meta property="og:title" content="k8s operator 简介" />
+  <meta name="twitter:title" content="k8s operator 简介" />
+  <meta name="description" content="0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
+ 2. 监听(watch)自定义资源
+ 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
+ 4. 当监听到资源变化之后，调用对应的 handler 进行处理
+  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
+比如 deployment ，只是 deployment 资源是内置资源，
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。">
+  <meta property="og:description" content="0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
+ 2. 监听(watch)自定义资源
+ 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
+ 4. 当监听到资源变化之后，调用对应的 handler 进行处理
+  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
+比如 deployment ，只是 deployment 资源是内置资源，
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。">
+  <meta name="twitter:description" content="0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator  …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/tags/clair/" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-operator/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/tags/clair/" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-operator/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -144,14 +180,33 @@
 
 
     
+  
+  
+  
+
+
+
+
+  
+
   <header class="header-section ">
+    
     <div class="intro-header no-img">
+      
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>#Clair</h1>
-              <hr class="small">
+          <div class="">
+            <div class="post-heading">
+              <h1>k8s operator 简介</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on April 13, 2018
+  
+</span>
+
+
+                
             </div>
           </div>
         </div>
@@ -159,65 +214,101 @@
     </div>
   </header>
 
+
     
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="">
+
+      
+
+      <article role="main" class="blog-post">
         
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/clair/">
-                <h2 class="post-title">Clair 源码简要分析（未完待续）</h2>
 
-                
-              </a>
+<h1 id="0x1-operator-介绍">0x1 Operator 介绍</h1>
 
-              <p class="post-meta">
-                Posted on December 20, 2017
-              </p>
-              <div class="post-entry">
-                
-                  概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
-在开始分析 clair 之前，我们明白几点：
-1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。
-2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。
-3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
-clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
-比如 debian，NodeJS。
-2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
-比如： Name: OpenSSL, Version: 1.0, VersionFormat: dpkg
-3. NamespacedFeature 和 Feature 类似，同时检测到了 namespace。
-比如： OpenSSL 1.0 dpkg Debian:7
-4. Vulnerability Vulnerability 是应用对应的漏洞描述。
-代码分析 我们直接从镜像扫描开始分析代码
-代码在 github.com/coreos/clair/worker.go 中
-func processLayers(datastore database.Datastore, imageFormat string, requests []LayerRequest) ([]database.
-                  <a href="http://www.recall704.com/cloud/clair/" class="post-read-more">[Read More]</a>
-                
-              </div>
+<p>Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：</p>
 
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/scan/">scan</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/clair/">clair</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/">容器</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/%E9%95%9C%E5%83%8F/">镜像</a>&nbsp;
-                  
-                </span>
-              
+<ul>
+<li>1. Resource<br />
 
-            </article>
-          
-        </div>
+<ul>
+<li>1.1 自定义资源<br /></li>
+<li>1.2 为用户提供一种简单的方式描述对服务的期望<br /></li>
+</ul></li>
+<li>2. Controller<br />
+
+<ul>
+<li>2.1 创建 Resource<br /></li>
+<li>2.2 监听 Resource 的变更，用来实现用户对服务的期望<br /></li>
+</ul></li>
+</ul>
+
+<h1 id="0x2-operator-工作流程">0x2 Operator 工作流程</h1>
+
+<p><img src="/static/images/15235861375300.jpg" alt="" /></p>
+
+<ul>
+<li>1. 注册自定义资源 CustomResource<br /></li>
+<li>2. 监听(watch)自定义资源<br /></li>
+<li>3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作<br /></li>
+<li>4. 当监听到资源变化之后，调用对应的 handler 进行处理<br /></li>
+</ul>
+
+<p>如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，<br />
+比如 deployment ，只是 deployment 资源是内置资源，<br />
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。</p>
+
+<pre><code class="language-go">func NewDeploymentController(dInformer extensionsinformers.DeploymentInformer, rsInformer extensionsinformers.ReplicaSetInformer, podInformer coreinformers.PodInformer, client clientset.Interface) (*DeploymentController, error) {
+	eventBroadcaster := record.NewBroadcaster()
+	eventBroadcaster.StartLogging(glog.Infof)
+	// TODO: remove the wrapper when every clients have moved to use the clientset.
+	eventBroadcaster.StartRecordingToSink(&amp;v1core.EventSinkImpl{Interface: v1core.New(client.CoreV1().RESTClient()).Events(&quot;&quot;)})
+
+	if client != nil &amp;&amp; client.CoreV1().RESTClient().GetRateLimiter() != nil {
+		if err := metrics.RegisterMetricAndTrackRateLimiterUsage(&quot;deployment_controller&quot;, client.CoreV1().RESTClient().GetRateLimiter()); err != nil {
+			return nil, err
+		}
+	}
+	dc := &amp;DeploymentController{
+		client:        client,
+		eventRecorder: eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;deployment-controller&quot;}),
+		queue:         workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), &quot;deployment&quot;),
+	}
+	dc.rsControl = controller.RealRSControl{
+		KubeClient: client,
+		Recorder:   dc.eventRecorder,
+	}
+
+	dInformer.Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
+		AddFunc:    dc.addDeployment,
+		UpdateFunc: dc.updateDeployment,
+		// This will enter the sync loop and no-op, because the deployment has been deleted from the store.
+		DeleteFunc: dc.deleteDeployment,
+	})
+
+	...
+}
+</code></pre>
+
+      </article>
+
+
+
+      <ul class="pager blog-pager">
         
-      </div>
+          <li class="previous">
+            <a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" data-toggle="tooltip" data-placement="top" title="创建 client （一）： token 方式访问 k8s API">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

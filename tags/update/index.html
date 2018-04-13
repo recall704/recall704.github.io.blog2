@@ -177,7 +177,13 @@
                 Posted on January 18, 2018
               </p>
               <div class="post-entry">
+                
+                  之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
+FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
+docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
+/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.
                   <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" class="post-read-more">[Read More]</a>
+                
               </div>
 
               
