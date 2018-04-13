@@ -54,7 +54,7 @@
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
       <guid>http://www.recall704.com/cloud/k8s-node-roles/</guid>
-      <description>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES，但是
+      <description>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES 但是执行命令：
 kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
 那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
 通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&amp;lt;role&amp;gt;=&amp;quot;&amp;quot; 和 kubernetes.io/role=&amp;quot;&amp;lt;role&amp;gt;&amp;quot; 来定义角色。
