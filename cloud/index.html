@@ -167,6 +167,40 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/k8s-authentication-with-ca/">
+                <h2 class="post-title">创建 client （二）： 通过配置文件方式访问 k8s API</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on April 15, 2018
+              </p>
+              <div class="post-entry">
+                
+                  0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
+这个时候，我们还有两种认证方式
+ ca 证书认证
+ basic 认证  0x02 kubectl 是如何访问 k8s 的？ k8s 部署的时候，我们会给 kubectl 配置证书，context 等信息，生成一个 $HOME/.kube/config 这样的文件，文件内容如下 apiVersion: v1 clusters: - cluster: certificate-authority-data: ... server: https://192.168.1.200:6443 name: kube_cluster contexts: - context: cluster: kube_cluster namespace: kube-system user: kubectl name: kubectl@kube_cluster current-context: kubectl@kube_cluster kind: Config preferences: {} users: - name: kubectl user: as-user-extra: {} client-certificate-data: .
+                  <a href="http://www.recall704.com/cloud/k8s-authentication-with-ca/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/client/">client</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/config/">config</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="http://www.recall704.com/cloud/k8s-operator/">
                 <h2 class="post-title">k8s operator 简介</h2>
 
@@ -530,40 +564,16 @@ type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Rep
 
             </article>
           
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/">
-                <h2 class="post-title">部署一个带有基础认证的 docker 镜像仓库</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on October 28, 2017
-              </p>
-              <div class="post-entry">
-                
-                  一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
-$ mkdir auth  二、生成认证文件 $ docker run \ --entrypoint htpasswd \ registry:2 -Bbn testuser testpassword &gt; auth/htpasswd  生成了一个用户名为 testuser，密码为 testpassword 的认证文件
-三、启动镜像仓库 docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ registry:2  将认证文件挂载到容器中即可。
-如果有证书
-$ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ -v `pwd`/certs:/certs \ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.
-                  <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/docker/">docker</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/registry/">registry</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
         </div>
+        
+          <ul class="pager main-pager">
+            
+            
+              <li class="next">
+                <a href="/cloud/page/2">Older Posts &rarr;</a>
+              </li>
+            
+          </ul>
         
       </div>
     </div>

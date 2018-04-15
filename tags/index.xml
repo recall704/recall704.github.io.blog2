@@ -86,9 +86,18 @@
     <item>
       <title>Client</title>
       <link>http://www.recall704.com/tags/client/</link>
-      <pubDate>Wed, 11 Apr 2018 14:22:03 +0800</pubDate>
+      <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/client/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Config</title>
+      <link>http://www.recall704.com/tags/config/</link>
+      <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/config/</guid>
       <description></description>
     </item>
     
@@ -167,7 +176,7 @@
     <item>
       <title>K8s</title>
       <link>http://www.recall704.com/tags/k8s/</link>
-      <pubDate>Fri, 13 Apr 2018 10:03:03 +0800</pubDate>
+      <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/k8s/</guid>
       <description></description>
