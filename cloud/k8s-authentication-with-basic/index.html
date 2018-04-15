@@ -5,29 +5,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>创建 client （二）： 通过配置文件方式访问 k8s API</title>
-  <meta property="og:title" content="创建 client （二）： 通过配置文件方式访问 k8s API" />
-  <meta name="twitter:title" content="创建 client （二）： 通过配置文件方式访问 k8s API" />
-  <meta name="description" content="0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
-这个时候，我们还有两种认证方式
- ca 证书认证
- basic 认证  0x02 kubectl 是如何访问 k8s 的？ k8s 部署的时候，我们会给 kubectl 配置证书，context 等信息，生成一个 $HOME/.kube/config 这样的文件，文件内容如下 apiVersion: v1 clusters: - cluster: certificate-authority-data: ... server: https://192.168.1.200:6443 name: kube_cluster contexts: - context: cluster: kube_cluster namespace: kube-system user: kubectl name: kubectl@kube_cluster current-context: kubectl@kube_cluster kind: Config preferences: {} users: - name: kubectl user: as-user-extra: {} client-certificate-data: .">
-  <meta property="og:description" content="0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
-这个时候，我们还有两种认证方式
- ca 证书认证
- basic 认证  0x02 kubectl 是如何访问 k8s 的？ k8s 部署的时候，我们会给 kubectl 配置证书，context 等信息，生成一个 $HOME/.kube/config 这样的文件，文件内容如下 apiVersion: v1 clusters: - cluster: certificate-authority-data: ... server: https://192.168.1.200:6443 name: kube_cluster contexts: - context: cluster: kube_cluster namespace: kube-system user: kubectl name: kubectl@kube_cluster current-context: kubectl@kube_cluster kind: Config preferences: {} users: - name: kubectl user: as-user-extra: {} client-certificate-data: .">
-  <meta name="twitter:description" content="0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
-这个时候，我们还有两种认证方式
- ca 证书认证
- basic 认证  0x02 kubectl 是如何访问 k8s 的？ k8s 部署的时候，我们会给 kubectl  …">
+  <title>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</title>
+  <meta property="og:title" content="创建 client （三）： HTTP Basic Auth 访问 k8s API Server" />
+  <meta name="twitter:title" content="创建 client （三）： HTTP Basic Auth 访问 k8s API Server" />
+  <meta name="description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // &#43;optional ClientCertificate string `json:&quot;client-certificate,omitempty&quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.">
+  <meta property="og:description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // &#43;optional ClientCertificate string `json:&quot;client-certificate,omitempty&quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.">
+  <meta name="twitter:description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-authentication-with-ca/" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-authentication-with-basic/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-authentication-with-ca/" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-authentication-with-basic/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -173,7 +169,7 @@
         <div class="row">
           <div class="">
             <div class="post-heading">
-              <h1>创建 client （二）： 通过配置文件方式访问 k8s API</h1>
+              <h1>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</h1>
                 
                 
                   <span class="post-meta">
@@ -201,122 +197,86 @@
       <article role="main" class="blog-post">
         
 
-<h1 id="0x01-概述">0x01 概述</h1>
+<h1 id="0x01-结构体-authinfo">0x01 结构体 AuthInfo</h1>
 
-<p>前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server，
-那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？</p>
+<p>如果你留意过上一篇文章，你会发现一个结构体</p>
 
-<p>这个时候，我们还有两种认证方式</p>
-
-<ul>
-<li>ca 证书认证<br /></li>
-<li>basic 认证</li>
-</ul>
-
-<h1 id="0x02-kubectl-是如何访问-k8s-的">0x02 kubectl 是如何访问 k8s 的？</h1>
-
-<p>k8s 部署的时候，我们会给 kubectl 配置证书，context 等信息，生成一个 <code>$HOME/.kube/config</code> 这样的文件，文件内容如下 </p>
-
-<pre><code class="language-yaml">apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority-data: ...
-    server: https://192.168.1.200:6443
-  name: kube_cluster
-contexts:
-- context:
-    cluster: kube_cluster
-    namespace: kube-system
-    user: kubectl
-  name: kubectl@kube_cluster
-current-context: kubectl@kube_cluster
-kind: Config
-preferences: {}
-users:
-- name: kubectl
-  user:
-    as-user-extra: {}
-    client-certificate-data: ...
-    client-key-data: ...
+<pre><code>AuthInfo: clientcmdapi.AuthInfo{
+	ClientCertificate: &quot;client.crt&quot;,
+	ClientKey:         &quot;client.key&quot;,
+},
 </code></pre>
 
-<p>这个配置文件主要包括了两个部分：</p>
+<p>其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中</p>
 
-<ol>
-<li>apiserver 的信息</li>
-<li>ca 证书信息</li>
-</ol>
-
-<h1 id="0x03-通过-ca-证书访问-k8s">0x03 通过 ca 证书访问 k8s</h1>
-
-<p>我们可以参考 kubectl ，通过配置文件，创建对应的 client</p>
-
-<pre><code class="language-go">func main() {
-	var kubeconfig *string
-	if home := homeDir(); home != &quot;&quot; {
-		kubeconfig = flag.String(&quot;kubeconfig&quot;, filepath.Join(home, &quot;.kube&quot;, &quot;config&quot;), &quot;(optional) absolute path to the kubeconfig file&quot;)
-	} else {
-		kubeconfig = flag.String(&quot;kubeconfig&quot;, &quot;&quot;, &quot;absolute path to the kubeconfig file&quot;)
-	}
-	flag.Parse()
-
-	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags(&quot;&quot;, *kubeconfig)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// create the clientset
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-    ...
+<pre><code class="language-go">type AuthInfo struct {
+	// LocationOfOrigin indicates where this object came from.  It is used for round tripping config post-merge, but never serialized.
+	LocationOfOrigin string
+	// ClientCertificate is the path to a client cert file for TLS.
+	// +optional
+	ClientCertificate string `json:&quot;client-certificate,omitempty&quot;`
+	// ClientCertificateData contains PEM-encoded data from a client cert file for TLS. Overrides ClientCertificate
+	// +optional
+	ClientCertificateData []byte `json:&quot;client-certificate-data,omitempty&quot;`
+	// ClientKey is the path to a client key file for TLS.
+	// +optional
+	ClientKey string `json:&quot;client-key,omitempty&quot;`
+	// ClientKeyData contains PEM-encoded data from a client key file for TLS. Overrides ClientKey
+	// +optional
+	ClientKeyData []byte `json:&quot;client-key-data,omitempty&quot;`
+	// Token is the bearer token for authentication to the kubernetes cluster.
+	// +optional
+	Token string `json:&quot;token,omitempty&quot;`
+	// TokenFile is a pointer to a file that contains a bearer token (as described above).  If both Token and TokenFile are present, Token takes precedence.
+	// +optional
+	TokenFile string `json:&quot;tokenFile,omitempty&quot;`
+	// Impersonate is the username to act-as.
+	// +optional
+	Impersonate string `json:&quot;act-as,omitempty&quot;`
+	// ImpersonateGroups is the groups to imperonate.
+	// +optional
+	ImpersonateGroups []string `json:&quot;act-as-groups,omitempty&quot;`
+	// ImpersonateUserExtra contains additional information for impersonated user.
+	// +optional
+	ImpersonateUserExtra map[string][]string `json:&quot;act-as-user-extra,omitempty&quot;`
+	// Username is the username for basic authentication to the kubernetes cluster.
+	// +optional
+	Username string `json:&quot;username,omitempty&quot;`
+	// Password is the password for basic authentication to the kubernetes cluster.
+	// +optional
+	Password string `json:&quot;password,omitempty&quot;`
+	// AuthProvider specifies a custom authentication plugin for the kubernetes cluster.
+	// +optional
+	AuthProvider *AuthProviderConfig `json:&quot;auth-provider,omitempty&quot;`
+	// Extensions holds additional information. This is useful for extenders so that reads and writes don't clobber unknown fields
+	// +optional
+	Extensions map[string]runtime.Object `json:&quot;extensions,omitempty&quot;`
 }
 </code></pre>
 
-<p>这里我们深入了解一下</p>
+<p>这个结构体包含了 k8s 认证的所有信息，其中就包括了今天要讲得 http basic 认证</p>
 
-<pre><code class="language-go">func BuildConfigFromFlags(masterUrl, kubeconfigPath string) (*restclient.Config, error) {
-	if kubeconfigPath == &quot;&quot; &amp;&amp; masterUrl == &quot;&quot; {
-		glog.Warningf(&quot;Neither --kubeconfig nor --master was specified.  Using the inClusterConfig.  This might not work.&quot;)
-		kubeconfig, err := restclient.InClusterConfig()
-		if err == nil {
-			return kubeconfig, nil
-		}
-		glog.Warning(&quot;error creating inClusterConfig, falling back to default config: &quot;, err)
-	}
-	return NewNonInteractiveDeferredLoadingClientConfig(
-		&amp;ClientConfigLoadingRules{ExplicitPath: kubeconfigPath},
-		&amp;ConfigOverrides{ClusterInfo: clientcmdapi.Cluster{Server: masterUrl}}).ClientConfig()
-}
+<h1 id="0x02-http-basic-认证">0x02 HTTP Basic 认证</h1>
+
+<p>我们只需要修改 AuthInfo 的认证方式为 Basic Auth 即可，代码如下</p>
+
+<pre><code class="language-go">AuthInfo: clientcmdapi.AuthInfo{
+	Username: &quot;admin&quot;,
+	Password: &quot;123456789&quot;,
+},
 </code></pre>
 
-<p>如果没有指定 kubeconfig 路径，会尝试通过 InclusterConfig 的方式连接 apiserver。</p>
+<p>那么这个用户名和密码是在哪里定义的呢？
+这就涉及 apiserver 部署时的参数了，其对应的参数为 <code>--basic-auth-file</code></p>
 
-<h1 id="0x04-通过自定义方式连接-apiserver">0x04 通过自定义方式连接 apiserver</h1>
+<p>这个参数的值对应到一个具体的文件路径，这个文件的内容类似如下:</p>
 
-<p>如果不是一个 kubeconfig 文件，我们能不能自己配置访问 apiserver 呢？
-答案是可以的</p>
-
-<pre><code class="language-go">var clientConfig clientcmd.ClientConfig
-clientConfig = clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
-	&amp;clientcmd.ClientConfigLoadingRules{ExplicitPath: &quot;&quot;},
-	&amp;clientcmd.ConfigOverrides{
-		ClusterInfo: clientcmdapi.Cluster{
-            Server:               &quot;https://192.168.1.200:6443&quot;,
-			CertificateAuthority: &quot;ca.crt&quot;,
-		},
-		AuthInfo: clientcmdapi.AuthInfo{
-			ClientCertificate: &quot;client.crt&quot;,
-			ClientKey:         &quot;client.key&quot;,
-		},
-	})
-cfg, err := clientConfig.ClientConfig()
+<pre><code class="language-csv">123456789,admin,1
 </code></pre>
 
-<p>在 ClusterInfo 中写入 apiserver 的信息，<br />
-在 AuthInfo 写入 认证的证书信息，我们就能创建好这个配置文件了。</p>
+<p>分别代表了 密码，用户名，和 uid</p>
+
+<p>具体可以参考官方文档： <a href="https://kubernetes.io/docs/admin/authentication/#static-password-file">https://kubernetes.io/docs/admin/authentication/#static-password-file</a></p>
 
       </article>
 
@@ -325,13 +285,9 @@ cfg, err := clientConfig.ClientConfig()
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="http://www.recall704.com/cloud/k8s-operator/" data-toggle="tooltip" data-placement="top" title="k8s operator 简介">&larr; Previous Post</a>
+            <a href="http://www.recall704.com/cloud/k8s-authentication-with-ca/" data-toggle="tooltip" data-placement="top" title="创建 client （二）： 通过配置文件方式访问 k8s API">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/k8s-authentication-with-basic/" data-toggle="tooltip" data-placement="top" title="创建 client （三）： HTTP Basic Auth 访问 k8s API Server">Next Post &rarr;</a>
-          </li>
         
       </ul>
 

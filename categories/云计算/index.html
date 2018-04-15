@@ -167,6 +167,39 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/k8s-authentication-with-basic/">
+                <h2 class="post-title">创建 client （三）： HTTP Basic Auth 访问 k8s API Server</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on April 15, 2018
+              </p>
+              <div class="post-entry">
+                
+                  0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // +optional ClientCertificate string `json:&quot;client-certificate,omitempty&quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.
+                  <a href="http://www.recall704.com/cloud/k8s-authentication-with-basic/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/client/">client</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/basic/">basic</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="http://www.recall704.com/cloud/k8s-authentication-with-ca/">
                 <h2 class="post-title">创建 client （二）： 通过配置文件方式访问 k8s API</h2>
 
@@ -557,41 +590,6 @@ func processLayers(datastore database.Datastore, imageFormat string, requests []
                     #<a href="http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/">容器</a>&nbsp;
                   
                     #<a href="http://www.recall704.com/tags/%E9%95%9C%E5%83%8F/">镜像</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/harbor-job.md/">
-                <h2 class="post-title">harbor 源码分析： job</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on December 19, 2017
-              </p>
-              <div class="post-entry">
-                
-                  概述 harbor 中有两个常用的功能，镜像复制和镜像扫描，而这两个操作都是比较耗时的任务，在 harbor 中，被设计为 job 来完成。
-接口定义 同样的，我们先来看 Job 的接口定义
-代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type Job interface { // job 的 id，通过 id 可以查看对应的信息 ID() int64 // job 类型，目前只有 Scan 和 Replication 两种 Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态 LogPath() string // 更新 job 状态 UpdateStatus(status string) error // 初始化一个 job Init() error }  镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 Digest string }  镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。
-                  <a href="http://www.recall704.com/cloud/harbor-job.md/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/docker/">docker</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/harbor/">harbor</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/job/">job</a>&nbsp;
                   
                 </span>
               

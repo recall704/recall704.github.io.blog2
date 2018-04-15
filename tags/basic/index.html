@@ -5,17 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Categories</title>
-  <meta property="og:title" content="Categories" />
-  <meta name="twitter:title" content="Categories" />
+  <title>Basic</title>
+  <meta property="og:title" content="Basic" />
+  <meta name="twitter:title" content="Basic" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/categories/" />
+  <meta property="og:url" content="http://www.recall704.com/tags/basic/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/categories/" />
+  <link rel="canonical" href="http://www.recall704.com/tags/basic/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -144,26 +144,14 @@
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
-          <div class="">
-            <div class="categories-heading">
-              <h1>Categories</h1>
-                
-                
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="page-heading">
+              <h1>#Basic</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -171,36 +159,50 @@
     </div>
   </header>
 
-
     
-  
   <div class="container" role="main">
-    <article class="post-preview">
-      <div class="list-group col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
-      
-      <a href="http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/" class="list-group-item">
-          云计算<span class="badge">13</span></a>
-      
-      <a href="http://www.recall704.com/categories/%E8%BF%90%E7%BB%B4/" class="list-group-item">
-          运维<span class="badge">2</span></a>
-      
-      <a href="http://www.recall704.com/categories/about/" class="list-group-item">
-          about<span class="badge">1</span></a>
-      
-      <a href="http://www.recall704.com/categories/ansible/" class="list-group-item">
-          ansible<span class="badge">1</span></a>
-      
-      <a href="http://www.recall704.com/categories/%E5%BC%80%E5%8F%91/" class="list-group-item">
-          开发<span class="badge">1</span></a>
-      
-      <a href="http://www.recall704.com/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" class="list-group-item">
-          树莓派<span class="badge">1</span></a>
-      
-      <a href="http://www.recall704.com/categories/%E7%BC%96%E7%A8%8B/" class="list-group-item">
-          编程<span class="badge">1</span></a>
-      
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        
+        <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="http://www.recall704.com/cloud/k8s-authentication-with-basic/">
+                <h2 class="post-title">创建 client （三）： HTTP Basic Auth 访问 k8s API Server</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on April 15, 2018
+              </p>
+              <div class="post-entry">
+                
+                  0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // +optional ClientCertificate string `json:&quot;client-certificate,omitempty&quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.
+                  <a href="http://www.recall704.com/cloud/k8s-authentication-with-basic/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/client/">client</a>&nbsp;
+                  
+                    #<a href="http://www.recall704.com/tags/basic/">basic</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+        </div>
+        
       </div>
-    </article>
+    </div>
   </div>
 
     <footer>

@@ -6,10 +6,21 @@
     <description>Recent content on RECALL&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 15 Apr 2018 22:12:03 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 15 Apr 2018 22:39:03 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</title>
+      <link>http://www.recall704.com/cloud/k8s-authentication-with-basic/</link>
+      <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s-authentication-with-basic/</guid>
+      <description>0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // +optional ClientCertificate string `json:&amp;quot;client-certificate,omitempty&amp;quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.</description>
+    </item>
     
     <item>
       <title>创建 client （二）： 通过配置文件方式访问 k8s API</title>
