@@ -177,14 +177,7 @@
                 Posted on November 22, 2017
               </p>
               <div class="post-entry">
-                
-                  接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
-我们通过其中的数据库认证方式，来简单分析。
-接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.
                   <a href="http://www.recall704.com/cloud/harbor-authenticate.md/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               

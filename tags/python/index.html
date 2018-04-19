@@ -177,15 +177,7 @@
                 Posted on March 14, 2016
               </p>
               <div class="post-entry">
-                
-                  最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
-1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
-@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2  这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
-2、用函数来代替变量的设置 同样的，当我们设置一个对象的属性的值的时候，
-obj.status = 2 obj.save()  除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
-def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs)  这样，在设置变量的时候，只需要
                   <a href="http://www.recall704.com/python/some-django-tips/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               

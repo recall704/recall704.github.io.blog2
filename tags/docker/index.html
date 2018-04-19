@@ -177,13 +177,7 @@
                 Posted on January 18, 2018
               </p>
               <div class="post-entry">
-                
-                  之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;&amp; \ apk add gcc linux-headers musl-dev &amp;&amp; \ rm -rf /var/cache/* &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories &amp;&amp; \ echo &quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&quot; &gt;&gt; /etc/apk/repositories  正常跑着没问题，但是
-docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
-/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.
                   <a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               
@@ -213,14 +207,7 @@ docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一
                 Posted on December 19, 2017
               </p>
               <div class="post-entry">
-                
-                  概述 harbor 中有两个常用的功能，镜像复制和镜像扫描，而这两个操作都是比较耗时的任务，在 harbor 中，被设计为 job 来完成。
-接口定义 同样的，我们先来看 Job 的接口定义
-代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type Job interface { // job 的 id，通过 id 可以查看对应的信息 ID() int64 // job 类型，目前只有 Scan 和 Replication 两种 Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态 LogPath() string // 更新 job 状态 UpdateStatus(status string) error // 初始化一个 job Init() error }  镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 Digest string }  镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。
                   <a href="http://www.recall704.com/cloud/harbor-job.md/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               
@@ -248,14 +235,7 @@ type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Rep
                 Posted on November 22, 2017
               </p>
               <div class="post-entry">
-                
-                  接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
-我们通过其中的数据库认证方式，来简单分析。
-接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.
                   <a href="http://www.recall704.com/cloud/harbor-authenticate.md/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               
@@ -283,14 +263,7 @@ type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Rep
                 Posted on October 28, 2017
               </p>
               <div class="post-entry">
-                
-                  一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
-$ mkdir auth  二、生成认证文件 $ docker run \ --entrypoint htpasswd \ registry:2 -Bbn testuser testpassword &gt; auth/htpasswd  生成了一个用户名为 testuser，密码为 testpassword 的认证文件
-三、启动镜像仓库 docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ registry:2  将认证文件挂载到容器中即可。
-如果有证书
-$ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ -v `pwd`/certs:/certs \ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.
                   <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               
@@ -316,11 +289,7 @@ $ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/a
                 Posted on October 21, 2017
               </p>
               <div class="post-entry">
-                
-                  1. 加入软件源 cat &gt;&gt; /etc/apt/sources.list &lt;&lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
-apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.
                   <a href="http://www.recall704.com/ops/install-docker-on-debian/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               
@@ -348,12 +317,7 @@ apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选�
                 Posted on October 21, 2017
               </p>
               <div class="post-entry">
-                
-                  增加 docker 源
-cat &gt;/etc/yum.repos.d/docker.repo &lt;&lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
-# yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.
                   <a href="http://www.recall704.com/ops/install-docker-on-centos/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               

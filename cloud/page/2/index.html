@@ -177,14 +177,7 @@
                 Posted on November 22, 2017
               </p>
               <div class="post-entry">
-                
-                  接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
-我们通过其中的数据库认证方式，来简单分析。
-接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.
                   <a href="http://www.recall704.com/cloud/harbor-authenticate.md/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               
@@ -212,14 +205,7 @@
                 Posted on October 28, 2017
               </p>
               <div class="post-entry">
-                
-                  一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
-$ mkdir auth  二、生成认证文件 $ docker run \ --entrypoint htpasswd \ registry:2 -Bbn testuser testpassword &gt; auth/htpasswd  生成了一个用户名为 testuser，密码为 testpassword 的认证文件
-三、启动镜像仓库 docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ registry:2  将认证文件挂载到容器中即可。
-如果有证书
-$ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &quot;REGISTRY_AUTH=htpasswd&quot; \ -e &quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ -v `pwd`/certs:/certs \ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.
                   <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/" class="post-read-more">[Read More]</a>
-                
               </div>
 
               

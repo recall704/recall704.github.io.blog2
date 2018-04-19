@@ -177,38 +177,7 @@
                 Posted on March 14, 2018
               </p>
               <div class="post-entry">
-                
-                  <p>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES</p>
-
-<p><img src="/static/images/15210086580054.jpg" alt="" /></p>
-
-<p>但是执行命令：</p>
-
-<pre><code>kubectl get nodes 192.168.88.201 -o yaml
-</code></pre>
-
-<p>在里面却没有发现有 ROLES 这样的字段？</p>
-
-<p>那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？</p>
-
-<p><img src="/static/images/15210089063257.jpg" alt="" /></p>
-
-<p>通过代码，我们可以知道，k8s 把 label
-<code>node-role.kubernetes.io/&lt;role&gt;=&quot;&quot;</code> 和
-<code>kubernetes.io/role=&quot;&lt;role&gt;&quot;</code>
-来定义角色。</p>
-
-<p>所以 master 可以这样</p>
-
-<pre><code>kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true
-</code></pre>
-
-<p>或者</p>
-
-<pre><code>kubectl label node 192.168.88.201 kubernetes.io/role=master
-</code></pre>
-
-                
+                  <a href="http://www.recall704.com/cloud/k8s-node-roles/" class="post-read-more">[Read More]</a>
               </div>
 
               
