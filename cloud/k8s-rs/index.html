@@ -194,7 +194,7 @@
 
 <h2 id="0x01-rs-控制器">0x01 RS 控制器</h2>
 
-<pre><code>func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error {
+<pre><code class="language-go">func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error {
 	// 当前 pod 数量，期望 pod 数量
 	diff := len(filteredPods) - int(*(rs.Spec.Replicas))
 	rsKey, err := controller.KeyFunc(rs)
@@ -241,7 +241,7 @@
 
 <p>新版本中 RC 控制器已经逐渐被 RS 替代了，那它们有什么不同吗？</p>
 
-<pre><code>func NewControllerInitializers() map[string]InitFunc {
+<pre><code class="language-go">func NewControllerInitializers() map[string]InitFunc {
 	controllers := map[string]InitFunc{}
 	controllers[&quot;replicationcontroller&quot;] = startReplicationController
 	controllers[&quot;replicaset&quot;] = startReplicaSetController
@@ -289,7 +289,26 @@ func NewReplicaSetController(rsInformer extensionsinformers.ReplicaSetInformer, 
 
 <p>上面提到过 pod 增加和删除的时候，不会一次增加和删除所有 pod，而是有一个限定值，我很好奇这个值是多少，所以看了一下</p>
 
-<p><img src="/static/images/15247301692257.jpg" alt="" /></p>
+<pre><code class="language-go">func startReplicaSetController(ctx ControllerContext) (bool, error) {
+	if !ctx.AvailableResources[schema.GroupVersionResource{Group: &quot;extensions&quot;, Version: &quot;v1beta1&quot;, Resource: &quot;replicasets&quot;}] {
+		return false, nil
+	}
+	go replicaset.NewReplicaSetController(
+		ctx.InformerFactory.Extensions().V1beta1().ReplicaSets(),
+		ctx.InformerFactory.Core().V1().Pods(),
+		ctx.ClientBuilder.ClientOrDie(&quot;replicaset-controller&quot;),
+		replicaset.BurstReplicas,
+	).Run(int(ctx.Options.ConcurrentRSSyncs), ctx.Stop)
+	return true, nil
+}
+</code></pre>
+
+<pre><code class="language-go">const (
+	// Realistic value of the burstReplica field for the replica set manager based off
+	// performance requirements for kubernetes 1.0.
+	BurstReplicas = 500
+)
+</code></pre>
 
 <p>这个值不是启动参数限定的，而是一个常量，其值居然是 500.</p>
 
