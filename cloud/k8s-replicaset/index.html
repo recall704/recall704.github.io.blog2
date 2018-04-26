@@ -5,17 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>K8s</title>
-  <meta property="og:title" content="K8s" />
-  <meta name="twitter:title" content="K8s" />
+  <title>k8s 源码分析: ReplicaSet 控制器</title>
+  <meta property="og:title" content="k8s 源码分析: ReplicaSet 控制器" />
+  <meta name="twitter:title" content="k8s 源码分析: ReplicaSet 控制器" />
+  <meta name="description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&quot;Couldn&#39;t get key for %v %#v: %v&quot;, rsc.Kind, rs, err)) return nil } if diff &lt; 0 { // 当前 pod 数量 &lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.">
+  <meta property="og:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&quot;Couldn&#39;t get key for %v %#v: %v&quot;, rsc.Kind, rs, err)) return nil } if diff &lt; 0 { // 当前 pod 数量 &lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.">
+  <meta name="twitter:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/categories/k8s/" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-replicaset/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/categories/k8s/" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-replicaset/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -144,14 +147,33 @@
 
 
     
+  
+  
+  
+
+
+
+
+  
+
   <header class="header-section ">
+    
     <div class="intro-header no-img">
+      
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>#K8s</h1>
-              <hr class="small">
+          <div class="col-sm-10 col-xs-10">
+            <div class="post-heading">
+              <h1>k8s 源码分析: ReplicaSet 控制器</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on April 26, 2018
+  
+</span>
+
+
+                
             </div>
           </div>
         </div>
@@ -159,104 +181,155 @@
     </div>
   </header>
 
+
     
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-sm-10 col-xs-10">
+
+      
+
+      <article role="main" class="blog-post">
         
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/k8s-replicaset/">
-                <h2 class="post-title">k8s 源码分析: ReplicaSet 控制器</h2>
 
-                
-              </a>
+<h2 id="0x01-rs-控制器">0x01 RS 控制器</h2>
 
-              <p class="post-meta">
-                Posted on April 26, 2018
-              </p>
-              <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/k8s-replicaset/" class="post-read-more">[Read More]</a>
-              </div>
+<pre><code class="language-go">func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error {
+	// 当前 pod 数量，期望 pod 数量
+	diff := len(filteredPods) - int(*(rs.Spec.Replicas))
+	rsKey, err := controller.KeyFunc(rs)
+	if err != nil {
+		utilruntime.HandleError(fmt.Errorf(&quot;Couldn't get key for %v %#v: %v&quot;, rsc.Kind, rs, err))
+		return nil
+	}
+	if diff &lt; 0 {
+		// 当前 pod 数量 &lt; 期望 pod 数量
+		// 需要增加 pod
+		diff *= -1
+		if diff &gt; rsc.burstReplicas {
+			// 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成
+			diff = rsc.burstReplicas
+		}
+		...
+		return err
+	} else if diff &gt; 0 {
+		if diff &gt; rsc.burstReplicas {
+			// 如果一次需要删除的 pod 过多，则限制删除数量，分多次完成
+			diff = rsc.burstReplicas
+		}
+		...
+		podsToDelete := getPodsToDelete(filteredPods, diff)
+		...
+	}
 
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/kubelet/">kubelet</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/rs/">rs</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/replicaset/">ReplicaSet</a>&nbsp;
-                  
-                </span>
-              
+	return nil
+}
+</code></pre>
 
-            </article>
-          
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/k8s-kubelet-cri/">
-                <h2 class="post-title">k8s 源码分析: 自动扩缩容分析(未完成)</h2>
+<p>对于需要删除的 pod，会对当前的 pod 进行排序
+删除顺序如下</p>
 
-                
-              </a>
+<pre><code>1. Unassigned &lt; assigned
+2. PodPending &lt; PodUnknown &lt; PodRunning
+3. Not ready &lt; ready
+4. Been ready for empty time &lt; less time &lt; more time
+5. Pods with containers with higher restart counts &lt; lower restart counts
+6. Empty creation time pods &lt; newer pods &lt; older pods
+</code></pre>
 
-              <p class="post-meta">
-                Posted on April 26, 2018
-              </p>
-              <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/k8s-kubelet-cri/" class="post-read-more">[Read More]</a>
-              </div>
+<h2 id="0x02-rs-控制器和-rc-控制器有什么区别">0x02 RS 控制器和 RC 控制器有什么区别</h2>
 
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/kubelet/">kubelet</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/hpa/">hpa</a>&nbsp;
-                  
-                </span>
-              
+<p>新版本中 RC 控制器已经逐渐被 RS 替代了，那它们有什么不同吗？</p>
 
-            </article>
-          
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/k8s-kubelet-cri/">
-                <h2 class="post-title">k8s 源码分析: kubelet CRI(未完成)</h2>
+<pre><code class="language-go">func NewControllerInitializers() map[string]InitFunc {
+	controllers := map[string]InitFunc{}
+	controllers[&quot;replicationcontroller&quot;] = startReplicationController
+	controllers[&quot;replicaset&quot;] = startReplicaSetController
+	...
 
-                
-              </a>
+	return controllers
+}
+</code></pre>
 
-              <p class="post-meta">
-                Posted on January 1, 0001
-              </p>
-              <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/k8s-kubelet-cri/" class="post-read-more">[Read More]</a>
-              </div>
+<p>直接看创建 controller 的函数</p>
 
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/kubelet/">kubelet</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/cri/">cri</a>&nbsp;
-                  
-                </span>
-              
+<pre><code class="language-go">func NewReplicationManager(podInformer coreinformers.PodInformer, rcInformer coreinformers.ReplicationControllerInformer, kubeClient clientset.Interface, burstReplicas int) *ReplicationManager {
+	...
+	return &amp;ReplicationManager{
+		*replicaset.NewBaseController(informerAdapter{rcInformer}, podInformer, clientsetAdapter{kubeClient}, burstReplicas,
+			v1.SchemeGroupVersion.WithKind(&quot;ReplicationController&quot;),
+			&quot;replication_controller&quot;,
+			&quot;replicationmanager&quot;,
+			podControlAdapter{controller.RealPodControl{
+				KubeClient: kubeClient,
+				Recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;replication-controller&quot;}),
+			}},
+		),
+	}
+}
 
-            </article>
-          
-        </div>
+
+func NewReplicaSetController(rsInformer extensionsinformers.ReplicaSetInformer, podInformer coreinformers.PodInformer, kubeClient clientset.Interface, burstReplicas int) *ReplicaSetController {
+	...
+	return NewBaseController(rsInformer, podInformer, kubeClient, burstReplicas,
+		v1beta1.SchemeGroupVersion.WithKind(&quot;ReplicaSet&quot;),
+		&quot;replicaset_controller&quot;,
+		&quot;replicaset&quot;,
+		controller.RealPodControl{
+			KubeClient: kubeClient,
+			Recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;replicaset-controller&quot;}),
+		},
+	)
+}
+</code></pre>
+
+<p>其实看来 RS 和 RC 已经没多少不同了。</p>
+
+<h2 id="0x03-burstreplicas-限定值">0x03 BurstReplicas 限定值</h2>
+
+<p>上面提到过 pod 增加和删除的时候，不会一次增加和删除所有 pod，而是有一个限定值，我很好奇这个值是多少，所以看了一下</p>
+
+<pre><code class="language-go">func startReplicaSetController(ctx ControllerContext) (bool, error) {
+	if !ctx.AvailableResources[schema.GroupVersionResource{Group: &quot;extensions&quot;, Version: &quot;v1beta1&quot;, Resource: &quot;replicasets&quot;}] {
+		return false, nil
+	}
+	go replicaset.NewReplicaSetController(
+		ctx.InformerFactory.Extensions().V1beta1().ReplicaSets(),
+		ctx.InformerFactory.Core().V1().Pods(),
+		ctx.ClientBuilder.ClientOrDie(&quot;replicaset-controller&quot;),
+		replicaset.BurstReplicas,
+	).Run(int(ctx.Options.ConcurrentRSSyncs), ctx.Stop)
+	return true, nil
+}
+</code></pre>
+
+<pre><code class="language-go">const (
+	// Realistic value of the burstReplica field for the replica set manager based off
+	// performance requirements for kubernetes 1.0.
+	BurstReplicas = 500
+)
+</code></pre>
+
+<p>这个值不是启动参数限定的，而是一个常量，其值居然是 500.</p>
+
+      </article>
+
+
+
+      <ul class="pager blog-pager">
         
-      </div>
+          <li class="previous">
+            <a href="http://www.recall704.com/cloud/k8s-kubelet-cri/" data-toggle="tooltip" data-placement="top" title="k8s 源码分析: 自动扩缩容分析(未完成)">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
