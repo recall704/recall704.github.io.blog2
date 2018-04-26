@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>k8s 源码分析: RS 控制器</title>
+  <meta property="og:title" content="k8s 源码分析: RS 控制器" />
+  <meta name="twitter:title" content="k8s 源码分析: RS 控制器" />
+  <meta name="description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&quot;Couldn&#39;t get key for %v %#v: %v&quot;, rsc.Kind, rs, err)) return nil } if diff &lt; 0 { // 当前 pod 数量 &lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.">
+  <meta property="og:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&quot;Couldn&#39;t get key for %v %#v: %v&quot;, rsc.Kind, rs, err)) return nil } if diff &lt; 0 { // 当前 pod 数量 &lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.">
+  <meta name="twitter:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-rs/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RECALL&#39;s Blog" />
+
+  <meta name="generator" content="Hugo 0.32.2" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-rs/" />
+  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="home" href="/">home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="categories" href="/categories/">categories</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="series" href="/series/">series</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about" href="/about/">about</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-10 col-xs-10">
+            <div class="post-heading">
+              <h1>k8s 源码分析: RS 控制器</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on April 26, 2018
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-sm-10 col-xs-10">
+
+      
+
+      <article role="main" class="blog-post">
+        
+
+<h2 id="0x01-rs-控制器">0x01 RS 控制器</h2>
+
+<pre><code>func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error {
+	// 当前 pod 数量，期望 pod 数量
+	diff := len(filteredPods) - int(*(rs.Spec.Replicas))
+	rsKey, err := controller.KeyFunc(rs)
+	if err != nil {
+		utilruntime.HandleError(fmt.Errorf(&quot;Couldn't get key for %v %#v: %v&quot;, rsc.Kind, rs, err))
+		return nil
+	}
+	if diff &lt; 0 {
+		// 当前 pod 数量 &lt; 期望 pod 数量
+		// 需要增加 pod
+		diff *= -1
+		if diff &gt; rsc.burstReplicas {
+			// 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成
+			diff = rsc.burstReplicas
+		}
+		...
+		return err
+	} else if diff &gt; 0 {
+		if diff &gt; rsc.burstReplicas {
+			// 如果一次需要删除的 pod 过多，则限制删除数量，分多次完成
+			diff = rsc.burstReplicas
+		}
+		...
+		podsToDelete := getPodsToDelete(filteredPods, diff)
+		...
+	}
+
+	return nil
+}
+</code></pre>
+
+<p>对于需要删除的 pod，会对当前的 pod 进行排序
+删除顺序如下</p>
+
+<pre><code>1. Unassigned &lt; assigned
+2. PodPending &lt; PodUnknown &lt; PodRunning
+3. Not ready &lt; ready
+4. Been ready for empty time &lt; less time &lt; more time
+5. Pods with containers with higher restart counts &lt; lower restart counts
+6. Empty creation time pods &lt; newer pods &lt; older pods
+</code></pre>
+
+<h2 id="0x02-rs-控制器和-rc-控制器有什么区别">0x02 RS 控制器和 RC 控制器有什么区别</h2>
+
+<p>新版本中 RC 控制器已经逐渐被 RS 替代了，那它们有什么不同吗？</p>
+
+<pre><code>func NewControllerInitializers() map[string]InitFunc {
+	controllers := map[string]InitFunc{}
+	controllers[&quot;replicationcontroller&quot;] = startReplicationController
+	controllers[&quot;replicaset&quot;] = startReplicaSetController
+	...
+
+	return controllers
+}
+</code></pre>
+
+<p>直接看创建 controller 的函数</p>
+
+<pre><code class="language-go">func NewReplicationManager(podInformer coreinformers.PodInformer, rcInformer coreinformers.ReplicationControllerInformer, kubeClient clientset.Interface, burstReplicas int) *ReplicationManager {
+	...
+	return &amp;ReplicationManager{
+		*replicaset.NewBaseController(informerAdapter{rcInformer}, podInformer, clientsetAdapter{kubeClient}, burstReplicas,
+			v1.SchemeGroupVersion.WithKind(&quot;ReplicationController&quot;),
+			&quot;replication_controller&quot;,
+			&quot;replicationmanager&quot;,
+			podControlAdapter{controller.RealPodControl{
+				KubeClient: kubeClient,
+				Recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;replication-controller&quot;}),
+			}},
+		),
+	}
+}
+
+
+func NewReplicaSetController(rsInformer extensionsinformers.ReplicaSetInformer, podInformer coreinformers.PodInformer, kubeClient clientset.Interface, burstReplicas int) *ReplicaSetController {
+	...
+	return NewBaseController(rsInformer, podInformer, kubeClient, burstReplicas,
+		v1beta1.SchemeGroupVersion.WithKind(&quot;ReplicaSet&quot;),
+		&quot;replicaset_controller&quot;,
+		&quot;replicaset&quot;,
+		controller.RealPodControl{
+			KubeClient: kubeClient,
+			Recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;replicaset-controller&quot;}),
+		},
+	)
+}
+</code></pre>
+
+<p>其实看来 RS 和 RC 已经没多少不同了。</p>
+
+<h2 id="0x03-burstreplicas-限定值">0x03 BurstReplicas 限定值</h2>
+
+<p>上面提到过 pod 增加和删除的时候，不会一次增加和删除所有 pod，而是有一个限定值，我很好奇这个值是多少，所以看了一下</p>
+
+<p><img src="/static/images/15247301692257.jpg" alt="" /></p>
+
+<p>这个值不是启动参数限定的，而是一个常量，其值居然是 500.</p>
+
+      </article>
+
+
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="http://www.recall704.com/cloud/k8s-kubelet-cri/" data-toggle="tooltip" data-placement="top" title="k8s 源码分析: 自动扩缩容分析(未完成)">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+          
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.32.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/main.js"></script>
+<script src="http://www.recall704.com/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+
+  </body>
+</html>
+

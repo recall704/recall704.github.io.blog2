@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/linux/</link>
+    <description>Recent content in Linux on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 24 Apr 2018 10:27:53 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>linux crontab</title>
+      <link>http://www.recall704.com/linux/linux-crontab/</link>
+      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/linux/linux-crontab/</guid>
+      <description>一、操作符号 在一个区域里填写多个数值的方法：
+ 逗号（&amp;rsquo;,&amp;lsquo;）分开的值，例如：“1,3,4,7,8” 连词符（&amp;rsquo;-&amp;lsquo;）指定值的范围，例如：“1-6”，意思等同于“1,2,3,4,5,6” 星号（&amp;rsquo;*&amp;lsquo;）代表任何可能的值。例如，在“小时域”里的星号等于是“每一个小时”，等等  某些cron程序的扩展版本也支持斜线（&amp;rsquo;/&amp;lsquo;）操作符，用于表示跳过某些给定的数。例如，“*/3”在小时域中等于“0,3,6,9,12,15,18,21”等被3整除的数；
+二、时间设置 # 文件格式说明 # ——分钟（0 - 59） # | ——小时（0 - 23） # | | ——日（1 - 31） # | | | ——月（1 - 12） # | | | | ——星期（0 - 7，星期日=0或7） # | | | | | # * * * * * 被执行的命令  注：
+ 在“星期域”（第五个域），0和7都被视为星期日。 不很直观的用法：如果日期和星期同时被设定，那么其中的一个条件被满足时，指令便会被执行。请参考下例。 前5个域称之分时日月周，可方便个人记忆。  从第六个域起，指明要执行的命令。
+三、示例
+1 2 3 4 5 touch ~/right_$（date +\%Y\%m\%d）.</description>
+    </item>
+    
+  </channel>
+</rss>

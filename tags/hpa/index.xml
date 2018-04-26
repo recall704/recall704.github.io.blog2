@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hpa on RECALL&#39;s Blog</title>
+    <link>http://www.recall704.com/tags/hpa/</link>
+    <description>Recent content in Hpa on RECALL&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 Apr 2018 10:49:03 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.recall704.com/tags/hpa/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>k8s 源码分析: 自动扩缩容分析(未完成)</title>
+      <link>http://www.recall704.com/cloud/k8s-kubelet-cri/</link>
+      <pubDate>Thu, 26 Apr 2018 10:49:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s-kubelet-cri/</guid>
+      <description>0x01 HPA metric client 自动扩缩容的前提是要有监控数据，那么 k8s 是从哪里读取监控数据的呢？
+https://github.com/recall704/kubernetes/blob/v1.9.3/cmd/kube-controller-manager/app/autoscaling.go#L36
+func startHPAController(ctx ControllerContext) (bool, error) { if !ctx.AvailableResources[schema.GroupVersionResource{Group: &amp;quot;autoscaling&amp;quot;, Version: &amp;quot;v1&amp;quot;, Resource: &amp;quot;horizontalpodautoscalers&amp;quot;}] { return false, nil } if ctx.Options.HorizontalPodAutoscalerUseRESTClients { // use the new-style clients if support for custom metrics is enabled return startHPAControllerWithRESTClient(ctx) } return startHPAControllerWithLegacyClient(ctx) } ... func startHPAControllerWithLegacyClient(ctx ControllerContext) (bool, error) { hpaClient := ctx.ClientBuilder.ClientOrDie(&amp;quot;horizontal-pod-autoscaler&amp;quot;) metricsClient := metrics.NewHeapsterMetricsClient( hpaClient, metrics.DefaultHeapsterNamespace, metrics.DefaultHeapsterScheme, metrics.DefaultHeapsterService, metrics.DefaultHeapsterPort, ) return startHPAControllerWithMetricsClient(ctx, metricsClient) }  如果 controller 的参数配置了 HorizontalPodAutoscalerUseRESTClients ，就会通过 rest 的方式连接到对应的 metric-server，这个值在 1.</description>
+    </item>
+    
+  </channel>
+</rss>

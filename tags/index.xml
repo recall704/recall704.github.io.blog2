@@ -111,6 +111,33 @@
     </item>
     
     <item>
+      <title>Cri</title>
+      <link>http://www.recall704.com/tags/cri/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://www.recall704.com/tags/cri/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cron</title>
+      <link>http://www.recall704.com/tags/cron/</link>
+      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/cron/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Crontab</title>
+      <link>http://www.recall704.com/tags/crontab/</link>
+      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/crontab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Debian</title>
       <link>http://www.recall704.com/tags/debian/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
@@ -165,6 +192,15 @@
     </item>
     
     <item>
+      <title>Hpa</title>
+      <link>http://www.recall704.com/tags/hpa/</link>
+      <pubDate>Thu, 26 Apr 2018 10:49:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/hpa/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Install</title>
       <link>http://www.recall704.com/tags/install/</link>
       <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
@@ -185,7 +221,7 @@
     <item>
       <title>K8s</title>
       <link>http://www.recall704.com/tags/k8s/</link>
-      <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
+      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/k8s/</guid>
       <description></description>
@@ -201,11 +237,29 @@
     </item>
     
     <item>
+      <title>Kubelet</title>
+      <link>http://www.recall704.com/tags/kubelet/</link>
+      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/kubelet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Kubernetes</title>
       <link>http://www.recall704.com/tags/kubernetes/</link>
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux</title>
+      <link>http://www.recall704.com/tags/linux/</link>
+      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/linux/</guid>
       <description></description>
     </item>
     
@@ -273,11 +327,29 @@
     </item>
     
     <item>
+      <title>Replicaset</title>
+      <link>http://www.recall704.com/tags/replicaset/</link>
+      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/replicaset/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Roles</title>
       <link>http://www.recall704.com/tags/roles/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/roles/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rs</title>
+      <link>http://www.recall704.com/tags/rs/</link>
+      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/rs/</guid>
       <description></description>
     </item>
     
