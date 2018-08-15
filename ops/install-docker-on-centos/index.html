@@ -267,8 +267,8 @@ systemctl start docker.service
 
 <pre><code>cat &gt;/etc/docker/daemon.json &lt;&lt;-EOF
 {
-    &quot;insecure-registries&quot;: [&quot;192.168.1.111:5000&quot;],
-	&quot;registry-mirrors&quot;: [&quot;https://0yjmvwvv.mirror.aliyuncs.com&quot;],
+   &quot;insecure-registries&quot;: [&quot;0.0.0.0/0&quot;],
+	&quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;],
 	&quot;storage-driver&quot;: &quot;devicemapper&quot;
 }
 EOF

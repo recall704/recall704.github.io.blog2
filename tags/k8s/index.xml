@@ -6,10 +6,40 @@
     <description>Recent content in K8s on RECALL&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Apr 2018 15:32:03 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Aug 2018 23:06:42 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>k8s pod 调度</title>
+      <link>http://www.recall704.com/cloud/k8s-scheduler/</link>
+      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s-scheduler/</guid>
+      <description>一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。</description>
+    </item>
+    
+    <item>
+      <title>k8s nodeport 端口范围</title>
+      <link>http://www.recall704.com/cloud/k8s-nodeport-range/</link>
+      <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s-nodeport-range/</guid>
+      <description>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
+在 k8s 源码中搜索 32767，在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  存在代码
+fs.Var(&amp;amp;s.ServiceNodePortRange, &amp;quot;service-node-port-range&amp;quot;, &amp;quot;&amp;quot;+ &amp;quot;A port range to reserve for services with NodePort visibility. &amp;quot;+ &amp;quot;Example: &#39;30000-32767&#39;. Inclusive at both ends of the range.&amp;quot;)  其实上面注释已经说了是闭区间了，但是我还是要看看
+搜索 ServiceNodePortRange 在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  中存在
+ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange,  跟踪 DefaultServiceNodePortRange 找到
+var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768}  跟踪 PortRange 找到
+type PortRange struct { Base int Size int } // Contains tests whether a given port falls within the PortRange.</description>
+    </item>
     
     <item>
       <title>k8s 源码分析: ReplicaSet 控制器</title>
@@ -18,17 +48,6 @@
       
       <guid>http://www.recall704.com/cloud/k8s-replicaset/</guid>
       <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;quot;Couldn&#39;t get key for %v %#v: %v&amp;quot;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &amp;gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.</description>
-    </item>
-    
-    <item>
-      <title>k8s 源码分析: 自动扩缩容分析(未完成)</title>
-      <link>http://www.recall704.com/cloud/k8s-kubelet-cri/</link>
-      <pubDate>Thu, 26 Apr 2018 10:49:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-kubelet-cri/</guid>
-      <description>0x01 HPA metric client 自动扩缩容的前提是要有监控数据，那么 k8s 是从哪里读取监控数据的呢？
-https://github.com/recall704/kubernetes/blob/v1.9.3/cmd/kube-controller-manager/app/autoscaling.go#L36
-func startHPAController(ctx ControllerContext) (bool, error) { if !ctx.AvailableResources[schema.GroupVersionResource{Group: &amp;quot;autoscaling&amp;quot;, Version: &amp;quot;v1&amp;quot;, Resource: &amp;quot;horizontalpodautoscalers&amp;quot;}] { return false, nil } if ctx.Options.HorizontalPodAutoscalerUseRESTClients { // use the new-style clients if support for custom metrics is enabled return startHPAControllerWithRESTClient(ctx) } return startHPAControllerWithLegacyClient(ctx) } ... func startHPAControllerWithLegacyClient(ctx ControllerContext) (bool, error) { hpaClient := ctx.ClientBuilder.ClientOrDie(&amp;quot;horizontal-pod-autoscaler&amp;quot;) metricsClient := metrics.NewHeapsterMetricsClient( hpaClient, metrics.DefaultHeapsterNamespace, metrics.DefaultHeapsterScheme, metrics.DefaultHeapsterService, metrics.DefaultHeapsterPort, ) return startHPAControllerWithMetricsClient(ctx, metricsClient) }  如果 controller 的参数配置了 HorizontalPodAutoscalerUseRESTClients ，就会通过 rest 的方式连接到对应的 metric-server，这个值在 1.</description>
     </item>
     
     <item>
@@ -120,23 +139,6 @@ kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
 2. bbb 代表 taint 的 value
 3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
    值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。</description>
-    </item>
-    
-    <item>
-      <title>k8s 源码分析: kubelet CRI(未完成)</title>
-      <link>http://www.recall704.com/cloud/k8s-kubelet-cri/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-kubelet-cri/</guid>
-      <description>一、概述 在学习 k8s 的时候，很容易就看到上面这张图，
-然而，我更想了解一下 kubelet 的一些细节知识：
- kubelet 是如何和 docker 进行通信的 CRI 是如何定义和实现的  二、GRPC grpc 的接口定义是在后缀为 .proto 的文件中
-在 k8s 的源码中搜索 rpc 并指定文件类型为 proto，可以很快搜索到相关的定义，具体文件在
-k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime/api.proto
-其中，我比较关注下面几个接口
- rpc CreateContainer(CreateContainerRequest) returns (CreateContainerResponse) {} rpc StartContainer(StartContainerRequest) returns (StartContainerResponse) {} rpc StopContainer(StopContainerRequest) returns (StopContainerResponse) {}  到此，我找到了 CRI 接口的定义，那么，它的具体实现在哪里呢？
-我尝试了全局搜索，由于数据量太多，暂时放弃了。
-三、kubelet 中 CRI Runtime 的配置 if containerRuntime != kubetypes.RktContainerRuntime { ... switch containerRuntime { case kubetypes.DockerContainerRuntime: // Create and start the CRI shim running as a grpc server.</description>
     </item>
     
   </channel>

@@ -5,17 +5,38 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>K8s</title>
-  <meta property="og:title" content="K8s" />
-  <meta name="twitter:title" content="K8s" />
+  <title>k8s nodeport 端口范围</title>
+  <meta property="og:title" content="k8s nodeport 端口范围" />
+  <meta name="twitter:title" content="k8s nodeport 端口范围" />
+  <meta name="description" content="k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
+在 k8s 源码中搜索 32767，在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  存在代码
+fs.Var(&amp;s.ServiceNodePortRange, &quot;service-node-port-range&quot;, &quot;&quot;&#43; &quot;A port range to reserve for services with NodePort visibility. &quot;&#43; &quot;Example: &#39;30000-32767&#39;. Inclusive at both ends of the range.&quot;)  其实上面注释已经说了是闭区间了，但是我还是要看看
+搜索 ServiceNodePortRange 在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  中存在
+ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange,  跟踪 DefaultServiceNodePortRange 找到
+var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768}  跟踪 PortRange 找到
+type PortRange struct { Base int Size int } // Contains tests whether a given port falls within the PortRange.">
+  <meta property="og:description" content="k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
+在 k8s 源码中搜索 32767，在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  存在代码
+fs.Var(&amp;s.ServiceNodePortRange, &quot;service-node-port-range&quot;, &quot;&quot;&#43; &quot;A port range to reserve for services with NodePort visibility. &quot;&#43; &quot;Example: &#39;30000-32767&#39;. Inclusive at both ends of the range.&quot;)  其实上面注释已经说了是闭区间了，但是我还是要看看
+搜索 ServiceNodePortRange 在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  中存在
+ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange,  跟踪 DefaultServiceNodePortRange 找到
+var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768}  跟踪 PortRange 找到
+type PortRange struct { Base int Size int } // Contains tests whether a given port falls within the PortRange.">
+  <meta name="twitter:description" content="k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
+在 k8s 源码中搜索 32767，在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  存 …">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/categories/k8s/" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-nodeport-range/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="RECALL&#39;s Blog" />
 
   <meta name="generator" content="Hugo 0.32.2" />
-  <link rel="canonical" href="http://www.recall704.com/categories/k8s/" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-nodeport-range/" />
   <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -144,14 +165,33 @@
 
 
     
+  
+  
+  
+
+
+
+
+  
+
   <header class="header-section ">
+    
     <div class="intro-header no-img">
+      
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>#K8s</h1>
-              <hr class="small">
+          <div class="col-sm-10 col-xs-10">
+            <div class="post-heading">
+              <h1>k8s nodeport 端口范围</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on August 14, 2018
+  
+</span>
+
+
+                
             </div>
           </div>
         </div>
@@ -159,48 +199,94 @@
     </div>
   </header>
 
+
     
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-sm-10 col-xs-10">
+
+      
+
+      <article role="main" class="blog-post">
+        <p>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？</p>
+
+<p>在 k8s 源码中搜索 32767，在</p>
+
+<pre><code class="language-go">gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go
+</code></pre>
+
+<p>存在代码</p>
+
+<pre><code class="language-go">    fs.Var(&amp;s.ServiceNodePortRange, &quot;service-node-port-range&quot;, &quot;&quot;+
+        &quot;A port range to reserve for services with NodePort visibility. &quot;+
+        &quot;Example: '30000-32767'. Inclusive at both ends of the range.&quot;)
+</code></pre>
+
+<p>其实上面注释已经说了是闭区间了，但是我还是要看看</p>
+
+<p>搜索 ServiceNodePortRange
+在</p>
+
+<pre><code class="language-go">gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go
+</code></pre>
+
+<p>中存在</p>
+
+<pre><code class="language-go">ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange,
+</code></pre>
+
+<p>跟踪 DefaultServiceNodePortRange 找到</p>
+
+<pre><code class="language-go">var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768}
+</code></pre>
+
+<p>跟踪 PortRange 找到</p>
+
+<pre><code class="language-go">type PortRange struct {
+    Base int
+    Size int
+}
+
+// Contains tests whether a given port falls within the PortRange.
+func (pr *PortRange) Contains(p int) bool {
+    // pr.Base = 30000
+    // pr.Size = 2768
+    // p = [30000, 32768) = [30000,32767]
+    return (p &gt;= pr.Base) &amp;&amp; ((p - pr.Base) &lt; pr.Size)
+}
+</code></pre>
+
+<p>判断 nodeport 的代码如下</p>
+
+<pre><code class="language-go">    if options.KubernetesServiceNodePort &gt; 0 &amp;&amp; !options.ServiceNodePortRange.Contains(options.KubernetesServiceNodePort) {
+        errors = append(errors, fmt.Errorf(&quot;kubernetes service port range %v doesn't contain %v&quot;, options.ServiceNodePortRange, (options.KubernetesServiceNodePort)))
+    }
+</code></pre>
+
+<p>最终结论，nodeport 的端口范围是 [30000,32767], 而且必定是连续的。</p>
+
+      </article>
+
+
+
+      <ul class="pager blog-pager">
         
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="http://www.recall704.com/cloud/k8s-replicaset/">
-                <h2 class="post-title">k8s 源码分析: ReplicaSet 控制器</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on April 26, 2018
-              </p>
-              <div class="post-entry">
-                  <a href="http://www.recall704.com/cloud/k8s-replicaset/" class="post-read-more">[Read More]</a>
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="http://www.recall704.com/tags/k8s/">k8s</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/kubelet/">kubelet</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/rs/">rs</a>&nbsp;
-                  
-                    #<a href="http://www.recall704.com/tags/replicaset/">ReplicaSet</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
-        </div>
+          <li class="previous">
+            <a href="http://www.recall704.com/cloud/k8s-replicaset/" data-toggle="tooltip" data-placement="top" title="k8s 源码分析: ReplicaSet 控制器">&larr; Previous Post</a>
+          </li>
         
-      </div>
+        
+          <li class="next">
+            <a href="http://www.recall704.com/cloud/k8s-scheduler/" data-toggle="tooltip" data-placement="top" title="k8s pod 调度">Next Post &rarr;</a>
+          </li>
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

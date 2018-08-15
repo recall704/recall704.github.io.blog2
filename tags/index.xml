@@ -111,33 +111,6 @@
     </item>
     
     <item>
-      <title>Cri</title>
-      <link>http://www.recall704.com/tags/cri/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.recall704.com/tags/cri/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Cron</title>
-      <link>http://www.recall704.com/tags/cron/</link>
-      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/tags/cron/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Crontab</title>
-      <link>http://www.recall704.com/tags/crontab/</link>
-      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/tags/crontab/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Debian</title>
       <link>http://www.recall704.com/tags/debian/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
@@ -192,15 +165,6 @@
     </item>
     
     <item>
-      <title>Hpa</title>
-      <link>http://www.recall704.com/tags/hpa/</link>
-      <pubDate>Thu, 26 Apr 2018 10:49:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/tags/hpa/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Install</title>
       <link>http://www.recall704.com/tags/install/</link>
       <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
@@ -221,7 +185,7 @@
     <item>
       <title>K8s</title>
       <link>http://www.recall704.com/tags/k8s/</link>
-      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
+      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/k8s/</guid>
       <description></description>
@@ -255,20 +219,20 @@
     </item>
     
     <item>
-      <title>Linux</title>
-      <link>http://www.recall704.com/tags/linux/</link>
-      <pubDate>Tue, 24 Apr 2018 10:27:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/tags/linux/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Node</title>
       <link>http://www.recall704.com/tags/node/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/node/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Nodeport</title>
+      <link>http://www.recall704.com/tags/nodeport/</link>
+      <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/nodeport/</guid>
       <description></description>
     </item>
     
@@ -291,6 +255,15 @@
     </item>
     
     <item>
+      <title>Pod</title>
+      <link>http://www.recall704.com/tags/pod/</link>
+      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/pod/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Python</title>
       <link>http://www.recall704.com/tags/python/</link>
       <pubDate>Mon, 14 Mar 2016 14:22:53 +0800</pubDate>
@@ -305,6 +278,15 @@
       <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/rabc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Range</title>
+      <link>http://www.recall704.com/tags/range/</link>
+      <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/range/</guid>
       <description></description>
     </item>
     
@@ -359,6 +341,24 @@
       <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/scan/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Scheduler</title>
+      <link>http://www.recall704.com/tags/scheduler/</link>
+      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/scheduler/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Service</title>
+      <link>http://www.recall704.com/tags/service/</link>
+      <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/service/</guid>
       <description></description>
     </item>
     

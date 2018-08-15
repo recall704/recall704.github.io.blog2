@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>k8s pod 调度</title>
+  <meta property="og:title" content="k8s pod 调度" />
+  <meta name="twitter:title" content="k8s pod 调度" />
+  <meta name="description" content="一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。">
+  <meta property="og:description" content="一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。">
+  <meta name="twitter:description" content="一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件， …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-scheduler/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RECALL&#39;s Blog" />
+
+  <meta name="generator" content="Hugo 0.32.2" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-scheduler/" />
+  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="home" href="/">home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="categories" href="/categories/">categories</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="series" href="/series/">series</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about" href="/about/">about</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-10 col-xs-10">
+            <div class="post-heading">
+              <h1>k8s pod 调度</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on August 14, 2018
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-sm-10 col-xs-10">
+
+      
+      <hr />
+      <aside>
+        <nav id="TableOfContents">
+<ul>
+<li><a href="#一-k8s-基础架构">一、k8s 基础架构</a></li>
+<li><a href="#二-k8s-pod-调度相关的参数">二、k8s pod 调度相关的参数</a>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-nodename">1. NodeName</a></li>
+<li><a href="#2-nodeselector">2. NodeSelector</a></li>
+<li><a href="#3-affinity">3. Affinity</a></li>
+<li><a href="#4-tolerations">4. Tolerations</a></li>
+<li><a href="#5-priorityclassname">5. PriorityClassName</a></li>
+<li><a href="#6-priority">6. Priority</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#1-nodename-1">1. nodeName</a></li>
+<li><a href="#2-priority">2. Priority</a></li>
+<li><a href="#3-priorityclass">3. PriorityClass</a></li>
+<li><a href="#4-其它">4. 其它</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#三-k8s-调度之节点的筛选">三、k8s 调度之节点的筛选</a></li>
+<li><a href="#四-k8s-调度之节点的排序">四、k8s 调度之节点的排序</a></li>
+<li><a href="#五-kubelet-实例化-pod-为容器">五、 kubelet 实例化 pod 为容器</a>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-从-apiserver-获取-pod-信息">1. 从 apiserver 获取 pod 信息</a></li>
+<li><a href="#2-从-url-获取-pod-信息">2. 从 url 获取 pod 信息</a></li>
+<li><a href="#3-从本地文件夹获取-pod-信息-这就是通常我们使用的-manifest">3. 从本地文件夹获取 pod 信息，这就是通常我们使用的 manifest</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+      </aside>
+      <hr />
+      
+
+      <article role="main" class="blog-post">
+        
+
+<h1 id="一-k8s-基础架构">一、k8s 基础架构</h1>
+
+<p>在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构</p>
+
+<p><img src="/static/images/kubernetes-arch.png" alt="" /></p>
+
+<h1 id="二-k8s-pod-调度相关的参数">二、k8s pod 调度相关的参数</h1>
+
+<p>当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候，
+k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器，
+那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？
+有哪些因数会影响 pod 的调度呢？</p>
+
+<p>我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度</p>
+
+<h5 id="1-nodename">1. NodeName</h5>
+
+<h5 id="2-nodeselector">2. NodeSelector</h5>
+
+<h5 id="3-affinity">3. Affinity</h5>
+
+<h5 id="4-tolerations">4. Tolerations</h5>
+
+<h5 id="5-priorityclassname">5. PriorityClassName</h5>
+
+<h5 id="6-priority">6. Priority</h5>
+
+<h3 id="1-nodename-1">1. nodeName</h3>
+
+<p>一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了</p>
+
+<h3 id="2-priority">2. Priority</h3>
+
+<p>pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。</p>
+
+<h3 id="3-priorityclass">3. PriorityClass</h3>
+
+<p>和 Priority 类似，PriorityClass 只是定义了一个名字而已，这样可以多个 pod 公用一个 优先级。</p>
+
+<pre><code class="language-yaml">apiVersion: scheduling.k8s.io/v1alpha1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: &quot;This priority class should be used for XYZ service pods only.&quot;
+</code></pre>
+
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  priorityClassName: high-priority
+</code></pre>
+
+<h3 id="4-其它">4. 其它</h3>
+
+<p>其它的请参考 阳总的文章</p>
+
+<p><a href="https://blog.qikqiak.com/post/understand-kubernetes-affinity/">https://blog.qikqiak.com/post/understand-kubernetes-affinity/</a></p>
+
+<h1 id="三-k8s-调度之节点的筛选">三、k8s 调度之节点的筛选</h1>
+
+<p>pod 请求的资源都是有一定要求的，比如 cpu 多少， memory 多少，或者存在 nodeSelector 之类的选择器，亲和性参数等等。</p>
+
+<p>我们可以用以下伪代码来描述</p>
+
+<pre><code class="language-go">func checkNode(pod v1.Pod, node v1.Node) (bool, err) {
+    // 1. cpu check
+    if pod.cpu &gt; node.availableCPU {
+        // 没有足够的 cpu ，该节点不满足
+        return false, nil
+    }
+    // 2. memory check
+    if pod.memory &gt; node.availableMemory {
+        // 没有足够的内存，该节点不满足
+        return false, nil
+    }
+    // 3. nodeSelector check
+    if !node.MatchSelector(pod.Spec.NodeSelector) {
+        // label 条件不满足
+        return false, nil
+    }
+    // ....
+    // 3. other check
+
+    // 检查结束，该节点满足
+    return true, nil
+}
+
+func getFliterdNodeList(pod *v1.Pod) ([]*v1.Node, error) {
+    allNode := getKubernetesAllNode()
+    var filterdNodeList []*v1.Node
+    for _, node := range allNode {
+        if ok, err := checkNode(pod, node); err != nil {
+            // 报错处理
+        }
+        if ok {
+            // 符合条件，添加到数组中
+            filterdNodeList = append(filterdNodeList, node)
+        }
+    }
+
+    // 返回筛选后的 node 列表
+    return filterdNodeList
+} 
+
+
+</code></pre>
+
+<p>经过一轮筛选之后，会留下一些 node，我暂时称之为 filterdNodeList</p>
+
+<h1 id="四-k8s-调度之节点的排序">四、k8s 调度之节点的排序</h1>
+
+<p>我们从多个 node 中筛选出适合 pod 的节点 filterdNodeList 之后，我们要做一个最终选择，
+因为我们的 pod 只能运行在一个节点上，那么到底选谁呢？</p>
+
+<p>那么我们的相亲对象 pod 一定会从众多 node 选择一个最高，最帅，最富，而且还爱自己的 node，这一环节，是众多 node 之间的比拼。</p>
+
+<p>我们用以下伪代码表示</p>
+
+<pre><code class="language-go">type NodeList []v1.Node
+func (nodes NodeList) Len() int { return len(nodes) }
+func (nodes NodeList) Swap(i, j int){ s[i], s[j] = s[j], s[i] }
+func (nodes NodeList) Less(i, j int) bool { 
+    if nodes[i].availableCPU &gt; nodes[j].availableCPU {
+        // cpu 资源多，优先级高， pod 优先考虑
+        // ...
+    }
+    if nodes[i].availableMemory &gt; nodes[j].availableMemory {
+        // memory 资源多，优先级高， pod 优先考虑
+        // 比较帅，这个也不错
+        // ...
+    }
+    // 其它方面的比较
+}
+</code></pre>
+
+<p>我大概总结一下：
+1. 节点上可用资源越多，优先级越高 (越有钱越好)
+2. 节点 cpu 和 memory 使用比较均衡 (相对帅且有钱，而不是只帅而没有钱的)
+3. 亲和性 （比如最好是公务员）
+4. 节点上已经存在镜像，且镜像越大越好，这样就能节约拉取镜像的时间 (家里已经买了车了，越贵越好)
+5. 其它</p>
+
+<h1 id="五-kubelet-实例化-pod-为容器">五、 kubelet 实例化 pod 为容器</h1>
+
+<p>之前我提到过，kubelet 创建的 pod 有三个来源，分别是</p>
+
+<h5 id="1-从-apiserver-获取-pod-信息">1. 从 apiserver 获取 pod 信息</h5>
+
+<h5 id="2-从-url-获取-pod-信息">2. 从 url 获取 pod 信息</h5>
+
+<h5 id="3-从本地文件夹获取-pod-信息-这就是通常我们使用的-manifest">3. 从本地文件夹获取 pod 信息，这就是通常我们使用的 manifest</h5>
+
+<p>kubelet 获取 pod 信息之后，会通过调用 容器运行时，通常是 docker，将 pod 实例化为具体的容器。</p>
+
+      </article>
+
+
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="http://www.recall704.com/cloud/k8s-nodeport-range/" data-toggle="tooltip" data-placement="top" title="k8s nodeport 端口范围">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+          
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.32.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/main.js"></script>
+<script src="http://www.recall704.com/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+
+  </body>
+</html>
+

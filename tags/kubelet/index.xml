@@ -20,33 +20,5 @@
       <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;quot;Couldn&#39;t get key for %v %#v: %v&amp;quot;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &amp;gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.</description>
     </item>
     
-    <item>
-      <title>k8s 源码分析: 自动扩缩容分析(未完成)</title>
-      <link>http://www.recall704.com/cloud/k8s-kubelet-cri/</link>
-      <pubDate>Thu, 26 Apr 2018 10:49:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-kubelet-cri/</guid>
-      <description>0x01 HPA metric client 自动扩缩容的前提是要有监控数据，那么 k8s 是从哪里读取监控数据的呢？
-https://github.com/recall704/kubernetes/blob/v1.9.3/cmd/kube-controller-manager/app/autoscaling.go#L36
-func startHPAController(ctx ControllerContext) (bool, error) { if !ctx.AvailableResources[schema.GroupVersionResource{Group: &amp;quot;autoscaling&amp;quot;, Version: &amp;quot;v1&amp;quot;, Resource: &amp;quot;horizontalpodautoscalers&amp;quot;}] { return false, nil } if ctx.Options.HorizontalPodAutoscalerUseRESTClients { // use the new-style clients if support for custom metrics is enabled return startHPAControllerWithRESTClient(ctx) } return startHPAControllerWithLegacyClient(ctx) } ... func startHPAControllerWithLegacyClient(ctx ControllerContext) (bool, error) { hpaClient := ctx.ClientBuilder.ClientOrDie(&amp;quot;horizontal-pod-autoscaler&amp;quot;) metricsClient := metrics.NewHeapsterMetricsClient( hpaClient, metrics.DefaultHeapsterNamespace, metrics.DefaultHeapsterScheme, metrics.DefaultHeapsterService, metrics.DefaultHeapsterPort, ) return startHPAControllerWithMetricsClient(ctx, metricsClient) }  如果 controller 的参数配置了 HorizontalPodAutoscalerUseRESTClients ，就会通过 rest 的方式连接到对应的 metric-server，这个值在 1.</description>
-    </item>
-    
-    <item>
-      <title>k8s 源码分析: kubelet CRI(未完成)</title>
-      <link>http://www.recall704.com/cloud/k8s-kubelet-cri/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-kubelet-cri/</guid>
-      <description>一、概述 在学习 k8s 的时候，很容易就看到上面这张图，
-然而，我更想了解一下 kubelet 的一些细节知识：
- kubelet 是如何和 docker 进行通信的 CRI 是如何定义和实现的  二、GRPC grpc 的接口定义是在后缀为 .proto 的文件中
-在 k8s 的源码中搜索 rpc 并指定文件类型为 proto，可以很快搜索到相关的定义，具体文件在
-k8s.io/kubernetes/pkg/kubelet/apis/cri/v1alpha1/runtime/api.proto
-其中，我比较关注下面几个接口
- rpc CreateContainer(CreateContainerRequest) returns (CreateContainerResponse) {} rpc StartContainer(StartContainerRequest) returns (StartContainerResponse) {} rpc StopContainer(StopContainerRequest) returns (StopContainerResponse) {}  到此，我找到了 CRI 接口的定义，那么，它的具体实现在哪里呢？
-我尝试了全局搜索，由于数据量太多，暂时放弃了。
-三、kubelet 中 CRI Runtime 的配置 if containerRuntime != kubetypes.RktContainerRuntime { ... switch containerRuntime { case kubetypes.DockerContainerRuntime: // Create and start the CRI shim running as a grpc server.</description>
-    </item>
-    
   </channel>
 </rss>
