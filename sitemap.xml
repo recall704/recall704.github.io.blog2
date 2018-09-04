@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://www.recall704.com/cloud/volume-of-k8s/</loc>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/cloud/k8s-scheduler/</loc>
     <lastmod>2018-08-14T23:06:42+08:00</lastmod>
   </url>
@@ -209,7 +214,7 @@
   
   <url>
     <loc>http://www.recall704.com/cloud/</loc>
-    <lastmod>2018-08-14T23:06:42+08:00</lastmod>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -275,7 +280,7 @@
   
   <url>
     <loc>http://www.recall704.com/tags/k8s/</loc>
-    <lastmod>2018-08-14T23:06:42+08:00</lastmod>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -346,6 +351,12 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/tags/persistentvoume/</loc>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/tags/pod/</loc>
     <lastmod>2018-08-14T23:06:42+08:00</lastmod>
     <priority>0</priority>
@@ -365,7 +376,7 @@
   
   <url>
     <loc>http://www.recall704.com/</loc>
-    <lastmod>2018-08-14T23:06:42+08:00</lastmod>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -484,8 +495,20 @@
   </url>
   
   <url>
+    <loc>http://www.recall704.com/tags/volume/</loc>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</loc>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.recall704.com/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/</loc>
-    <lastmod>2018-08-14T23:06:42+08:00</lastmod>
+    <lastmod>2018-09-04T13:48:09+08:00</lastmod>
     <priority>0</priority>
   </url>
   

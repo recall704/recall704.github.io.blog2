@@ -6,10 +6,24 @@
     <description>Recent content on RECALL&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 14 Aug 2018 23:06:42 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 04 Sep 2018 13:48:09 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>k8s 学习笔记之存储</title>
+      <link>http://www.recall704.com/cloud/volume-of-k8s/</link>
+      <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/volume-of-k8s/</guid>
+      <description>一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
+2. pvc A PersistentVolumeClaims is a request for storage by a user.
+3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
+pv 支持两种方式的 provision，静态和动态
+1. static A cluster administrator create a number of PVs. 管理员先创建一堆 PVs，然后提供给 PVC 绑定
+2. Dynamic Base StorageClasses, when none of the static PVs the administrator created matches a user&amp;rsquo;s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC.</description>
+    </item>
     
     <item>
       <title>k8s pod 调度</title>

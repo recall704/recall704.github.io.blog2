@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>k8s 学习笔记之存储</title>
+  <meta property="og:title" content="k8s 学习笔记之存储" />
+  <meta name="twitter:title" content="k8s 学习笔记之存储" />
+  <meta name="description" content="一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
+2. pvc A PersistentVolumeClaims is a request for storage by a user.
+3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
+pv 支持两种方式的 provision，静态和动态
+1. static A cluster administrator create a number of PVs. 管理员先创建一堆 PVs，然后提供给 PVC 绑定
+2. Dynamic Base StorageClasses, when none of the static PVs the administrator created matches a user&rsquo;s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC.">
+  <meta property="og:description" content="一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
+2. pvc A PersistentVolumeClaims is a request for storage by a user.
+3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
+pv 支持两种方式的 provision，静态和动态
+1. static A cluster administrator create a number of PVs. 管理员先创建一堆 PVs，然后提供给 PVC 绑定
+2. Dynamic Base StorageClasses, when none of the static PVs the administrator created matches a user&rsquo;s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC.">
+  <meta name="twitter:description" content="一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
+2. pvc A PersistentVolumeClaims is a request for storage by a user.
+3. …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/volume-of-k8s/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RECALL&#39;s Blog" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="http://www.recall704.com/cloud/volume-of-k8s/" />
+  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="home" href="/">home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="categories" href="/categories/">categories</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="series" href="/series/">series</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about" href="/about/">about</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-10 col-xs-10">
+            <div class="post-heading">
+              <h1>k8s 学习笔记之存储</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on September 4, 2018
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-sm-10 col-xs-10">
+
+      
+      <hr />
+      <aside>
+        <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#一-几个存储的概念">一、几个存储的概念</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-pv">1. pv</a></li>
+<li><a href="#2-pvc">2. pvc</a></li>
+<li><a href="#3-storageclass">3. storageclass</a></li>
+<li><a href="#1-static">1. static</a></li>
+<li><a href="#2-dynamic">2. Dynamic</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#二-storageclass-是怎么完成-dynamic-provison-的">二、StorageClass 是怎么完成 Dynamic provison 的</a></li>
+<li><a href="#三-pv-的生命周期">三、pv 的生命周期</a></li>
+<li><a href="#四-三种pv的访问模式">四、三种PV的访问模式</a></li>
+<li><a href="#五-persistentvolumecontroller-部分代码分析">五、PersistentVolumeController 部分代码分析</a></li>
+</ul></li>
+</ul>
+</nav>
+      </aside>
+      <hr />
+      
+
+      <article role="main" class="blog-post">
+        
+
+<h2 id="一-几个存储的概念">一、几个存储的概念</h2>
+
+<h4 id="1-pv">1. pv</h4>
+
+<p>A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.</p>
+
+<h4 id="2-pvc">2. pvc</h4>
+
+<p>A PersistentVolumeClaims is a request for storage by a user.</p>
+
+<h4 id="3-storageclass">3. storageclass</h4>
+
+<p>A storageclass provides a way for administrator to describe the <code>classes</code> of storage they offer.</p>
+
+<p>pv 支持两种方式的 provision，静态和动态</p>
+
+<h4 id="1-static">1. static</h4>
+
+<p>A cluster administrator create a number of PVs.
+   管理员先创建一堆 PVs，然后提供给 PVC 绑定</p>
+
+<h4 id="2-dynamic">2. Dynamic</h4>
+
+<p>Base StorageClasses, when none of the static PVs the administrator created matches a user&rsquo;s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC.</p>
+
+<h2 id="二-storageclass-是怎么完成-dynamic-provison-的">二、StorageClass 是怎么完成 Dynamic provison 的</h2>
+
+<pre><code class="language-yaml"># k get sc rbd -o yaml --export=true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rbd
+  selfLink: /apis/storage.k8s.io/v1/storageclasses/rbd
+parameters:
+  adminId: ***
+  adminSecretName: ***
+  adminSecretNamespace: ***
+  imageFeatures: ***
+  imageFormat: &quot;***&quot;
+  monitors: ***
+  pool: ***
+  userId: ***
+  userSecretName: ***
+  userSecretNamespace: ***
+provisioner: ceph.com/rbd
+reclaimPolicy: Delete
+</code></pre>
+
+<p>我们来重点关注这个 provisioner</p>
+
+<p>在代码 <code>https://github.com/kubernetes-incubator/external-storage/blob/v5.1.0/ceph/rbd/pkg/provision/provision.go#L114</code> 中我们可以看到</p>
+
+<pre><code class="language-go">pv := &amp;v1.PersistentVolume{
+	ObjectMeta: metav1.ObjectMeta{
+		Name: options.PVName,
+		Annotations: map[string]string{
+			provisionerIDAnn: p.identity,
+		},
+	},
+	Spec: v1.PersistentVolumeSpec{
+		PersistentVolumeReclaimPolicy: options.PersistentVolumeReclaimPolicy,
+		AccessModes:                   options.PVC.Spec.AccessModes,
+		MountOptions:                  options.MountOptions,
+		Capacity: v1.ResourceList{
+			v1.ResourceName(v1.ResourceStorage): resource.MustParse(fmt.Sprintf(&quot;%dMi&quot;, sizeMB)),
+		},
+		PersistentVolumeSource: v1.PersistentVolumeSource{
+			RBD: rbd,
+		},
+	},
+}
+</code></pre>
+
+<p>我们的 provisioner 会根据请求自动创建一个 pv 然后返回</p>
+
+<h2 id="三-pv-的生命周期">三、pv 的生命周期</h2>
+
+<ol>
+<li>Pending 不可用</li>
+<li>Available 可用</li>
+<li>Bound 已绑定</li>
+<li>Released pvc 已经删除，要先回收才能再次使用</li>
+<li>Failed 不能正确回收，或者在 pvc 释放之后不能删除</li>
+</ol>
+
+<h2 id="四-三种pv的访问模式">四、三种PV的访问模式</h2>
+
+<ol>
+<li>ReadWriteOnce：是最基本的方式，可读可写，但只支持被单个Pod挂载。</li>
+<li>ReadOnlyMany：可以以只读的方式被多个Pod挂载。</li>
+<li>ReadWriteMany：这种存储可以以读写的方式被多个Pod共享。</li>
+</ol>
+
+<h2 id="五-persistentvolumecontroller-部分代码分析">五、PersistentVolumeController 部分代码分析</h2>
+
+<pre><code class="language-go">// provisionClaimOperation provisions a volume. This method is running in
+// standalone goroutine and already has all necessary locks.
+func (ctrl *PersistentVolumeController) provisionClaimOperation(claimObj interface{}) {
+   // get pv
+	claim, ok := claimObj.(*v1.PersistentVolumeClaim)
+	if !ok {
+		glog.Errorf(&quot;Cannot convert provisionClaimOperation argument to claim, got %#v&quot;, claimObj)
+		return
+	}
+
+   // 从 pvc 的 annotation 或 spec 获取 storageclass 名称
+	claimClass := v1helper.GetPersistentVolumeClaimClass(claim)
+	glog.V(4).Infof(&quot;provisionClaimOperation [%s] started, class: %q&quot;, claimToClaimKey(claim), claimClass)
+
+   // 返回 volume 插件和 storageclass 实例
+	plugin, storageClass, err := ctrl.findProvisionablePlugin(claim)
+	if err != nil {
+		ctrl.eventRecorder.Event(claim, v1.EventTypeWarning, events.ProvisioningFailed, err.Error())
+		glog.V(2).Infof(&quot;error finding provisioning plugin for claim %s: %v&quot;, claimToClaimKey(claim), err)
+		// The controller will retry provisioning the volume in every
+		// syncVolume() call.
+		return
+	}
+
+	// Add provisioner annotation so external provisioners know when to start
+	// 在注解中加入 storageclass 
+	newClaim, err := ctrl.setClaimProvisioner(claim, storageClass)
+	if err != nil {
+		// Save failed, the controller will retry in the next sync
+		glog.V(2).Infof(&quot;error saving claim %s: %v&quot;, claimToClaimKey(claim), err)
+		return
+	}
+	claim = newClaim
+
+	if plugin == nil {
+		// findProvisionablePlugin returned no error nor plugin.
+		// This means that an unknown provisioner is requested. Report an event
+		// and wait for the external provisioner
+		msg := fmt.Sprintf(&quot;waiting for a volume to be created, either by external provisioner %q or manually created by system administrator&quot;, storageClass.Provisioner)
+		ctrl.eventRecorder.Event(claim, v1.EventTypeNormal, events.ExternalProvisioning, msg)
+		glog.V(3).Infof(&quot;provisioning claim %q: %s&quot;, claimToClaimKey(claim), msg)
+		return
+	}
+
+	// internal provisioning
+
+	//  A previous doProvisionClaim may just have finished while we were waiting for
+	//  the locks. Check that PV (with deterministic name) hasn't been provisioned
+	//  yet.
+  // pvName = 'pvc' + pvc.UID
+	pvName := ctrl.getProvisionedVolumeNameForClaim(claim)
+	volume, err := ctrl.kubeClient.CoreV1().PersistentVolumes().Get(pvName, metav1.GetOptions{})
+	// pv 已经存在，返回
+	if err == nil &amp;&amp; volume != nil {
+		// Volume has been already provisioned, nothing to do.
+		glog.V(4).Infof(&quot;provisionClaimOperation [%s]: volume already exists, skipping&quot;, claimToClaimKey(claim))
+		return
+	}
+
+	// Prepare a claimRef to the claim early (to fail before a volume is
+	// provisioned)
+	claimRef, err := ref.GetReference(scheme.Scheme, claim)
+	if err != nil {
+		glog.V(3).Infof(&quot;unexpected error getting claim reference: %v&quot;, err)
+		return
+	}
+
+	// Gather provisioning options
+	tags := make(map[string]string)
+	tags[CloudVolumeCreatedForClaimNamespaceTag] = claim.Namespace
+	tags[CloudVolumeCreatedForClaimNameTag] = claim.Name
+	tags[CloudVolumeCreatedForVolumeNameTag] = pvName
+
+	options := vol.VolumeOptions{
+		PersistentVolumeReclaimPolicy: *storageClass.ReclaimPolicy,
+		MountOptions:                  storageClass.MountOptions,
+		CloudTags:                     &amp;tags,
+		ClusterName:                   ctrl.clusterName,
+		PVName:                        pvName,
+		PVC:                           claim,
+		Parameters:                    storageClass.Parameters,
+	}
+
+	// Refuse to provision if the plugin doesn't support mount options, creation
+	// of PV would be rejected by validation anyway
+	if !plugin.SupportsMountOption() &amp;&amp; len(options.MountOptions) &gt; 0 {
+		strerr := fmt.Sprintf(&quot;Mount options are not supported by the provisioner but StorageClass %q has mount options %v&quot;, storageClass.Name, options.MountOptions)
+		glog.V(2).Infof(&quot;Mount options are not supported by the provisioner but claim %q's StorageClass %q has mount options %v&quot;, claimToClaimKey(claim), storageClass.Name, options.MountOptions)
+		ctrl.eventRecorder.Event(claim, v1.EventTypeWarning, events.ProvisioningFailed, strerr)
+		return
+	}
+
+	// Provision the volume
+	provisioner, err := plugin.NewProvisioner(options)
+	if err != nil {
+		strerr := fmt.Sprintf(&quot;Failed to create provisioner: %v&quot;, err)
+		glog.V(2).Infof(&quot;failed to create provisioner for claim %q with StorageClass %q: %v&quot;, claimToClaimKey(claim), storageClass.Name, err)
+		ctrl.eventRecorder.Event(claim, v1.EventTypeWarning, events.ProvisioningFailed, strerr)
+		return
+	}
+
+	opComplete := util.OperationCompleteHook(plugin.GetPluginName(), &quot;volume_provision&quot;)
+	// 还记得上面的 Provison 么？
+	// 继续参见 https://github.com/kubernetes-incubator/external-storage/blob/v5.1.0/ceph/rbd/pkg/provision/provision.go#L114
+	volume, err = provisioner.Provision()
+	opComplete(err)
+	if err != nil {
+		strerr := fmt.Sprintf(&quot;Failed to provision volume with StorageClass %q: %v&quot;, storageClass.Name, err)
+		glog.V(2).Infof(&quot;failed to provision volume for claim %q with StorageClass %q: %v&quot;, claimToClaimKey(claim), storageClass.Name, err)
+		ctrl.eventRecorder.Event(claim, v1.EventTypeWarning, events.ProvisioningFailed, strerr)
+		return
+	}
+
+	glog.V(3).Infof(&quot;volume %q for claim %q created&quot;, volume.Name, claimToClaimKey(claim))
+
+	// Create Kubernetes PV object for the volume.
+	if volume.Name == &quot;&quot; {
+		volume.Name = pvName
+	}
+	// Bind it to the claim
+	// 修改 pv 的值，绑定到 pvc
+	volume.Spec.ClaimRef = claimRef
+	volume.Status.Phase = v1.VolumeBound
+	volume.Spec.StorageClassName = claimClass
+
+	// Add annBoundByController (used in deleting the volume)
+	metav1.SetMetaDataAnnotation(&amp;volume.ObjectMeta, annBoundByController, &quot;yes&quot;)
+	metav1.SetMetaDataAnnotation(&amp;volume.ObjectMeta, annDynamicallyProvisioned, plugin.GetPluginName())
+
+	// Try to create the PV object several times
+	for i := 0; i &lt; ctrl.createProvisionedPVRetryCount; i++ {
+		glog.V(4).Infof(&quot;provisionClaimOperation [%s]: trying to save volume %s&quot;, claimToClaimKey(claim), volume.Name)
+		var newVol *v1.PersistentVolume
+		if newVol, err = ctrl.kubeClient.CoreV1().PersistentVolumes().Create(volume); err == nil || apierrs.IsAlreadyExists(err) {
+			// Save succeeded.
+			if err != nil {
+				glog.V(3).Infof(&quot;volume %q for claim %q already exists, reusing&quot;, volume.Name, claimToClaimKey(claim))
+				err = nil
+			} else {
+				glog.V(3).Infof(&quot;volume %q for claim %q saved&quot;, volume.Name, claimToClaimKey(claim))
+
+				_, updateErr := ctrl.storeVolumeUpdate(newVol)
+				if updateErr != nil {
+					// We will get an &quot;volume added&quot; event soon, this is not a big error
+					glog.V(4).Infof(&quot;provisionClaimOperation [%s]: cannot update internal cache: %v&quot;, volume.Name, updateErr)
+				}
+			}
+			break
+		}
+		// Save failed, try again after a while.
+		glog.V(3).Infof(&quot;failed to save volume %q for claim %q: %v&quot;, volume.Name, claimToClaimKey(claim), err)
+		time.Sleep(ctrl.createProvisionedPVInterval)
+	}
+
+	if err != nil {
+		// Save failed. Now we have a storage asset outside of Kubernetes,
+		// but we don't have appropriate PV object for it.
+		// Emit some event here and try to delete the storage asset several
+		// times.
+		strerr := fmt.Sprintf(&quot;Error creating provisioned PV object for claim %s: %v. Deleting the volume.&quot;, claimToClaimKey(claim), err)
+		glog.V(3).Info(strerr)
+		ctrl.eventRecorder.Event(claim, v1.EventTypeWarning, events.ProvisioningFailed, strerr)
+
+		var deleteErr error
+		var deleted bool
+		for i := 0; i &lt; ctrl.createProvisionedPVRetryCount; i++ {
+			deleted, deleteErr = ctrl.doDeleteVolume(volume)
+			if deleteErr == nil &amp;&amp; deleted {
+				// Delete succeeded
+				glog.V(4).Infof(&quot;provisionClaimOperation [%s]: cleaning volume %s succeeded&quot;, claimToClaimKey(claim), volume.Name)
+				break
+			}
+			if !deleted {
+				// This is unreachable code, the volume was provisioned by an
+				// internal plugin and therefore there MUST be an internal
+				// plugin that deletes it.
+				glog.Errorf(&quot;Error finding internal deleter for volume plugin %q&quot;, plugin.GetPluginName())
+				break
+			}
+			// Delete failed, try again after a while.
+			glog.V(3).Infof(&quot;failed to delete volume %q: %v&quot;, volume.Name, deleteErr)
+			time.Sleep(ctrl.createProvisionedPVInterval)
+		}
+
+		if deleteErr != nil {
+			// Delete failed several times. There is an orphaned volume and there
+			// is nothing we can do about it.
+			strerr := fmt.Sprintf(&quot;Error cleaning provisioned volume for claim %s: %v. Please delete manually.&quot;, claimToClaimKey(claim), deleteErr)
+			glog.V(2).Info(strerr)
+			ctrl.eventRecorder.Event(claim, v1.EventTypeWarning, events.ProvisioningCleanupFailed, strerr)
+		}
+	} else {
+		glog.V(2).Infof(&quot;volume %q provisioned for claim %q&quot;, volume.Name, claimToClaimKey(claim))
+		msg := fmt.Sprintf(&quot;Successfully provisioned volume %s using %s&quot;, volume.Name, plugin.GetPluginName())
+		ctrl.eventRecorder.Event(claim, v1.EventTypeNormal, events.ProvisioningSucceeded, msg)
+	}
+}
+</code></pre>
+
+      </article>
+
+
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="http://www.recall704.com/cloud/k8s-scheduler/" data-toggle="tooltip" data-placement="top" title="k8s pod 调度">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+          
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/main.js"></script>
+<script src="http://www.recall704.com/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+
+  </body>
+</html>
+
