@@ -1,317 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/</link>
-    <description>Recent content on RECALL&#39;s Blog</description>
+    <title>Recall&#39;s blog</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Tue, 04 Sep 2018 13:48:09 +0800</lastBuildDate>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Sat, 21 Oct 2017 14:08:35 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>k8s 学习笔记之存储</title>
-      <link>http://www.recall704.com/cloud/volume-of-k8s/</link>
-      <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/volume-of-k8s/</guid>
-      <description>一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
-2. pvc A PersistentVolumeClaims is a request for storage by a user.
-3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
-pv 支持两种方式的 provision，静态和动态
-1. static A cluster administrator create a number of PVs. 管理员先创建一堆 PVs，然后提供给 PVC 绑定
-2. Dynamic Base StorageClasses, when none of the static PVs the administrator created matches a user&amp;rsquo;s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC.</description>
-    </item>
     
     <item>
-      <title>k8s pod 调度</title>
-      <link>http://www.recall704.com/cloud/k8s-scheduler/</link>
-      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
+      <title>友情链接</title>
+      <link>http://localhost:1313/links/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://www.recall704.com/cloud/k8s-scheduler/</guid>
-      <description>一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
-二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
-我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
-1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
-2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。</description>
-    </item>
-    
-    <item>
-      <title>k8s nodeport 端口范围</title>
-      <link>http://www.recall704.com/cloud/k8s-nodeport-range/</link>
-      <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-nodeport-range/</guid>
-      <description>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
-在 k8s 源码中搜索 32767，在
-gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  存在代码
-fs.Var(&amp;amp;s.ServiceNodePortRange, &amp;quot;service-node-port-range&amp;quot;, &amp;quot;&amp;quot;+ &amp;quot;A port range to reserve for services with NodePort visibility. &amp;quot;+ &amp;quot;Example: &#39;30000-32767&#39;. Inclusive at both ends of the range.&amp;quot;)  其实上面注释已经说了是闭区间了，但是我还是要看看
-搜索 ServiceNodePortRange 在
-gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  中存在
-ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange,  跟踪 DefaultServiceNodePortRange 找到
-var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768}  跟踪 PortRange 找到
-type PortRange struct { Base int Size int } // Contains tests whether a given port falls within the PortRange.</description>
-    </item>
-    
-    <item>
-      <title>k8s 源码分析: ReplicaSet 控制器</title>
-      <link>http://www.recall704.com/cloud/k8s-replicaset/</link>
-      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-replicaset/</guid>
-      <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;quot;Couldn&#39;t get key for %v %#v: %v&amp;quot;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &amp;gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.</description>
-    </item>
-    
-    <item>
-      <title>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</title>
-      <link>http://www.recall704.com/cloud/k8s-authentication-with-basic/</link>
-      <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-authentication-with-basic/</guid>
-      <description>0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
-AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
-type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // +optional ClientCertificate string `json:&amp;quot;client-certificate,omitempty&amp;quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.</description>
-    </item>
-    
-    <item>
-      <title>创建 client （二）： 通过配置文件方式访问 k8s API</title>
-      <link>http://www.recall704.com/cloud/k8s-authentication-with-ca/</link>
-      <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-authentication-with-ca/</guid>
-      <description>0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
-这个时候，我们还有两种认证方式
- ca 证书认证
- basic 认证  0x02 kubectl 是如何访问 k8s 的？ k8s 部署的时候，我们会给 kubectl 配置证书，context 等信息，生成一个 $HOME/.kube/config 这样的文件，文件内容如下 apiVersion: v1 clusters: - cluster: certificate-authority-data: ... server: https://192.168.1.200:6443 name: kube_cluster contexts: - context: cluster: kube_cluster namespace: kube-system user: kubectl name: kubectl@kube_cluster current-context: kubectl@kube_cluster kind: Config preferences: {} users: - name: kubectl user: as-user-extra: {} client-certificate-data: .</description>
-    </item>
-    
-    <item>
-      <title>k8s operator 简介</title>
-      <link>http://www.recall704.com/cloud/k8s-operator/</link>
-      <pubDate>Fri, 13 Apr 2018 10:03:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-operator/</guid>
-      <description>0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
- 1. Resource
- 1.1 自定义资源
- 1.2 为用户提供一种简单的方式描述对服务的期望
-  2. Controller
- 2.1 创建 Resource
- 2.2 监听 Resource 的变更，用来实现用户对服务的期望
-   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
- 2. 监听(watch)自定义资源
- 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
- 4. 当监听到资源变化之后，调用对应的 handler 进行处理
-  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
-比如 deployment ，只是 deployment 资源是内置资源，
-不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。</description>
-    </item>
-    
-    <item>
-      <title>创建 client （一）： token 方式访问 k8s API</title>
-      <link>http://www.recall704.com/cloud/k8s-authentication-with-token/</link>
-      <pubDate>Wed, 11 Apr 2018 14:22:03 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-authentication-with-token/</guid>
-      <description>0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
-1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
-2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
-3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
-0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？
-和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
-我们在 rook 的代码中，可以看到下面这样类似的代码</description>
-    </item>
-    
-    <item>
-      <title>apt 常用的几个命令</title>
-      <link>http://www.recall704.com/linux/apt-usage/</link>
-      <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/linux/apt-usage/</guid>
-      <description>一、安装软件 apt install &amp;lt;package_name&amp;gt;  二、删除软件 apt remove &amp;lt;package_name&amp;gt;  三、查找软件 apt-cache search &amp;lt;package_name&amp;gt;  四、显示软件版本 apt-cache policy vim vim: Installed: 2:7.4.488-7+deb8u2 Candidate: 2:7.4.488-7+deb8u3 Version table: 2:7.4.488-7+deb8u3 0 500 http://mirrordirector.raspbian.org/raspbian/ jessie/main armhf Packages *** 2:7.4.488-7+deb8u2 0 100 /var/lib/dpkg/status  使用 debian 系列系统安装软件的时候，经常会出现下面类似的错误：
-flex : 依赖: m4 但是它将不会被安装 依赖: libfl-dev (= 2.5.35-10ubuntu3) 但是它将不会被安装 libc6 : 依赖: libc-bin (= 2.15-0ubuntu10) 但是 2.15-0ubuntu10.3 正要被安装 libc6-dev : 依赖: libc6 (= 2.15-0ubuntu10.3) 但是 2.15-0ubuntu10 正要被安装  如果是显示依赖的版本不对，我们就可以通过指定版本来解决对应的依赖问题。</description>
-    </item>
-    
-    <item>
-      <title>k8s 中 node 的 roles</title>
-      <link>http://www.recall704.com/cloud/k8s-node-roles/</link>
-      <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/k8s-node-roles/</guid>
-      <description>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES
-但是执行命令：
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&amp;lt;role&amp;gt;=&amp;quot;&amp;quot; 和 kubernetes.io/role=&amp;quot;&amp;lt;role&amp;gt;&amp;quot; 来定义角色。
-所以 master 可以这样
-kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
-kubectl label node 192.168.88.201 kubernetes.io/role=master  </description>
-    </item>
-    
-    <item>
-      <title>k8s 中的污染 Taint 与容忍 Toleration</title>
-      <link>http://www.recall704.com/cloud/taint-and-toleration/</link>
-      <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/taint-and-toleration/</guid>
-      <description>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
- 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
-1. aaa 代表 taint 的 key
-2. bbb 代表 taint 的 value
-3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
-   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。</description>
-    </item>
-    
-    <item>
-      <title>Fix Alpine Update Failed</title>
-      <link>http://www.recall704.com/cloud/fix-alpine-update-failed/</link>
-      <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/fix-alpine-update-failed/</guid>
-      <description>之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
-FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;amp;&amp;amp; \ apk add gcc linux-headers musl-dev &amp;amp;&amp;amp; \ rm -rf /var/cache/* &amp;amp;&amp;amp; \ echo &amp;quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&amp;quot; &amp;gt; /etc/apk/repositories &amp;amp;&amp;amp; \ echo &amp;quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&amp;quot; &amp;gt;&amp;gt; /etc/apk/repositories  正常跑着没问题，但是
-docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
-/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.</description>
-    </item>
-    
-    <item>
-      <title>Deploy K8s With Kubeadm</title>
-      <link>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</link>
-      <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</guid>
-      <description>一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
-node1： 192.168.88.50
-node2： 192.168.88.51
-二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld  2. sysctl 配置 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system  3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn  4. 启用 epel yum install -y epel-release  5. 禁用虚拟内存 swapoff -a  6. 设置 hostname node1 上执行
-hostnamectl set-hostname node1  node2 上执行
-hostnamectl set-hostname node2  三、安装 docker yum install -y docker systemctl enable docker &amp;amp;&amp;amp; systemctl start docker  四、安装 kubeadm, kubelet and kubectl cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum.</description>
-    </item>
-    
-    <item>
-      <title>Clair 源码简要分析（未完待续）</title>
-      <link>http://www.recall704.com/cloud/clair/</link>
-      <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/clair/</guid>
-      <description>概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
-在开始分析 clair 之前，我们明白几点：
-1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。
-2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。
-3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
-clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
-比如 debian，NodeJS。
-2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
-比如： Name: OpenSSL, Version: 1.0, VersionFormat: dpkg
-3. NamespacedFeature 和 Feature 类似，同时检测到了 namespace。
-比如： OpenSSL 1.0 dpkg Debian:7
-4. Vulnerability Vulnerability 是应用对应的漏洞描述。
-代码分析 我们直接从镜像扫描开始分析代码
-代码在 github.com/coreos/clair/worker.go 中
-func processLayers(datastore database.Datastore, imageFormat string, requests []LayerRequest) ([]database.</description>
-    </item>
-    
-    <item>
-      <title>harbor 源码分析： job</title>
-      <link>http://www.recall704.com/cloud/harbor-job.md/</link>
-      <pubDate>Tue, 19 Dec 2017 18:45:17 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/harbor-job.md/</guid>
-      <description>概述 harbor 中有两个常用的功能，镜像复制和镜像扫描，而这两个操作都是比较耗时的任务，在 harbor 中，被设计为 job 来完成。
-接口定义 同样的，我们先来看 Job 的接口定义
-代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type Job interface { // job 的 id，通过 id 可以查看对应的信息 ID() int64 // job 类型，目前只有 Scan 和 Replication 两种 Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态 LogPath() string // 更新 job 状态 UpdateStatus(status string) error // 初始化一个 job Init() error }  镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 Digest string }  镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。</description>
-    </item>
-    
-    <item>
-      <title>harbor 源码分析： 用户认证</title>
-      <link>http://www.recall704.com/cloud/harbor-authenticate.md/</link>
-      <pubDate>Wed, 22 Nov 2017 11:14:50 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/harbor-authenticate.md/</guid>
-      <description>接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
-我们通过其中的数据库认证方式，来简单分析。
-接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.</description>
-    </item>
-    
-    <item>
-      <title>ansible template 基本用法</title>
-      <link>http://www.recall704.com/ansible/ansible-template-demo/</link>
-      <pubDate>Fri, 03 Nov 2017 11:08:09 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/ansible/ansible-template-demo/</guid>
-      <description>- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker  会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
-[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.</description>
-    </item>
-    
-    <item>
-      <title>部署一个带有基础认证的 docker 镜像仓库</title>
-      <link>http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/</link>
-      <pubDate>Sat, 28 Oct 2017 20:46:54 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/</guid>
-      <description>一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
-$ mkdir auth  二、生成认证文件 $ docker run \ --entrypoint htpasswd \ registry:2 -Bbn testuser testpassword &amp;gt; auth/htpasswd  生成了一个用户名为 testuser，密码为 testpassword 的认证文件
-三、启动镜像仓库 docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &amp;quot;REGISTRY_AUTH=htpasswd&amp;quot; \ -e &amp;quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&amp;quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ registry:2  将认证文件挂载到容器中即可。
-如果有证书
-$ docker run -d \ -p 5000:5000 \ --restart=always \ --name registry \ -v `pwd`/auth:/auth \ -e &amp;quot;REGISTRY_AUTH=htpasswd&amp;quot; \ -e &amp;quot;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&amp;quot; \ -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \ -v `pwd`/certs:/certs \ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.</description>
-    </item>
-    
-    <item>
-      <title>Add epel for centos</title>
-      <link>http://www.recall704.com/raspberry/add-epel-for-centos/</link>
-      <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/raspberry/add-epel-for-centos/</guid>
-      <description>cat &amp;gt; /etc/yum.repos.d/epel.repo &amp;lt;&amp;lt; EOF [epel] name=Epel rebuild for armhfp baseurl=https://armv7.dev.centos.org/repodir/epel-pass-1/ enabled=1 gpgcheck=0 EOF  </description>
-    </item>
-    
-    <item>
-      <title>debian 安装指定版本的 docker</title>
-      <link>http://www.recall704.com/ops/install-docker-on-debian/</link>
-      <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/ops/install-docker-on-debian/</guid>
-      <description>1. 加入软件源 cat &amp;gt;&amp;gt; /etc/apt/sources.list &amp;lt;&amp;lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
-apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.</description>
-    </item>
-    
-    <item>
-      <title>centos 安装指定版本的 docker</title>
-      <link>http://www.recall704.com/ops/install-docker-on-centos/</link>
-      <pubDate>Sat, 21 Oct 2017 16:56:06 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/ops/install-docker-on-centos/</guid>
-      <description>增加 docker 源
-cat &amp;gt;/etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
-# yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.</description>
-    </item>
-    
-    <item>
-      <title>权限、RBAC 和 ObjectPermission</title>
-      <link>http://www.recall704.com/developer/permission-rbac-and-objectpermission/</link>
-      <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
-      
-      <guid>http://www.recall704.com/developer/permission-rbac-and-objectpermission/</guid>
-      <description>一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
-   id 用户名 密码 是否管理员     1 admin 123456 True   2 test1 123123 False   3 test2 123123 False    系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
-def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass  2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
-我们的数据库变成了这样
-   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断</description>
+      <guid>http://localhost:1313/links/</guid>
+      <description></description>
     </item>
     
     <item>
       <title>初恋</title>
-      <link>http://www.recall704.com/about/</link>
+      <link>http://localhost:1313/about/</link>
       <pubDate>Sat, 21 Oct 2017 14:08:35 +0800</pubDate>
       
-      <guid>http://www.recall704.com/about/</guid>
+      <guid>http://localhost:1313/about/</guid>
       <description>你让我站也不是
 你让我坐也不是
 你说着感兴趣的
@@ -341,17 +56,314 @@ def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: 
     </item>
     
     <item>
+      <title>k8s 学习笔记之存储</title>
+      <link>http://localhost:1313/cloud/volume-of-k8s/</link>
+      <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/volume-of-k8s/</guid>
+      <description>一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
+2. pvc A PersistentVolumeClaims is a request for storage by a user.
+3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
+pv 支持两种方式的 provision，静态和动态
+1. static A cluster administrator create a number of PVs. 管理员先创建一堆 PVs，然后提供给 PVC 绑定
+2. Dynamic Base StorageClasses, when none of the static PVs the administrator created matches a user&amp;rsquo;s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC.</description>
+    </item>
+    
+    <item>
+      <title>k8s pod 调度</title>
+      <link>http://localhost:1313/cloud/k8s-scheduler/</link>
+      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-scheduler/</guid>
+      <description>一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。</description>
+    </item>
+    
+    <item>
+      <title>k8s nodeport 端口范围</title>
+      <link>http://localhost:1313/cloud/k8s-nodeport-range/</link>
+      <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-nodeport-range/</guid>
+      <description>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
+在 k8s 源码中搜索 32767，在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go 存在代码
+fs.Var(&amp;amp;s.ServiceNodePortRange, &amp;#34;service-node-port-range&amp;#34;, &amp;#34;&amp;#34;+ &amp;#34;A port range to reserve for services with NodePort visibility. &amp;#34;+ &amp;#34;Example: &amp;#39;30000-32767&amp;#39;. Inclusive at both ends of the range.&amp;#34;) 其实上面注释已经说了是闭区间了，但是我还是要看看
+搜索 ServiceNodePortRange 在
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go 中存在
+ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange, 跟踪 DefaultServiceNodePortRange 找到
+var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768} 跟踪 PortRange 找到
+type PortRange struct { Base int Size int } // Contains tests whether a given port falls within the PortRange.</description>
+    </item>
+    
+    <item>
+      <title>k8s 源码分析: ReplicaSet 控制器</title>
+      <link>http://localhost:1313/cloud/k8s-replicaset/</link>
+      <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-replicaset/</guid>
+      <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc.</description>
+    </item>
+    
+    <item>
+      <title>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</title>
+      <link>http://localhost:1313/cloud/k8s-authentication-with-basic/</link>
+      <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-authentication-with-basic/</guid>
+      <description>0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. 	LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. 	// +optional 	ClientCertificate string `json:&amp;#34;client-certificate,omitempty&amp;#34;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.</description>
+    </item>
+    
+    <item>
+      <title>创建 client （二）： 通过配置文件方式访问 k8s API</title>
+      <link>http://localhost:1313/cloud/k8s-authentication-with-ca/</link>
+      <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-authentication-with-ca/</guid>
+      <description>0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
+这个时候，我们还有两种认证方式
+ ca 证书认证
+ basic 认证  0x02 kubectl 是如何访问 k8s 的？ k8s 部署的时候，我们会给 kubectl 配置证书，context 等信息，生成一个 $HOME/.kube/config 这样的文件，文件内容如下 apiVersion: v1 clusters: - cluster: certificate-authority-data: ... server: https://192.168.1.200:6443 name: kube_cluster contexts: - context: cluster: kube_cluster namespace: kube-system user: kubectl name: kubectl@kube_cluster current-context: kubectl@kube_cluster kind: Config preferences: {} users: - name: kubectl user: as-user-extra: {} client-certificate-data: .</description>
+    </item>
+    
+    <item>
+      <title>k8s operator 简介</title>
+      <link>http://localhost:1313/cloud/k8s-operator/</link>
+      <pubDate>Fri, 13 Apr 2018 10:03:03 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-operator/</guid>
+      <description>0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
+ 1. Resource
+ 1.1 自定义资源
+ 1.2 为用户提供一种简单的方式描述对服务的期望
+  2. Controller
+ 2.1 创建 Resource
+ 2.2 监听 Resource 的变更，用来实现用户对服务的期望
+   0x2 Operator 工作流程  1. 注册自定义资源 CustomResource
+ 2. 监听(watch)自定义资源
+ 3. 用户对自定义进行 CREATE/UPDATE/DELETE 操作
+ 4. 当监听到资源变化之后，调用对应的 handler 进行处理
+  如果你了解 k8s 的内部原理，你会发现其实 k8s 本身就是这样做的，
+比如 deployment ，只是 deployment 资源是内置资源，
+不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。</description>
+    </item>
+    
+    <item>
+      <title>创建 client （一）： token 方式访问 k8s API</title>
+      <link>http://localhost:1313/cloud/k8s-authentication-with-token/</link>
+      <pubDate>Wed, 11 Apr 2018 14:22:03 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-authentication-with-token/</guid>
+      <description>0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
+3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
+0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？
+和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
+我们在 rook 的代码中，可以看到下面这样类似的代码</description>
+    </item>
+    
+    <item>
+      <title>apt 常用的几个命令</title>
+      <link>http://localhost:1313/linux/apt-usage/</link>
+      <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
+      
+      <guid>http://localhost:1313/linux/apt-usage/</guid>
+      <description>一、安装软件 apt install &amp;lt;package_name&amp;gt;  二、删除软件 apt remove &amp;lt;package_name&amp;gt;  三、查找软件 apt-cache search &amp;lt;package_name&amp;gt;  四、显示软件版本 apt-cache policy vim vim: Installed: 2:7.4.488-7+deb8u2 Candidate: 2:7.4.488-7+deb8u3 Version table: 2:7.4.488-7+deb8u3 0 500 http://mirrordirector.raspbian.org/raspbian/ jessie/main armhf Packages *** 2:7.4.488-7+deb8u2 0 100 /var/lib/dpkg/status  使用 debian 系列系统安装软件的时候，经常会出现下面类似的错误：
+flex : 依赖: m4 但是它将不会被安装 依赖: libfl-dev (= 2.5.35-10ubuntu3) 但是它将不会被安装 libc6 : 依赖: libc-bin (= 2.15-0ubuntu10) 但是 2.15-0ubuntu10.3 正要被安装 libc6-dev : 依赖: libc6 (= 2.15-0ubuntu10.3) 但是 2.15-0ubuntu10 正要被安装  如果是显示依赖的版本不对，我们就可以通过指定版本来解决对应的依赖问题。</description>
+    </item>
+    
+    <item>
+      <title>k8s 中 node 的 roles</title>
+      <link>http://localhost:1313/cloud/k8s-node-roles/</link>
+      <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/k8s-node-roles/</guid>
+      <description>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES
+但是执行命令：
+kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
+那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
+通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&amp;lt;role&amp;gt;=&amp;quot;&amp;quot; 和 kubernetes.io/role=&amp;quot;&amp;lt;role&amp;gt;&amp;quot; 来定义角色。
+所以 master 可以这样
+kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
+kubectl label node 192.168.88.201 kubernetes.io/role=master  </description>
+    </item>
+    
+    <item>
+      <title>k8s 中的污染 Taint 与容忍 Toleration</title>
+      <link>http://localhost:1313/cloud/taint-and-toleration/</link>
+      <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/taint-and-toleration/</guid>
+      <description>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
+1. aaa 代表 taint 的 key
+2. bbb 代表 taint 的 value
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。</description>
+    </item>
+    
+    <item>
+      <title>Fix Alpine Update Failed</title>
+      <link>http://localhost:1313/cloud/fix-alpine-update-failed/</link>
+      <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/fix-alpine-update-failed/</guid>
+      <description>之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
+FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;amp;&amp;amp; \ apk add gcc linux-headers musl-dev &amp;amp;&amp;amp; \ rm -rf /var/cache/* &amp;amp;&amp;amp; \ echo &amp;quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&amp;quot; &amp;gt; /etc/apk/repositories &amp;amp;&amp;amp; \ echo &amp;quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&amp;quot; &amp;gt;&amp;gt; /etc/apk/repositories  正常跑着没问题，但是
+docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是
+/go # apk update fetch https://mirrors.ustc.edu.cn/alpine/v3.6/main/x86_64/APKINDEX.tar.gz ERROR: https://mirrors.ustc.edu.cn/alpine/v3.6/main/: Bad file descriptor WARNING: Ignoring APKINDEX.</description>
+    </item>
+    
+    <item>
+      <title>Deploy K8s With Kubeadm</title>
+      <link>http://localhost:1313/cloud/deploy-k8s-with-kubeadm/</link>
+      <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/deploy-k8s-with-kubeadm/</guid>
+      <description>一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
+node1： 192.168.88.50
+node2： 192.168.88.51
+二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld 2. sysctl 配置 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system 3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn 4. 启用 epel yum install -y epel-release 5. 禁用虚拟内存 swapoff -a 6. 设置 hostname node1 上执行
+hostnamectl set-hostname node1 node2 上执行
+hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemctl enable docker &amp;amp;&amp;amp; systemctl start docker 四、安装 kubeadm, kubelet and kubectl cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum.</description>
+    </item>
+    
+    <item>
+      <title>Clair 源码简要分析（未完待续）</title>
+      <link>http://localhost:1313/cloud/clair/</link>
+      <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/clair/</guid>
+      <description>概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
+在开始分析 clair 之前，我们明白几点：
+1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。
+2. clair 镜像分析是按镜像层级来进行的，如果某一层的软件有漏洞，在上层被删除了，该漏洞还是存在的。
+3. clair 的漏洞扫描是通过软件版本比对来完成的，如果某个应用，比如 nginx ，它在镜像中的版本为 1.0.0，而该版本在数据库中存在 1.0.0 对应的漏洞数据，则表示该镜像存在对应的漏洞。
+clair 中的几个概念 1. Namespace 这里的 namespace 既不是租户也不是命名空间，而是系统或软件的名称。
+比如 debian，NodeJS。
+2. Feature 在镜像层中检测到的软件包，但是没有检测到 namespace。
+比如： Name: OpenSSL, Version: 1.0, VersionFormat: dpkg
+3. NamespacedFeature 和 Feature 类似，同时检测到了 namespace。
+比如： OpenSSL 1.0 dpkg Debian:7
+4. Vulnerability Vulnerability 是应用对应的漏洞描述。
+代码分析 我们直接从镜像扫描开始分析代码
+代码在 github.com/coreos/clair/worker.go 中
+func processLayers(datastore database.Datastore, imageFormat string, requests []LayerRequest) ([]database.</description>
+    </item>
+    
+    <item>
+      <title>harbor 源码分析： job</title>
+      <link>http://localhost:1313/cloud/harbor-job.md/</link>
+      <pubDate>Tue, 19 Dec 2017 18:45:17 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/harbor-job.md/</guid>
+      <description>概述 harbor 中有两个常用的功能，镜像复制和镜像扫描，而这两个操作都是比较耗时的任务，在 harbor 中，被设计为 job 来完成。
+接口定义 同样的，我们先来看 Job 的接口定义
+代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
+type Job interface { // job 的 id，通过 id 可以查看对应的信息  ID() int64 // job 类型，目前只有 Scan 和 Replication 两种  Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态  LogPath() string // 更新 job 状态  UpdateStatus(status string) error // 初始化一个 job  Init() error } 镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
+type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 	Digest string } 镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。</description>
+    </item>
+    
+    <item>
+      <title>harbor 源码分析： 用户认证</title>
+      <link>http://localhost:1313/cloud/harbor-authenticate.md/</link>
+      <pubDate>Wed, 22 Nov 2017 11:14:50 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/harbor-authenticate.md/</guid>
+      <description>接口定义 代码在 src/ui/auth/authenticator.go
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... 	Authenticate(m models.AuthModel) (*models.User, error) } 接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
+我们通过其中的数据库认证方式，来简单分析。
+接口实现 代码在 src/ui/auth/db/db.go
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil } 接口的注册 代码在 src/ui/auth/db/db.</description>
+    </item>
+    
+    <item>
+      <title>ansible template 基本用法</title>
+      <link>http://localhost:1313/ansible/ansible-template-demo/</link>
+      <pubDate>Fri, 03 Nov 2017 11:08:09 +0800</pubDate>
+      
+      <guid>http://localhost:1313/ansible/ansible-template-demo/</guid>
+      <description>- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker 会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.</description>
+    </item>
+    
+    <item>
+      <title>部署一个带有基础认证的 docker 镜像仓库</title>
+      <link>http://localhost:1313/cloud/deploy-docker-registry-with-basic-authentication/</link>
+      <pubDate>Sat, 28 Oct 2017 20:46:54 +0800</pubDate>
+      
+      <guid>http://localhost:1313/cloud/deploy-docker-registry-with-basic-authentication/</guid>
+      <description>一、创建 auth 目录 创建 auth 目录来存放 用户名和密码
+$ mkdir auth 二、生成认证文件 $ docker run \  --entrypoint htpasswd \  registry:2 -Bbn testuser testpassword &amp;gt; auth/htpasswd 生成了一个用户名为 testuser，密码为 testpassword 的认证文件
+三、启动镜像仓库 docker run -d \  -p 5000:5000 \  --restart=always \  --name registry \  -v `pwd`/auth:/auth \  -e &amp;#34;REGISTRY_AUTH=htpasswd&amp;#34; \  -e &amp;#34;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&amp;#34; \  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \  registry:2 将认证文件挂载到容器中即可。
+如果有证书
+$ docker run -d \  -p 5000:5000 \  --restart=always \  --name registry \  -v `pwd`/auth:/auth \  -e &amp;#34;REGISTRY_AUTH=htpasswd&amp;#34; \  -e &amp;#34;REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm&amp;#34; \  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \  -v `pwd`/certs:/certs \  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.</description>
+    </item>
+    
+    <item>
+      <title>Add epel for centos</title>
+      <link>http://localhost:1313/raspberry/add-epel-for-centos/</link>
+      <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
+      
+      <guid>http://localhost:1313/raspberry/add-epel-for-centos/</guid>
+      <description>cat &amp;gt; /etc/yum.repos.d/epel.repo &amp;lt;&amp;lt; EOF [epel] name=Epel rebuild for armhfp baseurl=https://armv7.dev.centos.org/repodir/epel-pass-1/ enabled=1 gpgcheck=0 EOF  </description>
+    </item>
+    
+    <item>
+      <title>debian 安装指定版本的 docker</title>
+      <link>http://localhost:1313/ops/install-docker-on-debian/</link>
+      <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
+      
+      <guid>http://localhost:1313/ops/install-docker-on-debian/</guid>
+      <description>1. 加入软件源 cat &amp;gt;&amp;gt; /etc/apt/sources.list &amp;lt;&amp;lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
+apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.</description>
+    </item>
+    
+    <item>
+      <title>centos 安装指定版本的 docker</title>
+      <link>http://localhost:1313/ops/install-docker-on-centos/</link>
+      <pubDate>Sat, 21 Oct 2017 16:56:06 +0800</pubDate>
+      
+      <guid>http://localhost:1313/ops/install-docker-on-centos/</guid>
+      <description>增加 docker 源
+cat &amp;gt;/etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
+# yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.</description>
+    </item>
+    
+    <item>
+      <title>权限、RBAC 和 ObjectPermission</title>
+      <link>http://localhost:1313/developer/permission-rbac-and-objectpermission/</link>
+      <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
+      
+      <guid>http://localhost:1313/developer/permission-rbac-and-objectpermission/</guid>
+      <description>一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
+   id 用户名 密码 是否管理员     1 admin 123456 True   2 test1 123123 False   3 test2 123123 False    系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
+def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass 2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。
+我们的数据库变成了这样
+   id 用户名 密码 是否允许发布文章 是否允许修改文章 是否允许删除文章     1 test1 123123 True False False   2 test2 123123 False True False   3 test3 123123 False False True    同样的，我们的代码也会多一些判断</description>
+    </item>
+    
+    <item>
       <title>一些 django 经验分享</title>
-      <link>http://www.recall704.com/python/some-django-tips/</link>
+      <link>http://localhost:1313/python/some-django-tips/</link>
       <pubDate>Mon, 14 Mar 2016 14:22:53 +0800</pubDate>
       
-      <guid>http://www.recall704.com/python/some-django-tips/</guid>
+      <guid>http://localhost:1313/python/some-django-tips/</guid>
       <description>最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
 1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
-@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2  这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
+@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2 这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
 2、用函数来代替变量的设置 同样的，当我们设置一个对象的属性的值的时候，
-obj.status = 2 obj.save()  除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
-def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs)  这样，在设置变量的时候，只需要</description>
+obj.status = 2 obj.save() 除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
+def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs) 这样，在设置变量的时候，只需要
+obj.set_status_finished()
+就可以了。</description>
     </item>
     
   </channel>

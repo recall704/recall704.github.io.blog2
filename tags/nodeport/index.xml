@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Nodeport on RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/tags/nodeport/</link>
-    <description>Recent content in Nodeport on RECALL&#39;s Blog</description>
+    <title>Nodeport on Recall&#39;s blog</title>
+    <link>http://localhost:1313/tags/nodeport/</link>
+    <description>Recent content in Nodeport on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 14 Aug 2018 22:55:42 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/tags/nodeport/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/nodeport/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s nodeport 端口范围</title>
-      <link>http://www.recall704.com/cloud/k8s-nodeport-range/</link>
+      <link>http://localhost:1313/cloud/k8s-nodeport-range/</link>
       <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/k8s-nodeport-range/</guid>
+      <guid>http://localhost:1313/cloud/k8s-nodeport-range/</guid>
       <description>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
 在 k8s 源码中搜索 32767，在
-gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  存在代码
-fs.Var(&amp;amp;s.ServiceNodePortRange, &amp;quot;service-node-port-range&amp;quot;, &amp;quot;&amp;quot;+ &amp;quot;A port range to reserve for services with NodePort visibility. &amp;quot;+ &amp;quot;Example: &#39;30000-32767&#39;. Inclusive at both ends of the range.&amp;quot;)  其实上面注释已经说了是闭区间了，但是我还是要看看
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go 存在代码
+fs.Var(&amp;amp;s.ServiceNodePortRange, &amp;#34;service-node-port-range&amp;#34;, &amp;#34;&amp;#34;+ &amp;#34;A port range to reserve for services with NodePort visibility. &amp;#34;+ &amp;#34;Example: &amp;#39;30000-32767&amp;#39;. Inclusive at both ends of the range.&amp;#34;) 其实上面注释已经说了是闭区间了，但是我还是要看看
 搜索 ServiceNodePortRange 在
-gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go  中存在
-ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange,  跟踪 DefaultServiceNodePortRange 找到
-var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768}  跟踪 PortRange 找到
+gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go 中存在
+ServiceNodePortRange: kubeoptions.DefaultServiceNodePortRange, 跟踪 DefaultServiceNodePortRange 找到
+var DefaultServiceNodePortRange = utilnet.PortRange{Base: 30000, Size: 2768} 跟踪 PortRange 找到
 type PortRange struct { Base int Size int } // Contains tests whether a given port falls within the PortRange.</description>
     </item>
     

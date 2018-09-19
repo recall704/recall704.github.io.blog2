@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>容器 on RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/</link>
-    <description>Recent content in 容器 on RECALL&#39;s Blog</description>
+    <title>容器 on Recall&#39;s blog</title>
+    <link>http://localhost:1313/tags/%E5%AE%B9%E5%99%A8/</link>
+    <description>Recent content in 容器 on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Wed, 20 Dec 2017 20:24:42 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Clair 源码简要分析（未完待续）</title>
-      <link>http://www.recall704.com/cloud/clair/</link>
+      <link>http://localhost:1313/cloud/clair/</link>
       <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/clair/</guid>
+      <guid>http://localhost:1313/cloud/clair/</guid>
       <description>概述 clair 是 coreos 发布的一款开源容器漏洞扫描工具，该工具可以交叉检查Docker镜像的操作系统以及上面安装的任何包是否与任何已知不安全的包版本相匹配。
 在开始分析 clair 之前，我们明白几点：
 1. clair 是以静态分析的方式对镜像进行分析的，有点类似于杀毒软件用特征码来扫描病毒。

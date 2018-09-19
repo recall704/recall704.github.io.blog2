@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>K8s on RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/categories/k8s/</link>
-    <description>Recent content in K8s on RECALL&#39;s Blog</description>
+    <title>K8s on Recall&#39;s blog</title>
+    <link>http://localhost:1313/categories/k8s/</link>
+    <description>Recent content in K8s on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Thu, 26 Apr 2018 15:32:03 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/categories/k8s/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s 源码分析: ReplicaSet 控制器</title>
-      <link>http://www.recall704.com/cloud/k8s-replicaset/</link>
+      <link>http://localhost:1313/cloud/k8s-replicaset/</link>
       <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/k8s-replicaset/</guid>
-      <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;quot;Couldn&#39;t get key for %v %#v: %v&amp;quot;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &amp;gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.</description>
+      <guid>http://localhost:1313/cloud/k8s-replicaset/</guid>
+      <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc.</description>
     </item>
     
   </channel>

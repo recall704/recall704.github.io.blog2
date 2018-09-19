@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Harbor on RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/tags/harbor/</link>
-    <description>Recent content in Harbor on RECALL&#39;s Blog</description>
+    <title>Harbor on Recall&#39;s blog</title>
+    <link>http://localhost:1313/tags/harbor/</link>
+    <description>Recent content in Harbor on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 19 Dec 2017 18:45:17 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/tags/harbor/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/harbor/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>harbor 源码分析： job</title>
-      <link>http://www.recall704.com/cloud/harbor-job.md/</link>
+      <link>http://localhost:1313/cloud/harbor-job.md/</link>
       <pubDate>Tue, 19 Dec 2017 18:45:17 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/harbor-job.md/</guid>
+      <guid>http://localhost:1313/cloud/harbor-job.md/</guid>
       <description>概述 harbor 中有两个常用的功能，镜像复制和镜像扫描，而这两个操作都是比较耗时的任务，在 harbor 中，被设计为 job 来完成。
 接口定义 同样的，我们先来看 Job 的接口定义
 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type Job interface { // job 的 id，通过 id 可以查看对应的信息 ID() int64 // job 类型，目前只有 Scan 和 Replication 两种 Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态 LogPath() string // 更新 job 状态 UpdateStatus(status string) error // 初始化一个 job Init() error }  镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
-type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 Digest string }  镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。</description>
+type Job interface { // job 的 id，通过 id 可以查看对应的信息  ID() int64 // job 类型，目前只有 Scan 和 Replication 两种  Type() Type // 日志所在路径，通过这个路径可以查看 job 的状态  LogPath() string // 更新 job 状态  UpdateStatus(status string) error // 初始化一个 job  Init() error } 镜像扫描 1. 镜像扫描任务的基本结构 代码在 github.com/vmware/harbor/src/jobservice/job/jobs.go
+type ScanJob struct { id int64 parm *ScanJobParm } type ScanJobParm struct { Repository string Tag string // 镜像 哈希值 	Digest string } 镜像扫描需要的参数很少，其实就是镜像的地址，附带一个镜像哈希值。</description>
     </item>
     
     <item>
       <title>harbor 源码分析： 用户认证</title>
-      <link>http://www.recall704.com/cloud/harbor-authenticate.md/</link>
+      <link>http://localhost:1313/cloud/harbor-authenticate.md/</link>
       <pubDate>Wed, 22 Nov 2017 11:14:50 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/harbor-authenticate.md/</guid>
+      <guid>http://localhost:1313/cloud/harbor-authenticate.md/</guid>
       <description>接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... 	Authenticate(m models.AuthModel) (*models.User, error) } 接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
 我们通过其中的数据库认证方式，来简单分析。
 接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.</description>
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil } 接口的注册 代码在 src/ui/auth/db/db.</description>
     </item>
     
   </channel>

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Apk on RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/tags/apk/</link>
-    <description>Recent content in Apk on RECALL&#39;s Blog</description>
+    <title>Apk on Recall&#39;s blog</title>
+    <link>http://localhost:1313/tags/apk/</link>
+    <description>Recent content in Apk on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Thu, 18 Jan 2018 17:54:53 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/tags/apk/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/apk/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Fix Alpine Update Failed</title>
-      <link>http://www.recall704.com/cloud/fix-alpine-update-failed/</link>
+      <link>http://localhost:1313/cloud/fix-alpine-update-failed/</link>
       <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/fix-alpine-update-failed/</guid>
+      <guid>http://localhost:1313/cloud/fix-alpine-update-failed/</guid>
       <description>之前为了统一一个 golang 的编译环境，做了一个对应的镜像， Dockerfile 如下
 FROM golang:1.8.5-alpine3.6 MAINTAINER @recall704 https://github.com/recall704 RUN apk update &amp;amp;&amp;amp; \ apk add gcc linux-headers musl-dev &amp;amp;&amp;amp; \ rm -rf /var/cache/* &amp;amp;&amp;amp; \ echo &amp;quot;https://mirrors.ustc.edu.cn/alpine/v3.6/main/&amp;quot; &amp;gt; /etc/apk/repositories &amp;amp;&amp;amp; \ echo &amp;quot;https://mirrors.ustc.edu.cn/alpine/v3.6/community/&amp;quot; &amp;gt;&amp;gt; /etc/apk/repositories  正常跑着没问题，但是
 docker run --rm -it win7/golang:v1.8.5-gcc sh  进入容器后，我想更新一个 go 的 package，发现没有 git，很自然的想到 apk update apk add git  但是

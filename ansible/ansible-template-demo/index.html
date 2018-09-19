@@ -1,243 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
+  
   <title>ansible template 基本用法</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
+  <meta name="description" content="- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker 会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel." />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="ansible template 基本用法" />
+    <meta name="twitter:description" content="- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker 会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel." />
+    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
   <meta property="og:title" content="ansible template 基本用法" />
-  <meta name="twitter:title" content="ansible template 基本用法" />
-  <meta name="description" content="- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker  会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
-[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.">
-  <meta property="og:description" content="- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker  会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
-[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel.">
-  <meta name="twitter:description" content="- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker  会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的 …">
-  <meta name="author" content=""/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/ansible/ansible-template-demo/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="RECALL&#39;s Blog" />
-
-  <meta name="generator" content="Hugo 0.41" />
-  <link rel="canonical" href="http://www.recall704.com/ansible/ansible-template-demo/" />
-  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+  <meta property="og:description" content="- name: config docker service template: src: docker.service.j2 dest: /etc/systemd/system/docker.service mode: 0644 tags: - docker 会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下
+[Unit] Description=Docker Application Container Engine Documentation=https://docs.docker.com After=network-online.target firewalld.service Wants=network-online.target [Service] Type=notify # the default is not to use systemd for cgroups because the delegate issues still # exists and systemd currently does not support the cgroup feature set required # for containers run by docker ExecStart=/usr/bin/dockerd ExecReload=/bin/kill -s HUP $MAINPID # Having non-zero Limit*s causes performance problems due to accounting overhead # in the kernel." />
+  <meta property="og:url" content="http://localhost:1313/ansible/ansible-template-demo/" />
+  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
 
 
 
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-<div class="pswp__bg"></div>
+<meta name="generator" content="Hugo 0.41" />
 
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
+
+<link rel="canonical" href="http://localhost:1313/ansible/ansible-template-demo/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
 
 </head>
-
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="home" href="/">home</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="tags" href="/tags/">tags</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="categories" href="/categories/">categories</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="series" href="/series/">series</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="about" href="/about/">about</a>
-            </li>
-          
-        
-
-        
-
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
     
-  
-  
-  
-
-
-
-
-  
-
-  <header class="header-section ">
-    
-    <div class="intro-header no-img">
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-10 col-xs-10">
-            <div class="post-heading">
-              <h1>ansible template 基本用法</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on November 3, 2017
-  
-</span>
-
-
-                
-            </div>
-          </div>
-        </div>
-      </div>
+        
+      
     </div>
-  </header>
-
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-sm-10 col-xs-10">
+    
+  <header class="site-header">
+  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://localhost:1313/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
 
       
 
-      <article role="main" class="blog-post">
-        <pre><code class="language-yaml">- name: config docker service
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">ansible template 基本用法</h1>
+      <p class="post-meta">@recall704 · Nov 3, 2017 · 4 min read</p>
+    </header>
+
+    
+
+    <article class="post-content"><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- name: config docker service
   template: 
     src: docker.service.j2
     dest: /etc/systemd/system/docker.service
-    mode: 0644
+    mode: <span style="color:#ae81ff">0644</span>
   tags:
-    - docker
-</code></pre>
-
+    - docker</code></pre></div>
 <p>会将当前模板下的 docker.service.j2 生成 /etc/systemd/system/docker.service 到对应的主机下</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>Unit<span style="color:#f92672">]</span>
+Description<span style="color:#f92672">=</span>Docker Application Container Engine
+Documentation<span style="color:#f92672">=</span>https://docs.docker.com
+After<span style="color:#f92672">=</span>network-online.target firewalld.service
+Wants<span style="color:#f92672">=</span>network-online.target
 
-<pre><code class="language-shell">[Unit]
-Description=Docker Application Container Engine
-Documentation=https://docs.docker.com
-After=network-online.target firewalld.service
-Wants=network-online.target
+<span style="color:#f92672">[</span>Service<span style="color:#f92672">]</span>
+Type<span style="color:#f92672">=</span>notify
+<span style="color:#75715e"># the default is not to use systemd for cgroups because the delegate issues still
+</span><span style="color:#75715e"># exists and systemd currently does not support the cgroup feature set required
+</span><span style="color:#75715e"># for containers run by docker
+</span><span style="color:#75715e"></span>ExecStart<span style="color:#f92672">=</span>/usr/bin/dockerd
+ExecReload<span style="color:#f92672">=</span>/bin/kill -s HUP $MAINPID
+<span style="color:#75715e"># Having non-zero Limit*s causes performance problems due to accounting overhead
+</span><span style="color:#75715e"># in the kernel. We recommend using cgroups to do container-local accounting.
+</span><span style="color:#75715e"></span>LimitNOFILE<span style="color:#f92672">=</span><span style="color:#ae81ff">1048576</span>
+LimitNPROC<span style="color:#f92672">=</span><span style="color:#ae81ff">1048576</span>
+LimitCORE<span style="color:#f92672">=</span>infinity
+<span style="color:#75715e"># Uncomment TasksMax if your systemd version supports it.
+</span><span style="color:#75715e"># Only systemd 226 and above support this version.
+</span><span style="color:#75715e">#TasksMax=infinity
+</span><span style="color:#75715e"></span>TimeoutStartSec<span style="color:#f92672">=</span>1min
+<span style="color:#75715e"># set delegate yes so that systemd does not reset the cgroups of docker containers
+</span><span style="color:#75715e"></span>Delegate<span style="color:#f92672">=</span>yes
+<span style="color:#75715e"># kill only the docker process, not all processes in the cgroup
+</span><span style="color:#75715e"></span>KillMode<span style="color:#f92672">=</span>process
+<span style="color:#75715e"># restart the docker process if it exits prematurely
+</span><span style="color:#75715e"></span>Restart<span style="color:#f92672">=</span>on-failure
+StartLimitBurst<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>
+StartLimitInterval<span style="color:#f92672">=</span>60s
 
-[Service]
-Type=notify
-# the default is not to use systemd for cgroups because the delegate issues still
-# exists and systemd currently does not support the cgroup feature set required
-# for containers run by docker
-ExecStart=/usr/bin/dockerd
-ExecReload=/bin/kill -s HUP $MAINPID
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNOFILE=1048576
-LimitNPROC=1048576
-LimitCORE=infinity
-# Uncomment TasksMax if your systemd version supports it.
-# Only systemd 226 and above support this version.
-#TasksMax=infinity
-TimeoutStartSec=1min
-# set delegate yes so that systemd does not reset the cgroups of docker containers
-Delegate=yes
-# kill only the docker process, not all processes in the cgroup
-KillMode=process
-# restart the docker process if it exits prematurely
-Restart=on-failure
-StartLimitBurst=3
-StartLimitInterval=60s
-
-[Install]
-WantedBy=multi-user.target
-</code></pre>
-
+<span style="color:#f92672">[</span>Install<span style="color:#f92672">]</span>
+WantedBy<span style="color:#f92672">=</span>multi-user.target</code></pre></div>
 <p>全部用法如下</p>
 
 <pre><code>- name: Templates a file out to a remote server
@@ -271,65 +316,61 @@ WantedBy=multi-user.target
       variable_end_string:   # The string marking the end of a print statement.
       variable_start_string:   # The string marking the beginning of a print statement.
 </code></pre>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
         
+          <li><a href="http://localhost:1313/tags/ansible"><span class="tag">Ansible</span></a></li>
+        
+          <li><a href="http://localhost:1313/tags/template"><span class="tag">Template</span></a></li>
         
       </ul>
-
       
-
-    </div>
-  </div>
-</div>
-
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-          
-        </ul>
-        <p class="credits copyright text-muted">
-          
-          
-          &nbsp;&bull;&nbsp;
-          2018
-
-          
-            &nbsp;&bull;&nbsp;
-            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-          
-        </p>
-        
-        <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>320</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/main.js"></script>
-<script src="http://www.recall704.com/js/highlight.min.js"></script>
-<script> hljs.initHighlightingOnLoad(); </script>
-<script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+
 
 
 
   </body>
 </html>
-

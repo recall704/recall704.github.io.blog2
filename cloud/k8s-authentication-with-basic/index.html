@@ -1,201 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
+  
   <title>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</title>
-  <meta property="og:title" content="创建 client （三）： HTTP Basic Auth 访问 k8s API Server" />
-  <meta name="twitter:title" content="创建 client （三）： HTTP Basic Auth 访问 k8s API Server" />
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
   <meta name="description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
-AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
-type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // &#43;optional ClientCertificate string `json:&quot;client-certificate,omitempty&quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.">
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. 	LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. 	// &#43;optional 	ClientCertificate string `json:&amp;#34;client-certificate,omitempty&amp;#34;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS." />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="创建 client （三）： HTTP Basic Auth 访问 k8s API Server" />
+    <meta name="twitter:description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. 	LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. 	// &#43;optional 	ClientCertificate string `json:&amp;#34;client-certificate,omitempty&amp;#34;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS." />
+    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="创建 client （三）： HTTP Basic Auth 访问 k8s API Server" />
   <meta property="og:description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
-AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
-type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. // &#43;optional ClientCertificate string `json:&quot;client-certificate,omitempty&quot;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.">
-  <meta name="twitter:description" content="0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
-AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, ClientKey: &quot;client.key&quot;, },  其对应代码在 client-go …">
-  <meta name="author" content=""/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-authentication-with-basic/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="RECALL&#39;s Blog" />
-
-  <meta name="generator" content="Hugo 0.41" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-authentication-with-basic/" />
-  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
+type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. 	LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. 	// &#43;optional 	ClientCertificate string `json:&amp;#34;client-certificate,omitempty&amp;#34;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS." />
+  <meta property="og:url" content="http://localhost:1313/cloud/k8s-authentication-with-basic/" />
+  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
 
 
 
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-<div class="pswp__bg"></div>
+<meta name="generator" content="Hugo 0.41" />
 
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
+
+<link rel="canonical" href="http://localhost:1313/cloud/k8s-authentication-with-basic/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
 
 </head>
-
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="home" href="/">home</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="tags" href="/tags/">tags</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="categories" href="/categories/">categories</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="series" href="/series/">series</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="about" href="/about/">about</a>
-            </li>
-          
-        
-
-        
-
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
     
-  
-  
-  
-
-
-
-
-  
-
-  <header class="header-section ">
-    
-    <div class="intro-header no-img">
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-10 col-xs-10">
-            <div class="post-heading">
-              <h1>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on April 15, 2018
-  
-</span>
-
-
-                
-            </div>
-          </div>
-        </div>
-      </div>
+        
+      
     </div>
-  </header>
-
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-sm-10 col-xs-10">
+    
+  <header class="site-header">
+  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://localhost:1313/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
 
       
 
-      <article role="main" class="blog-post">
-        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">创建 client （三）： HTTP Basic Auth 访问 k8s API Server</h1>
+      <p class="post-meta">@recall704 · Apr 15, 2018 · 2 min read</p>
+    </header>
+
+    
+
+    <article class="post-content">
 
 <h1 id="0x01-结构体-authinfo">0x01 结构体 AuthInfo</h1>
 
@@ -208,142 +258,123 @@ AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &quot;client.crt&quot;, Clie
 </code></pre>
 
 <p>其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中</p>
-
-<pre><code class="language-go">type AuthInfo struct {
-	// LocationOfOrigin indicates where this object came from.  It is used for round tripping config post-merge, but never serialized.
-	LocationOfOrigin string
-	// ClientCertificate is the path to a client cert file for TLS.
-	// +optional
-	ClientCertificate string `json:&quot;client-certificate,omitempty&quot;`
-	// ClientCertificateData contains PEM-encoded data from a client cert file for TLS. Overrides ClientCertificate
-	// +optional
-	ClientCertificateData []byte `json:&quot;client-certificate-data,omitempty&quot;`
-	// ClientKey is the path to a client key file for TLS.
-	// +optional
-	ClientKey string `json:&quot;client-key,omitempty&quot;`
-	// ClientKeyData contains PEM-encoded data from a client key file for TLS. Overrides ClientKey
-	// +optional
-	ClientKeyData []byte `json:&quot;client-key-data,omitempty&quot;`
-	// Token is the bearer token for authentication to the kubernetes cluster.
-	// +optional
-	Token string `json:&quot;token,omitempty&quot;`
-	// TokenFile is a pointer to a file that contains a bearer token (as described above).  If both Token and TokenFile are present, Token takes precedence.
-	// +optional
-	TokenFile string `json:&quot;tokenFile,omitempty&quot;`
-	// Impersonate is the username to act-as.
-	// +optional
-	Impersonate string `json:&quot;act-as,omitempty&quot;`
-	// ImpersonateGroups is the groups to imperonate.
-	// +optional
-	ImpersonateGroups []string `json:&quot;act-as-groups,omitempty&quot;`
-	// ImpersonateUserExtra contains additional information for impersonated user.
-	// +optional
-	ImpersonateUserExtra map[string][]string `json:&quot;act-as-user-extra,omitempty&quot;`
-	// Username is the username for basic authentication to the kubernetes cluster.
-	// +optional
-	Username string `json:&quot;username,omitempty&quot;`
-	// Password is the password for basic authentication to the kubernetes cluster.
-	// +optional
-	Password string `json:&quot;password,omitempty&quot;`
-	// AuthProvider specifies a custom authentication plugin for the kubernetes cluster.
-	// +optional
-	AuthProvider *AuthProviderConfig `json:&quot;auth-provider,omitempty&quot;`
-	// Extensions holds additional information. This is useful for extenders so that reads and writes don't clobber unknown fields
-	// +optional
-	Extensions map[string]runtime.Object `json:&quot;extensions,omitempty&quot;`
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">AuthInfo</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#75715e">// LocationOfOrigin indicates where this object came from.  It is used for round tripping config post-merge, but never serialized.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">LocationOfOrigin</span> <span style="color:#66d9ef">string</span>
+	<span style="color:#75715e">// ClientCertificate is the path to a client cert file for TLS.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ClientCertificate</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;client-certificate,omitempty&#34;`</span>
+	<span style="color:#75715e">// ClientCertificateData contains PEM-encoded data from a client cert file for TLS. Overrides ClientCertificate
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ClientCertificateData</span> []<span style="color:#66d9ef">byte</span> <span style="color:#e6db74">`json:&#34;client-certificate-data,omitempty&#34;`</span>
+	<span style="color:#75715e">// ClientKey is the path to a client key file for TLS.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ClientKey</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;client-key,omitempty&#34;`</span>
+	<span style="color:#75715e">// ClientKeyData contains PEM-encoded data from a client key file for TLS. Overrides ClientKey
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ClientKeyData</span> []<span style="color:#66d9ef">byte</span> <span style="color:#e6db74">`json:&#34;client-key-data,omitempty&#34;`</span>
+	<span style="color:#75715e">// Token is the bearer token for authentication to the kubernetes cluster.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Token</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;token,omitempty&#34;`</span>
+	<span style="color:#75715e">// TokenFile is a pointer to a file that contains a bearer token (as described above).  If both Token and TokenFile are present, Token takes precedence.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">TokenFile</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;tokenFile,omitempty&#34;`</span>
+	<span style="color:#75715e">// Impersonate is the username to act-as.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Impersonate</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;act-as,omitempty&#34;`</span>
+	<span style="color:#75715e">// ImpersonateGroups is the groups to imperonate.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ImpersonateGroups</span> []<span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;act-as-groups,omitempty&#34;`</span>
+	<span style="color:#75715e">// ImpersonateUserExtra contains additional information for impersonated user.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ImpersonateUserExtra</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>][]<span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;act-as-user-extra,omitempty&#34;`</span>
+	<span style="color:#75715e">// Username is the username for basic authentication to the kubernetes cluster.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Username</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;username,omitempty&#34;`</span>
+	<span style="color:#75715e">// Password is the password for basic authentication to the kubernetes cluster.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Password</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;password,omitempty&#34;`</span>
+	<span style="color:#75715e">// AuthProvider specifies a custom authentication plugin for the kubernetes cluster.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">AuthProvider</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">AuthProviderConfig</span> <span style="color:#e6db74">`json:&#34;auth-provider,omitempty&#34;`</span>
+	<span style="color:#75715e">// Extensions holds additional information. This is useful for extenders so that reads and writes don&#39;t clobber unknown fields
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// +optional
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Extensions</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#a6e22e">runtime</span>.<span style="color:#a6e22e">Object</span> <span style="color:#e6db74">`json:&#34;extensions,omitempty&#34;`</span>
+}</code></pre></div>
 <p>这个结构体包含了 k8s 认证的所有信息，其中就包括了今天要讲得 http basic 认证</p>
 
 <h1 id="0x02-http-basic-认证">0x02 HTTP Basic 认证</h1>
 
 <p>我们只需要修改 AuthInfo 的认证方式为 Basic Auth 即可，代码如下</p>
-
-<pre><code class="language-go">AuthInfo: clientcmdapi.AuthInfo{
-	Username: &quot;admin&quot;,
-	Password: &quot;123456789&quot;,
-},
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">AuthInfo</span>: <span style="color:#a6e22e">clientcmdapi</span>.<span style="color:#a6e22e">AuthInfo</span>{
+	<span style="color:#a6e22e">Username</span>: <span style="color:#e6db74">&#34;admin&#34;</span>,
+	<span style="color:#a6e22e">Password</span>: <span style="color:#e6db74">&#34;123456789&#34;</span>,
+},</code></pre></div>
 <p>那么这个用户名和密码是在哪里定义的呢？
 这就涉及 apiserver 部署时的参数了，其对应的参数为 <code>--basic-auth-file</code></p>
 
 <p>这个参数的值对应到一个具体的文件路径，这个文件的内容类似如下:</p>
-
-<pre><code class="language-csv">123456789,admin,1
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-csv" data-lang="csv">123456789,admin,1</code></pre></div>
 <p>分别代表了 密码，用户名，和 uid</p>
 
 <p>具体可以参考官方文档： <a href="https://kubernetes.io/docs/admin/authentication/#static-password-file">https://kubernetes.io/docs/admin/authentication/#static-password-file</a></p>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
         
-          <li class="previous">
-            <a href="http://www.recall704.com/cloud/k8s-authentication-with-ca/" data-toggle="tooltip" data-placement="top" title="创建 client （二）： 通过配置文件方式访问 k8s API">&larr; Previous Post</a>
-          </li>
+          <li><a href="http://localhost:1313/tags/k8s"><span class="tag">K8s</span></a></li>
         
+          <li><a href="http://localhost:1313/tags/client"><span class="tag">Client</span></a></li>
         
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/k8s-replicaset/" data-toggle="tooltip" data-placement="top" title="k8s 源码分析: ReplicaSet 控制器">Next Post &rarr;</a>
-          </li>
+          <li><a href="http://localhost:1313/tags/basic"><span class="tag">Basic</span></a></li>
         
       </ul>
-
       
-
-    </div>
-  </div>
-</div>
-
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-          
-        </ul>
-        <p class="credits copyright text-muted">
-          
-          
-          &nbsp;&bull;&nbsp;
-          2018
-
-          
-            &nbsp;&bull;&nbsp;
-            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-          
-        </p>
-        
-        <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>156</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/main.js"></script>
-<script src="http://www.recall704.com/js/highlight.min.js"></script>
-<script> hljs.initHighlightingOnLoad(); </script>
-<script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+
 
 
 
   </body>
 </html>
-

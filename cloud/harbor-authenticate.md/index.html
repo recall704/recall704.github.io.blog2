@@ -1,205 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
+  
   <title>harbor 源码分析： 用户认证</title>
-  <meta property="og:title" content="harbor 源码分析： 用户认证" />
-  <meta name="twitter:title" content="harbor 源码分析： 用户认证" />
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
   <meta name="description" content="接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... 	Authenticate(m models.AuthModel) (*models.User, error) } 接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
 我们通过其中的数据库认证方式，来简单分析。
 接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.">
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil } 接口的注册 代码在 src/ui/auth/db/db." />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="harbor 源码分析： 用户认证" />
+    <meta name="twitter:description" content="接口定义 代码在 src/ui/auth/authenticator.go
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... 	Authenticate(m models.AuthModel) (*models.User, error) } 接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
+我们通过其中的数据库认证方式，来简单分析。
+接口实现 代码在 src/ui/auth/db/db.go
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil } 接口的注册 代码在 src/ui/auth/db/db." />
+    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="harbor 源码分析： 用户认证" />
   <meta property="og:description" content="接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) (*models.User, error) }  接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
+// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... 	Authenticate(m models.AuthModel) (*models.User, error) } 接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。
 我们通过其中的数据库认证方式，来简单分析。
 接口实现 代码在 src/ui/auth/db/db.go
-// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil }  接口的注册 代码在 src/ui/auth/db/db.">
-  <meta name="twitter:description" content="接口定义 代码在 src/ui/auth/authenticator.go
-// Authenticator provides interface to authenticate user credentials. type Authenticator interface { // Authenticate ... Authenticate(m models.AuthModel) …">
-  <meta name="author" content=""/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/harbor-authenticate.md/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="RECALL&#39;s Blog" />
-
-  <meta name="generator" content="Hugo 0.41" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/harbor-authenticate.md/" />
-  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+// Auth implements Authenticator interface to authenticate user against DB. type Auth struct{} // Authenticate calls dao to authenticate user. func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) { u, err := dao.LoginByDb(m) if err != nil { return nil, err } return u, nil } 接口的注册 代码在 src/ui/auth/db/db." />
+  <meta property="og:url" content="http://localhost:1313/cloud/harbor-authenticate.md/" />
+  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
 
 
 
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-<div class="pswp__bg"></div>
+<meta name="generator" content="Hugo 0.41" />
 
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
+
+<link rel="canonical" href="http://localhost:1313/cloud/harbor-authenticate.md/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
 
 </head>
-
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="home" href="/">home</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="tags" href="/tags/">tags</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="categories" href="/categories/">categories</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="series" href="/series/">series</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="about" href="/about/">about</a>
-            </li>
-          
-        
-
-        
-
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
     
-  
-  
-  
-
-
-
-
-  
-
-  <header class="header-section ">
-    
-    <div class="intro-header no-img">
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-10 col-xs-10">
-            <div class="post-heading">
-              <h1>harbor 源码分析： 用户认证</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on November 22, 2017
-  
-</span>
-
-
-                
-            </div>
-          </div>
-        </div>
-      </div>
+        
+      
     </div>
-  </header>
-
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-sm-10 col-xs-10">
+    
+  <header class="site-header">
+  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://localhost:1313/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
 
       
-      <hr />
-      <aside>
-        <nav id="TableOfContents">
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">harbor 源码分析： 用户认证</h1>
+      <p class="post-meta">@recall704 · Nov 22, 2017 · 2 min read</p>
+    </header>
+
+    
+    <div class="post-toc">
+        <hr />
+          <nav id="TableOfContents">
 <ul>
 <li>
 <ul>
@@ -210,78 +263,61 @@
 </ul></li>
 </ul>
 </nav>
-      </aside>
-      <hr />
-      
+        <hr />
+    </div>
+    
 
-      <article role="main" class="blog-post">
-        
+    <article class="post-content">
 
 <h2 id="接口定义">接口定义</h2>
 
 <p>代码在 <code>src/ui/auth/authenticator.go</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Authenticator provides interface to authenticate user credentials.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Authenticator</span> <span style="color:#66d9ef">interface</span> {
 
-<pre><code class="language-go">// Authenticator provides interface to authenticate user credentials.
-type Authenticator interface {
-
-	// Authenticate ...
-	Authenticate(m models.AuthModel) (*models.User, error)
-}
-</code></pre>
-
+	<span style="color:#75715e">// Authenticate ...
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Authenticate</span>(<span style="color:#a6e22e">m</span> <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">AuthModel</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>)
+}</code></pre></div>
 <p>接口中定义了函数 Authenticate，只要对应的结构体实现了该函数，就能完成认证。<br />
 我们通过其中的数据库认证方式，来简单分析。</p>
 
 <h2 id="接口实现">接口实现</h2>
 
 <p>代码在 <code>src/ui/auth/db/db.go</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Auth implements Authenticator interface to authenticate user against DB.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Auth</span> <span style="color:#66d9ef">struct</span>{}
 
-<pre><code class="language-go">// Auth implements Authenticator interface to authenticate user against DB.
-type Auth struct{}
-
-// Authenticate calls dao to authenticate user.
-func (d *Auth) Authenticate(m models.AuthModel) (*models.User, error) {
-	u, err := dao.LoginByDb(m)
-	if err != nil {
-		return nil, err
+<span style="color:#75715e">// Authenticate calls dao to authenticate user.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Auth</span>) <span style="color:#a6e22e">Authenticate</span>(<span style="color:#a6e22e">m</span> <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">AuthModel</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#a6e22e">u</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dao</span>.<span style="color:#a6e22e">LoginByDb</span>(<span style="color:#a6e22e">m</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
 	}
-	return u, nil
-}
-</code></pre>
-
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">u</span>, <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
 <h2 id="接口的注册">接口的注册</h2>
 
 <p>代码在 <code>src/ui/auth/db/db.go</code></p>
-
-<pre><code class="language-go">func init() {
-	auth.Register(&quot;db_auth&quot;, &amp;Auth{})
-}
-
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">init</span>() {
+	<span style="color:#a6e22e">auth</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#e6db74">&#34;db_auth&#34;</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Auth</span>{})
+}</code></pre></div>
 <p>初始化的时候，将自身注册到 auth 中，这里我们可以继续跟进 auth.Register 这个函数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">registry</span> = make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#a6e22e">Authenticator</span>)
 
-<pre><code class="language-go">var registry = make(map[string]Authenticator)
-
-// Register add different authenticators to registry map.
-func Register(name string, authenticator Authenticator) {
-	if _, dup := registry[name]; dup {
-		log.Infof(&quot;authenticator: %s has been registered&quot;, name)
-		return
+<span style="color:#75715e">// Register add different authenticators to registry map.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Register</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">authenticator</span> <span style="color:#a6e22e">Authenticator</span>) {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">dup</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">registry</span>[<span style="color:#a6e22e">name</span>]; <span style="color:#a6e22e">dup</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Infof</span>(<span style="color:#e6db74">&#34;authenticator: %s has been registered&#34;</span>, <span style="color:#a6e22e">name</span>)
+		<span style="color:#66d9ef">return</span>
 	}
-	registry[name] = authenticator
-}
-</code></pre>
-
+	<span style="color:#a6e22e">registry</span>[<span style="color:#a6e22e">name</span>] = <span style="color:#a6e22e">authenticator</span>
+}</code></pre></div>
 <p>这里很清楚的可以看到， registry 是一个 map，最终会大概成为这样：</p>
-
-<pre><code class="language-json">{
-    &quot;db_auth&quot;: &amp;Auth{},
-    &quot;ldap_auth&quot;: &amp;Auth{},
-    &quot;uaa_auth&quot;: &amp;Auth{}
-}
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#f92672">&#34;db_auth&#34;</span>: <span style="color:#960050;background-color:#1e0010">&amp;Auth</span>{},
+    <span style="color:#f92672">&#34;ldap_auth&#34;</span>: <span style="color:#960050;background-color:#1e0010">&amp;Auth</span>{},
+    <span style="color:#f92672">&#34;uaa_auth&#34;</span>: <span style="color:#960050;background-color:#1e0010">&amp;Auth</span>{}
+}</code></pre></div>
 <h2 id="接口调用">接口调用</h2>
 
 <p><code>db_auth</code>, <code>ldap_auth</code>, <code>uaa_auth</code> 中都实现了 Authenticate 这个函数。
@@ -289,103 +325,90 @@ func Register(name string, authenticator Authenticator) {
 然后调用对应的认证方法。</p>
 
 <p>代码在 <code>src/ui/auth/authenticator.go</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Login authenticates user credentials based on setting.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Login</span>(<span style="color:#a6e22e">m</span> <span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">AuthModel</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">models</span>.<span style="color:#a6e22e">User</span>, <span style="color:#66d9ef">error</span>) {
 
-<pre><code class="language-go">// Login authenticates user credentials based on setting.
-func Login(m models.AuthModel) (*models.User, error) {
-
-	authMode, err := config.AuthMode()
-	if err != nil {
-		return nil, err
+	<span style="color:#a6e22e">authMode</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">AuthMode</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
 	}
-	if authMode == &quot;&quot; || m.Principal == &quot;admin&quot; {
-		authMode = &quot;db_auth&quot;
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">authMode</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Principal</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;admin&#34;</span> {
+		<span style="color:#a6e22e">authMode</span> = <span style="color:#e6db74">&#34;db_auth&#34;</span>
 	}
-	log.Debug(&quot;Current AUTH_MODE is &quot;, authMode)
+	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Debug</span>(<span style="color:#e6db74">&#34;Current AUTH_MODE is &#34;</span>, <span style="color:#a6e22e">authMode</span>)
 
-	authenticator, ok := registry[authMode]
-	if !ok {
-		return nil, fmt.Errorf(&quot;Unrecognized auth_mode: %s&quot;, authMode)
+	<span style="color:#a6e22e">authenticator</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">registry</span>[<span style="color:#a6e22e">authMode</span>]
+	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Unrecognized auth_mode: %s&#34;</span>, <span style="color:#a6e22e">authMode</span>)
 	}
-	if lock.IsLocked(m.Principal) {
-		log.Debugf(&quot;%s is locked due to login failure, login failed&quot;, m.Principal)
-		return nil, nil
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">IsLocked</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Principal</span>) {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Debugf</span>(<span style="color:#e6db74">&#34;%s is locked due to login failure, login failed&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Principal</span>)
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>
 	}
-	user, err := authenticator.Authenticate(m)
-	if user == nil &amp;&amp; err == nil {
-		log.Debugf(&quot;Login failed, locking %s, and sleep for %v&quot;, m.Principal, frozenTime)
-		lock.Lock(m.Principal)
-		time.Sleep(frozenTime)
+	<span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">authenticator</span>.<span style="color:#a6e22e">Authenticate</span>(<span style="color:#a6e22e">m</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">user</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Debugf</span>(<span style="color:#e6db74">&#34;Login failed, locking %s, and sleep for %v&#34;</span>, <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Principal</span>, <span style="color:#a6e22e">frozenTime</span>)
+		<span style="color:#a6e22e">lock</span>.<span style="color:#a6e22e">Lock</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Principal</span>)
+		<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">frozenTime</span>)
 	}
-	return user, err
-}
-</code></pre>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">err</span>
+}</code></pre></div></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
         
-          <li class="previous">
-            <a href="http://www.recall704.com/cloud/deploy-docker-registry-with-basic-authentication/" data-toggle="tooltip" data-placement="top" title="部署一个带有基础认证的 docker 镜像仓库">&larr; Previous Post</a>
-          </li>
+          <li><a href="http://localhost:1313/tags/docker"><span class="tag">Docker</span></a></li>
         
+          <li><a href="http://localhost:1313/tags/harbor"><span class="tag">Harbor</span></a></li>
         
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/harbor-job.md/" data-toggle="tooltip" data-placement="top" title="harbor 源码分析： job">Next Post &rarr;</a>
-          </li>
+          <li><a href="http://localhost:1313/tags/authenticate"><span class="tag">Authenticate</span></a></li>
         
       </ul>
-
       
-
-    </div>
-  </div>
-</div>
-
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-          
-        </ul>
-        <p class="credits copyright text-muted">
-          
-          
-          &nbsp;&bull;&nbsp;
-          2018
-
-          
-            &nbsp;&bull;&nbsp;
-            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-          
-        </p>
-        
-        <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>301</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/main.js"></script>
-<script src="http://www.recall704.com/js/highlight.min.js"></script>
-<script> hljs.initHighlightingOnLoad(); </script>
-<script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+
 
 
 
   </body>
 </html>
-

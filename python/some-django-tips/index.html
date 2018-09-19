@@ -1,208 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<head>
 
+  <meta charset="utf-8" />
+
+  
   <title>一些 django 经验分享</title>
-  <meta property="og:title" content="一些 django 经验分享" />
-  <meta name="twitter:title" content="一些 django 经验分享" />
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
   <meta name="description" content="最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
 1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
-@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2  这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
+@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2 这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
 2、用函数来代替变量的设置 同样的，当我们设置一个对象的属性的值的时候，
-obj.status = 2 obj.save()  除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
-def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs)  这样，在设置变量的时候，只需要">
+obj.status = 2 obj.save() 除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
+def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs) 这样，在设置变量的时候，只需要
+obj.set_status_finished()
+就可以了。" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="一些 django 经验分享" />
+    <meta name="twitter:description" content="最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
+1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
+@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2 这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
+2、用函数来代替变量的设置 同样的，当我们设置一个对象的属性的值的时候，
+obj.status = 2 obj.save() 除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
+def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs) 这样，在设置变量的时候，只需要
+obj.set_status_finished()
+就可以了。" />
+    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="一些 django 经验分享" />
   <meta property="og:description" content="最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
 1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
-@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2  这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
+@property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2 这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。
 2、用函数来代替变量的设置 同样的，当我们设置一个对象的属性的值的时候，
-obj.status = 2 obj.save()  除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
-def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs)  这样，在设置变量的时候，只需要">
-  <meta name="twitter:description" content="最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
-1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
-@property …">
-  <meta name="author" content=""/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/python/some-django-tips/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="RECALL&#39;s Blog" />
-
-  <meta name="generator" content="Hugo 0.41" />
-  <link rel="canonical" href="http://www.recall704.com/python/some-django-tips/" />
-  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+obj.status = 2 obj.save() 除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。
+def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__class__, self).save(*args, **kwargs) 这样，在设置变量的时候，只需要
+obj.set_status_finished()
+就可以了。" />
+  <meta property="og:url" content="http://localhost:1313/python/some-django-tips/" />
+  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
 
 
 
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-<div class="pswp__bg"></div>
+<meta name="generator" content="Hugo 0.41" />
 
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
+
+<link rel="canonical" href="http://localhost:1313/python/some-django-tips/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
 
 </head>
-
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="home" href="/">home</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="tags" href="/tags/">tags</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="categories" href="/categories/">categories</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="series" href="/series/">series</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="about" href="/about/">about</a>
-            </li>
-          
-        
-
-        
-
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
     
-  
-  
-  
-
-
-
-
-  
-
-  <header class="header-section ">
-    
-    <div class="intro-header no-img">
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-10 col-xs-10">
-            <div class="post-heading">
-              <h1>一些 django 经验分享</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on March 14, 2016
-  
-</span>
-
-
-                
-            </div>
-          </div>
-        </div>
-      </div>
+        
+      
     </div>
-  </header>
-
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-sm-10 col-xs-10">
+    
+  <header class="site-header">
+  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://localhost:1313/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
 
       
-      <hr />
-      <aside>
-        <nav id="TableOfContents">
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">一些 django 经验分享</h1>
+      <p class="post-meta">@recall704 · Mar 14, 2016 · 1 min read</p>
+    </header>
+
+    
+    <div class="post-toc">
+        <hr />
+          <nav id="TableOfContents">
 <ul>
 <li>
 <ul>
@@ -219,12 +278,11 @@ def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__cla
 </ul></li>
 </ul>
 </nav>
-      </aside>
-      <hr />
-      
+        <hr />
+    </div>
+    
 
-      <article role="main" class="blog-post">
-        
+    <article class="post-content">
 
 <p>最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。</p>
 
@@ -233,16 +291,13 @@ def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__cla
 <p>（模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2
 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。
 其实我们可以用 property 来代替比较</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#a6e22e">@property</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_status_started</span>(self):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>status <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
 
-<pre><code class="language-python">    @property
-    def is_status_started(self):
-        return self.status == 1
-
-    @property
-    def is_status_finished(self):
-        return self.status == 2
-</code></pre>
-
+    <span style="color:#a6e22e">@property</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_status_finished</span>(self):
+        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>status <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span></code></pre></div>
 <p>这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义，
 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。</p>
 
@@ -251,18 +306,12 @@ def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__cla
 <h3 id="2-用函数来代替变量的设置">2、用函数来代替变量的设置</h3>
 
 <p>同样的，当我们设置一个对象的属性的值的时候，</p>
-
-<pre><code class="language-python">   obj.status = 2
-   obj.save()
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">   obj<span style="color:#f92672">.</span>status <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+   obj<span style="color:#f92672">.</span>save()</code></pre></div>
 <p>除非我们在这行代码附近添加注释，否则我们根本不知道这里 设置值为 2 是什么意思。 我们可以编写一个函数来完成该功能。</p>
-
-<pre><code class="language-python">    def set_status_finished(self, *args, **kwargs):
-        self.status = 2
-        super(self.__class__, self).save(*args, **kwargs)
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">set_status_finished</span>(self, <span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs):
+        self<span style="color:#f92672">.</span>status <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+        super(self<span style="color:#f92672">.</span>__class__, self)<span style="color:#f92672">.</span>save(<span style="color:#f92672">*</span>args, <span style="color:#f92672">**</span>kwargs)</code></pre></div>
 <p>这样，在设置变量的时候，只需要</p>
 
 <p>obj.set_status_finished()</p>
@@ -283,27 +332,21 @@ def set_status_finished(self, *args, **kwargs): self.status = 2 super(self.__cla
 <h3 id="3-contenttype-关联的数据项不要删除">3、contenttype 关联的数据项不要删除</h3>
 
 <p>其实真的要说的话，最好是所有数据都不要删除。而是用一个状态来表示删除，比如下面这样</p>
-
-<pre><code class="language-python">    is_deleted = models.BooleanField(default=False, verbose_name='is deleted')
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    is_deleted <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>BooleanField(default<span style="color:#f92672">=</span>False, verbose_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;is deleted&#39;</span>)</code></pre></div>
 <p>这里再来说说 contenttype 关联的数据。 比如我们的项目中有视频，有音乐，有文章，用户可以对他们进行评论。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Video</span>(models<span style="color:#f92672">.</span>Model):
+    name <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>CharField(max_length<span style="color:#f92672">=</span><span style="color:#ae81ff">255</span>, verbose_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;name&#39;</span>)
+    <span style="color:#f92672">...</span>
 
-<pre><code class="language-python">class Video(models.Model):
-    name = models.CharField(max_length=255, verbose_name='name')
-    ...
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Music</span>(models<span style="color:#f92672">.</span>Model):
+    name <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>CharField(max_length<span style="color:#f92672">=</span><span style="color:#ae81ff">255</span>, verbose_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;name&#39;</span>)
+    <span style="color:#f92672">...</span>
 
-class Music(models.Model):
-    name = models.CharField(max_length=255, verbose_name='name')
-    ...
-
-class Comment(models.Model):
-    object_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
-    obj = generic.GenericForeignKey(ct_field=&quot;object_type&quot;, fk_field=&quot;object_id&quot;)
-    content = models.TextField(blank=True, null=True)
-</code></pre>
-
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Comment</span>(models<span style="color:#f92672">.</span>Model):
+    object_type <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>ForeignKey(ContentType)
+    object_id <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>PositiveIntegerField()
+    obj <span style="color:#f92672">=</span> generic<span style="color:#f92672">.</span>GenericForeignKey(ct_field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_type&#34;</span>, fk_field<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;object_id&#34;</span>)
+    content <span style="color:#f92672">=</span> models<span style="color:#f92672">.</span>TextField(blank<span style="color:#f92672">=</span>True, null<span style="color:#f92672">=</span>True)</code></pre></div>
 <p>其中，我们的 object_type 指向 Video 和 Music， object_id 就指向 Video 和 Music 对应的 id，那么，我们的 Comment 就是一个通用的评论。</p>
 
 <p>但是，但是，但是，如果我们的 Video 或这 Music 具体的一项被删除的话，评论本身并没有被删除，一旦之后某一条数据的 id 和之前已经删除的一样(这种情况是的确会出现的，这与数据库有关)，就会发现莫名其妙的这个下面这么多出了某些评论。</p>
@@ -319,65 +362,61 @@ class Comment(models.Model):
 
 <p>就如之前所说，使用状态来表示删除。
 返回数据的时候，把删除状态的数据过滤掉就可以了。</p>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
         
+          <li><a href="http://localhost:1313/tags/python"><span class="tag">Python</span></a></li>
+        
+          <li><a href="http://localhost:1313/tags/django"><span class="tag">Django</span></a></li>
         
       </ul>
-
       
-
-    </div>
-  </div>
-</div>
-
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-          
-        </ul>
-        <p class="credits copyright text-muted">
-          
-          
-          &nbsp;&bull;&nbsp;
-          2018
-
-          
-            &nbsp;&bull;&nbsp;
-            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-          
-        </p>
-        
-        <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>919</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/main.js"></script>
-<script src="http://www.recall704.com/js/highlight.min.js"></script>
-<script> hljs.initHighlightingOnLoad(); </script>
-<script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+
 
 
 
   </body>
 </html>
-

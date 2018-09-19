@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Pod on RECALL&#39;s Blog</title>
-    <link>http://www.recall704.com/tags/pod/</link>
-    <description>Recent content in Pod on RECALL&#39;s Blog</description>
+    <title>Pod on Recall&#39;s blog</title>
+    <link>http://localhost:1313/tags/pod/</link>
+    <description>Recent content in Pod on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>en</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 14 Aug 2018 23:06:42 +0800</lastBuildDate>
     
-	<atom:link href="http://www.recall704.com/tags/pod/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/pod/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s pod 调度</title>
-      <link>http://www.recall704.com/cloud/k8s-scheduler/</link>
+      <link>http://localhost:1313/cloud/k8s-scheduler/</link>
       <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/k8s-scheduler/</guid>
+      <guid>http://localhost:1313/cloud/k8s-scheduler/</guid>
       <description>一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
 二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
 我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度

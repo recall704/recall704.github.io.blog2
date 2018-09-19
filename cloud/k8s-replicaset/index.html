@@ -1,231 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
+  
   <title>k8s 源码分析: ReplicaSet 控制器</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
+  <meta name="description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc." />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="k8s 源码分析: ReplicaSet 控制器" />
+    <meta name="twitter:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc." />
+    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
   <meta property="og:title" content="k8s 源码分析: ReplicaSet 控制器" />
-  <meta name="twitter:title" content="k8s 源码分析: ReplicaSet 控制器" />
-  <meta name="description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&quot;Couldn&#39;t get key for %v %#v: %v&quot;, rsc.Kind, rs, err)) return nil } if diff &lt; 0 { // 当前 pod 数量 &lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.">
-  <meta property="og:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&quot;Couldn&#39;t get key for %v %#v: %v&quot;, rsc.Kind, rs, err)) return nil } if diff &lt; 0 { // 当前 pod 数量 &lt; 期望 pod 数量 // 需要增加 pod diff *= -1 if diff &gt; rsc.burstReplicas { // 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成 diff = rsc.">
-  <meta name="twitter:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 diff := len(filteredPods) - int(*(rs.Spec.Replicas)) …">
-  <meta name="author" content=""/>
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-replicaset/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="RECALL&#39;s Blog" />
-
-  <meta name="generator" content="Hugo 0.41" />
-  <link rel="canonical" href="http://www.recall704.com/cloud/k8s-replicaset/" />
-  <link rel="alternate" href="http://www.recall704.com/index.xml" type="application/rss+xml" title="RECALL&#39;s Blog">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="http://www.recall704.com/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/pygment_highlights.css" />
-  <link rel="stylesheet" href="http://www.recall704.com/css/highlight.min.css" />
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+  <meta property="og:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc." />
+  <meta property="og:url" content="http://localhost:1313/cloud/k8s-replicaset/" />
+  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
 
 
 
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
-<div class="pswp__bg"></div>
+<meta name="generator" content="Hugo 0.41" />
 
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
+
+<link rel="canonical" href="http://localhost:1313/cloud/k8s-replicaset/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
 
 </head>
-
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="home" href="/">home</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="tags" href="/tags/">tags</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="categories" href="/categories/">categories</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="series" href="/series/">series</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="about" href="/about/">about</a>
-            </li>
-          
-        
-
-        
-
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-
     
-  
-  
-  
-
-
-
-
-  
-
-  <header class="header-section ">
-    
-    <div class="intro-header no-img">
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-10 col-xs-10">
-            <div class="post-heading">
-              <h1>k8s 源码分析: ReplicaSet 控制器</h1>
-                
-                
-                  <span class="post-meta">
-  Posted on April 26, 2018
-  
-</span>
-
-
-                
-            </div>
-          </div>
-        </div>
-      </div>
+        
+      
     </div>
-  </header>
-
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-sm-10 col-xs-10">
+    
+  <header class="site-header">
+  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://localhost:1313/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://localhost:1313/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
 
       
 
-      <article role="main" class="blog-post">
-        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">k8s 源码分析: ReplicaSet 控制器</h1>
+      <p class="post-meta">@recall704 · Apr 26, 2018 · 2 min read</p>
+    </header>
+
+    
+
+    <article class="post-content">
 
 <h2 id="0x01-rs-控制器">0x01 RS 控制器</h2>
-
-<pre><code class="language-go">func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error {
-	// 当前 pod 数量，期望 pod 数量
-	diff := len(filteredPods) - int(*(rs.Spec.Replicas))
-	rsKey, err := controller.KeyFunc(rs)
-	if err != nil {
-		utilruntime.HandleError(fmt.Errorf(&quot;Couldn't get key for %v %#v: %v&quot;, rsc.Kind, rs, err))
-		return nil
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rsc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ReplicaSetController</span>) <span style="color:#a6e22e">manageReplicas</span>(<span style="color:#a6e22e">filteredPods</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">rs</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">extensions</span>.<span style="color:#a6e22e">ReplicaSet</span>) <span style="color:#66d9ef">error</span> {
+	<span style="color:#75715e">// 当前 pod 数量，期望 pod 数量
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">diff</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">filteredPods</span>) <span style="color:#f92672">-</span> int(<span style="color:#f92672">*</span>(<span style="color:#a6e22e">rs</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Replicas</span>))
+	<span style="color:#a6e22e">rsKey</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">controller</span>.<span style="color:#a6e22e">KeyFunc</span>(<span style="color:#a6e22e">rs</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">utilruntime</span>.<span style="color:#a6e22e">HandleError</span>(<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;Couldn&#39;t get key for %v %#v: %v&#34;</span>, <span style="color:#a6e22e">rsc</span>.<span style="color:#a6e22e">Kind</span>, <span style="color:#a6e22e">rs</span>, <span style="color:#a6e22e">err</span>))
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
 	}
-	if diff &lt; 0 {
-		// 当前 pod 数量 &lt; 期望 pod 数量
-		// 需要增加 pod
-		diff *= -1
-		if diff &gt; rsc.burstReplicas {
-			// 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成
-			diff = rsc.burstReplicas
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">diff</span> &lt; <span style="color:#ae81ff">0</span> {
+		<span style="color:#75715e">// 当前 pod 数量 &lt; 期望 pod 数量
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 需要增加 pod
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">diff</span> <span style="color:#f92672">*=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">diff</span> &gt; <span style="color:#a6e22e">rsc</span>.<span style="color:#a6e22e">burstReplicas</span> {
+			<span style="color:#75715e">// 如果一次要增加的 pod 过多，则对数量进行限制，分多次完成完成
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">diff</span> = <span style="color:#a6e22e">rsc</span>.<span style="color:#a6e22e">burstReplicas</span>
 		}
-		...
-		return err
-	} else if diff &gt; 0 {
-		if diff &gt; rsc.burstReplicas {
-			// 如果一次需要删除的 pod 过多，则限制删除数量，分多次完成
-			diff = rsc.burstReplicas
+		<span style="color:#f92672">...</span>
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">diff</span> &gt; <span style="color:#ae81ff">0</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">diff</span> &gt; <span style="color:#a6e22e">rsc</span>.<span style="color:#a6e22e">burstReplicas</span> {
+			<span style="color:#75715e">// 如果一次需要删除的 pod 过多，则限制删除数量，分多次完成
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">diff</span> = <span style="color:#a6e22e">rsc</span>.<span style="color:#a6e22e">burstReplicas</span>
 		}
-		...
-		podsToDelete := getPodsToDelete(filteredPods, diff)
-		...
+		<span style="color:#f92672">...</span>
+		<span style="color:#a6e22e">podsToDelete</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getPodsToDelete</span>(<span style="color:#a6e22e">filteredPods</span>, <span style="color:#a6e22e">diff</span>)
+		<span style="color:#f92672">...</span>
 	}
 
-	return nil
-}
-</code></pre>
-
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
 <p>对于需要删除的 pod，会对当前的 pod 进行排序
 删除顺序如下</p>
 
@@ -240,144 +286,124 @@
 <h2 id="0x02-rs-控制器和-rc-控制器有什么区别">0x02 RS 控制器和 RC 控制器有什么区别</h2>
 
 <p>新版本中 RC 控制器已经逐渐被 RS 替代了，那它们有什么不同吗？</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewControllerInitializers</span>() <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#a6e22e">InitFunc</span> {
+	<span style="color:#a6e22e">controllers</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#a6e22e">InitFunc</span>{}
+	<span style="color:#a6e22e">controllers</span>[<span style="color:#e6db74">&#34;replicationcontroller&#34;</span>] = <span style="color:#a6e22e">startReplicationController</span>
+	<span style="color:#a6e22e">controllers</span>[<span style="color:#e6db74">&#34;replicaset&#34;</span>] = <span style="color:#a6e22e">startReplicaSetController</span>
+	<span style="color:#f92672">...</span>
 
-<pre><code class="language-go">func NewControllerInitializers() map[string]InitFunc {
-	controllers := map[string]InitFunc{}
-	controllers[&quot;replicationcontroller&quot;] = startReplicationController
-	controllers[&quot;replicaset&quot;] = startReplicaSetController
-	...
-
-	return controllers
-}
-</code></pre>
-
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">controllers</span>
+}</code></pre></div>
 <p>直接看创建 controller 的函数</p>
-
-<pre><code class="language-go">func NewReplicationManager(podInformer coreinformers.PodInformer, rcInformer coreinformers.ReplicationControllerInformer, kubeClient clientset.Interface, burstReplicas int) *ReplicationManager {
-	...
-	return &amp;ReplicationManager{
-		*replicaset.NewBaseController(informerAdapter{rcInformer}, podInformer, clientsetAdapter{kubeClient}, burstReplicas,
-			v1.SchemeGroupVersion.WithKind(&quot;ReplicationController&quot;),
-			&quot;replication_controller&quot;,
-			&quot;replicationmanager&quot;,
-			podControlAdapter{controller.RealPodControl{
-				KubeClient: kubeClient,
-				Recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;replication-controller&quot;}),
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewReplicationManager</span>(<span style="color:#a6e22e">podInformer</span> <span style="color:#a6e22e">coreinformers</span>.<span style="color:#a6e22e">PodInformer</span>, <span style="color:#a6e22e">rcInformer</span> <span style="color:#a6e22e">coreinformers</span>.<span style="color:#a6e22e">ReplicationControllerInformer</span>, <span style="color:#a6e22e">kubeClient</span> <span style="color:#a6e22e">clientset</span>.<span style="color:#a6e22e">Interface</span>, <span style="color:#a6e22e">burstReplicas</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">ReplicationManager</span> {
+	<span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ReplicationManager</span>{
+		<span style="color:#f92672">*</span><span style="color:#a6e22e">replicaset</span>.<span style="color:#a6e22e">NewBaseController</span>(<span style="color:#a6e22e">informerAdapter</span>{<span style="color:#a6e22e">rcInformer</span>}, <span style="color:#a6e22e">podInformer</span>, <span style="color:#a6e22e">clientsetAdapter</span>{<span style="color:#a6e22e">kubeClient</span>}, <span style="color:#a6e22e">burstReplicas</span>,
+			<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">SchemeGroupVersion</span>.<span style="color:#a6e22e">WithKind</span>(<span style="color:#e6db74">&#34;ReplicationController&#34;</span>),
+			<span style="color:#e6db74">&#34;replication_controller&#34;</span>,
+			<span style="color:#e6db74">&#34;replicationmanager&#34;</span>,
+			<span style="color:#a6e22e">podControlAdapter</span>{<span style="color:#a6e22e">controller</span>.<span style="color:#a6e22e">RealPodControl</span>{
+				<span style="color:#a6e22e">KubeClient</span>: <span style="color:#a6e22e">kubeClient</span>,
+				<span style="color:#a6e22e">Recorder</span>:   <span style="color:#a6e22e">eventBroadcaster</span>.<span style="color:#a6e22e">NewRecorder</span>(<span style="color:#a6e22e">scheme</span>.<span style="color:#a6e22e">Scheme</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventSource</span>{<span style="color:#a6e22e">Component</span>: <span style="color:#e6db74">&#34;replication-controller&#34;</span>}),
 			}},
 		),
 	}
 }
 
 
-func NewReplicaSetController(rsInformer extensionsinformers.ReplicaSetInformer, podInformer coreinformers.PodInformer, kubeClient clientset.Interface, burstReplicas int) *ReplicaSetController {
-	...
-	return NewBaseController(rsInformer, podInformer, kubeClient, burstReplicas,
-		v1beta1.SchemeGroupVersion.WithKind(&quot;ReplicaSet&quot;),
-		&quot;replicaset_controller&quot;,
-		&quot;replicaset&quot;,
-		controller.RealPodControl{
-			KubeClient: kubeClient,
-			Recorder:   eventBroadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: &quot;replicaset-controller&quot;}),
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewReplicaSetController</span>(<span style="color:#a6e22e">rsInformer</span> <span style="color:#a6e22e">extensionsinformers</span>.<span style="color:#a6e22e">ReplicaSetInformer</span>, <span style="color:#a6e22e">podInformer</span> <span style="color:#a6e22e">coreinformers</span>.<span style="color:#a6e22e">PodInformer</span>, <span style="color:#a6e22e">kubeClient</span> <span style="color:#a6e22e">clientset</span>.<span style="color:#a6e22e">Interface</span>, <span style="color:#a6e22e">burstReplicas</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">ReplicaSetController</span> {
+	<span style="color:#f92672">...</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">NewBaseController</span>(<span style="color:#a6e22e">rsInformer</span>, <span style="color:#a6e22e">podInformer</span>, <span style="color:#a6e22e">kubeClient</span>, <span style="color:#a6e22e">burstReplicas</span>,
+		<span style="color:#a6e22e">v1beta1</span>.<span style="color:#a6e22e">SchemeGroupVersion</span>.<span style="color:#a6e22e">WithKind</span>(<span style="color:#e6db74">&#34;ReplicaSet&#34;</span>),
+		<span style="color:#e6db74">&#34;replicaset_controller&#34;</span>,
+		<span style="color:#e6db74">&#34;replicaset&#34;</span>,
+		<span style="color:#a6e22e">controller</span>.<span style="color:#a6e22e">RealPodControl</span>{
+			<span style="color:#a6e22e">KubeClient</span>: <span style="color:#a6e22e">kubeClient</span>,
+			<span style="color:#a6e22e">Recorder</span>:   <span style="color:#a6e22e">eventBroadcaster</span>.<span style="color:#a6e22e">NewRecorder</span>(<span style="color:#a6e22e">scheme</span>.<span style="color:#a6e22e">Scheme</span>, <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">EventSource</span>{<span style="color:#a6e22e">Component</span>: <span style="color:#e6db74">&#34;replicaset-controller&#34;</span>}),
 		},
 	)
-}
-</code></pre>
-
+}</code></pre></div>
 <p>其实看来 RS 和 RC 已经没多少不同了。</p>
 
 <h2 id="0x03-burstreplicas-限定值">0x03 BurstReplicas 限定值</h2>
 
 <p>上面提到过 pod 增加和删除的时候，不会一次增加和删除所有 pod，而是有一个限定值，我很好奇这个值是多少，所以看了一下</p>
-
-<pre><code class="language-go">func startReplicaSetController(ctx ControllerContext) (bool, error) {
-	if !ctx.AvailableResources[schema.GroupVersionResource{Group: &quot;extensions&quot;, Version: &quot;v1beta1&quot;, Resource: &quot;replicasets&quot;}] {
-		return false, nil
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">startReplicaSetController</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">ControllerContext</span>) (<span style="color:#66d9ef">bool</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">AvailableResources</span>[<span style="color:#a6e22e">schema</span>.<span style="color:#a6e22e">GroupVersionResource</span>{<span style="color:#a6e22e">Group</span>: <span style="color:#e6db74">&#34;extensions&#34;</span>, <span style="color:#a6e22e">Version</span>: <span style="color:#e6db74">&#34;v1beta1&#34;</span>, <span style="color:#a6e22e">Resource</span>: <span style="color:#e6db74">&#34;replicasets&#34;</span>}] {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>
 	}
-	go replicaset.NewReplicaSetController(
-		ctx.InformerFactory.Extensions().V1beta1().ReplicaSets(),
-		ctx.InformerFactory.Core().V1().Pods(),
-		ctx.ClientBuilder.ClientOrDie(&quot;replicaset-controller&quot;),
-		replicaset.BurstReplicas,
-	).Run(int(ctx.Options.ConcurrentRSSyncs), ctx.Stop)
-	return true, nil
-}
-</code></pre>
-
-<pre><code class="language-go">const (
-	// Realistic value of the burstReplica field for the replica set manager based off
-	// performance requirements for kubernetes 1.0.
-	BurstReplicas = 500
-)
-</code></pre>
-
+	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">replicaset</span>.<span style="color:#a6e22e">NewReplicaSetController</span>(
+		<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">InformerFactory</span>.<span style="color:#a6e22e">Extensions</span>().<span style="color:#a6e22e">V1beta1</span>().<span style="color:#a6e22e">ReplicaSets</span>(),
+		<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">InformerFactory</span>.<span style="color:#a6e22e">Core</span>().<span style="color:#a6e22e">V1</span>().<span style="color:#a6e22e">Pods</span>(),
+		<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">ClientBuilder</span>.<span style="color:#a6e22e">ClientOrDie</span>(<span style="color:#e6db74">&#34;replicaset-controller&#34;</span>),
+		<span style="color:#a6e22e">replicaset</span>.<span style="color:#a6e22e">BurstReplicas</span>,
+	).<span style="color:#a6e22e">Run</span>(int(<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Options</span>.<span style="color:#a6e22e">ConcurrentRSSyncs</span>), <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Stop</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>
+}</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">const</span> (
+	<span style="color:#75715e">// Realistic value of the burstReplica field for the replica set manager based off
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// performance requirements for kubernetes 1.0.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">BurstReplicas</span> = <span style="color:#ae81ff">500</span>
+)</code></pre></div>
 <p>这个值不是启动参数限定的，而是一个常量，其值居然是 500.</p>
-
-      </article>
-
-
-
-      <ul class="pager blog-pager">
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
         
-          <li class="previous">
-            <a href="http://www.recall704.com/cloud/k8s-authentication-with-basic/" data-toggle="tooltip" data-placement="top" title="创建 client （三）： HTTP Basic Auth 访问 k8s API Server">&larr; Previous Post</a>
-          </li>
+          <li><a href="http://localhost:1313/tags/k8s"><span class="tag">K8s</span></a></li>
         
+          <li><a href="http://localhost:1313/tags/kubelet"><span class="tag">Kubelet</span></a></li>
         
-          <li class="next">
-            <a href="http://www.recall704.com/cloud/k8s-nodeport-range/" data-toggle="tooltip" data-placement="top" title="k8s nodeport 端口范围">Next Post &rarr;</a>
-          </li>
+          <li><a href="http://localhost:1313/tags/rs"><span class="tag">Rs</span></a></li>
+        
+          <li><a href="http://localhost:1313/tags/replicaset"><span class="tag">ReplicaSet</span></a></li>
         
       </ul>
-
       
-
-    </div>
-  </div>
-</div>
-
-    <footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <ul class="list-inline text-center footer-links">
-          
-          
-        </ul>
-        <p class="credits copyright text-muted">
-          
-          
-          &nbsp;&bull;&nbsp;
-          2018
-
-          
-            &nbsp;&bull;&nbsp;
-            <a href="http://www.recall704.com/">RECALL&#39;s Blog</a>
-          
-        </p>
-        
-        <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
-          
-        </p>
-      </div>
-    </div>
-  </div>
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>146</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/main.js"></script>
-<script src="http://www.recall704.com/js/highlight.min.js"></script>
-<script> hljs.initHighlightingOnLoad(); </script>
-<script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
-<script src="http://www.recall704.com/js/load-photoswipe.js"></script>
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+
 
 
 
   </body>
 </html>
-
