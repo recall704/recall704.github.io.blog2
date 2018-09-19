@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>K8s on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/k8s/</link>
+    <link>http://www.recall704.com/tags/k8s/</link>
     <description>Recent content in K8s on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 04 Sep 2018 13:48:09 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s 学习笔记之存储</title>
-      <link>http://localhost:1313/cloud/volume-of-k8s/</link>
+      <link>http://www.recall704.com/cloud/volume-of-k8s/</link>
       <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/volume-of-k8s/</guid>
+      <guid>http://www.recall704.com/cloud/volume-of-k8s/</guid>
       <description>一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
 2. pvc A PersistentVolumeClaims is a request for storage by a user.
 3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
@@ -28,10 +28,10 @@ pv 支持两种方式的 provision，静态和动态
     
     <item>
       <title>k8s pod 调度</title>
-      <link>http://localhost:1313/cloud/k8s-scheduler/</link>
+      <link>http://www.recall704.com/cloud/k8s-scheduler/</link>
       <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-scheduler/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-scheduler/</guid>
       <description>一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
 二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
 我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
@@ -41,10 +41,10 @@ pv 支持两种方式的 provision，静态和动态
     
     <item>
       <title>k8s nodeport 端口范围</title>
-      <link>http://localhost:1313/cloud/k8s-nodeport-range/</link>
+      <link>http://www.recall704.com/cloud/k8s-nodeport-range/</link>
       <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-nodeport-range/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-nodeport-range/</guid>
       <description>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
 在 k8s 源码中搜索 32767，在
 gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go 存在代码
@@ -58,19 +58,19 @@ type PortRange struct { Base int Size int } // Contains tests whether a given po
     
     <item>
       <title>k8s 源码分析: ReplicaSet 控制器</title>
-      <link>http://localhost:1313/cloud/k8s-replicaset/</link>
+      <link>http://www.recall704.com/cloud/k8s-replicaset/</link>
       <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-replicaset/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-replicaset/</guid>
       <description>0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc.</description>
     </item>
     
     <item>
       <title>创建 client （三）： HTTP Basic Auth 访问 k8s API Server</title>
-      <link>http://localhost:1313/cloud/k8s-authentication-with-basic/</link>
+      <link>http://www.recall704.com/cloud/k8s-authentication-with-basic/</link>
       <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-authentication-with-basic/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-authentication-with-basic/</guid>
       <description>0x01 结构体 AuthInfo 如果你留意过上一篇文章，你会发现一个结构体
 AuthInfo: clientcmdapi.AuthInfo{ ClientCertificate: &amp;quot;client.crt&amp;quot;, ClientKey: &amp;quot;client.key&amp;quot;, },  其对应代码在 client-go 下的 k8s.io/client-go/tools/clientcmd/api 中
 type AuthInfo struct { // LocationOfOrigin indicates where this object came from. It is used for round tripping config post-merge, but never serialized. 	LocationOfOrigin string // ClientCertificate is the path to a client cert file for TLS. 	// +optional 	ClientCertificate string `json:&amp;#34;client-certificate,omitempty&amp;#34;` // ClientCertificateData contains PEM-encoded data from a client cert file for TLS.</description>
@@ -78,10 +78,10 @@ type AuthInfo struct { // LocationOfOrigin indicates where this object came from
     
     <item>
       <title>创建 client （二）： 通过配置文件方式访问 k8s API</title>
-      <link>http://localhost:1313/cloud/k8s-authentication-with-ca/</link>
+      <link>http://www.recall704.com/cloud/k8s-authentication-with-ca/</link>
       <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-authentication-with-ca/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-authentication-with-ca/</guid>
       <description>0x01 概述 前面我讲过集群内通过 ServiceAccount 生成 token 的方式访问 k8s API Server， 那么如果我们要访问 k8s api 的应用不是跑在 k8s 之内，而是在 k8s 集群之外运行呢？
 这个时候，我们还有两种认证方式
  ca 证书认证
@@ -90,10 +90,10 @@ type AuthInfo struct { // LocationOfOrigin indicates where this object came from
     
     <item>
       <title>k8s operator 简介</title>
-      <link>http://localhost:1313/cloud/k8s-operator/</link>
+      <link>http://www.recall704.com/cloud/k8s-operator/</link>
       <pubDate>Fri, 13 Apr 2018 10:03:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-operator/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-operator/</guid>
       <description>0x1 Operator 介绍 Operator 是 CoreOS 公司提出的一个概念，用来创建、配置、管理复杂应用，由两部分构成：
  1. Resource
  1.1 自定义资源
@@ -112,10 +112,10 @@ type AuthInfo struct { // LocationOfOrigin indicates where this object came from
     
     <item>
       <title>创建 client （一）： token 方式访问 k8s API</title>
-      <link>http://localhost:1313/cloud/k8s-authentication-with-token/</link>
+      <link>http://www.recall704.com/cloud/k8s-authentication-with-token/</link>
       <pubDate>Wed, 11 Apr 2018 14:22:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-authentication-with-token/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-authentication-with-token/</guid>
       <description>0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
 1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
 2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
@@ -127,10 +127,10 @@ type AuthInfo struct { // LocationOfOrigin indicates where this object came from
     
     <item>
       <title>k8s 中 node 的 roles</title>
-      <link>http://localhost:1313/cloud/k8s-node-roles/</link>
+      <link>http://www.recall704.com/cloud/k8s-node-roles/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-node-roles/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-node-roles/</guid>
       <description>部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES
 但是执行命令：
 kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
@@ -143,10 +143,10 @@ kubectl label node 192.168.88.201 kubernetes.io/role=master  </description>
     
     <item>
       <title>k8s 中的污染 Taint 与容忍 Toleration</title>
-      <link>http://localhost:1313/cloud/taint-and-toleration/</link>
+      <link>http://www.recall704.com/cloud/taint-and-toleration/</link>
       <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/taint-and-toleration/</guid>
+      <guid>http://www.recall704.com/cloud/taint-and-toleration/</guid>
       <description>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
  一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
 kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：

@@ -24,15 +24,15 @@
     <meta name="twitter:site" content="@gohugoio" />
     <meta name="twitter:title" content="k8s 源码分析: ReplicaSet 控制器" />
     <meta name="twitter:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc." />
-    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+    <meta name="twitter:image" content="http://www.recall704.com/img/avatar.jpg" />
   
 
   
   <meta property="og:type" content="article" />
   <meta property="og:title" content="k8s 源码分析: ReplicaSet 控制器" />
   <meta property="og:description" content="0x01 RS 控制器 func (rsc *ReplicaSetController) manageReplicas(filteredPods []*v1.Pod, rs *extensions.ReplicaSet) error { // 当前 pod 数量，期望 pod 数量 	diff := len(filteredPods) - int(*(rs.Spec.Replicas)) rsKey, err := controller.KeyFunc(rs) if err != nil { utilruntime.HandleError(fmt.Errorf(&amp;#34;Couldn&amp;#39;t get key for %v %#v: %v&amp;#34;, rsc.Kind, rs, err)) return nil } if diff &amp;lt; 0 { // 当前 pod 数量 &amp;lt; 期望 pod 数量 	// 需要增加 pod 	diff *= -1 if diff &amp;gt; rsc." />
-  <meta property="og:url" content="http://localhost:1313/cloud/k8s-replicaset/" />
-  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s-replicaset/" />
+  <meta property="og:image" content="http://www.recall704.com/img/avatar.jpg" />
 
 
 
@@ -40,7 +40,7 @@
 <meta name="generator" content="Hugo 0.41" />
 
 
-<link rel="canonical" href="http://localhost:1313/cloud/k8s-replicaset/" />
+<link rel="canonical" href="http://www.recall704.com/cloud/k8s-replicaset/" />
 
 <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -64,18 +64,18 @@
 <meta name='msapplication-navbutton-color' content="#5fbf5e" />
 <meta name="msapplication-TileColor" content="#5fbf5e" />
 <meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
-<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
-<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
-<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
-<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+<link rel="icon" href="http://www.recall704.com/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://www.recall704.com/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://www.recall704.com/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://www.recall704.com/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://www.recall704.com/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://www.recall704.com/img/safari-pinned-tab.svg" color="#5fbf5e" />
 
 
 
 <link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
 
-<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+<link rel="stylesheet" href="http://www.recall704.com/css/bundle.6271cf88a8.css" />
 
 
   
@@ -108,7 +108,7 @@
     
     
   <header class="site-header">
-  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  <img class="avatar" src="http://www.recall704.com/img/bio.jpg" alt="Avatar">
   
   <h2 class="title">Recall&#39;s blog</h2>
   
@@ -129,42 +129,42 @@
             
               is-active
             ">
-            <a href="http://localhost:1313/">Home</a>
+            <a href="http://www.recall704.com/">Home</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/tags/">Tags</a>
+            <a href="http://www.recall704.com/tags/">Tags</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/categories/">Categories</a>
+            <a href="http://www.recall704.com/categories/">Categories</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/series/">series</a>
+            <a href="http://www.recall704.com/series/">series</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/links/">友情链接</a>
+            <a href="http://www.recall704.com/links/">友情链接</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/about/">初恋</a>
+            <a href="http://www.recall704.com/about/">初恋</a>
           </li>
       
     </ul>
@@ -212,7 +212,7 @@
       
 
       <li class="social-item">
-        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+        <a href="http://www.recall704.com/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
       </li>
 
       
@@ -224,7 +224,7 @@
       
 
       <li class="social-item">
-        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+        <a rel="alternate" type="application/rss+xml" href="http://www.recall704.com/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
       </li>
 
     </ul>
@@ -350,13 +350,13 @@
       
       <ul class="post-tags">
         
-          <li><a href="http://localhost:1313/tags/k8s"><span class="tag">K8s</span></a></li>
+          <li><a href="http://www.recall704.com/tags/k8s"><span class="tag">K8s</span></a></li>
         
-          <li><a href="http://localhost:1313/tags/kubelet"><span class="tag">Kubelet</span></a></li>
+          <li><a href="http://www.recall704.com/tags/kubelet"><span class="tag">Kubelet</span></a></li>
         
-          <li><a href="http://localhost:1313/tags/rs"><span class="tag">Rs</span></a></li>
+          <li><a href="http://www.recall704.com/tags/rs"><span class="tag">Rs</span></a></li>
         
-          <li><a href="http://localhost:1313/tags/replicaset"><span class="tag">ReplicaSet</span></a></li>
+          <li><a href="http://www.recall704.com/tags/replicaset"><span class="tag">ReplicaSet</span></a></li>
         
       </ul>
       
@@ -400,7 +400,7 @@
   });
 </script>
 
-<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+<script src="http://www.recall704.com/js/bundle.fb61ec41f8.js"></script>
 
 
 

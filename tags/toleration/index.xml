@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Toleration on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/toleration/</link>
+    <link>http://www.recall704.com/tags/toleration/</link>
     <description>Recent content in Toleration on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Sun, 11 Mar 2018 22:36:53 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/toleration/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/toleration/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s 中的污染 Taint 与容忍 Toleration</title>
-      <link>http://localhost:1313/cloud/taint-and-toleration/</link>
+      <link>http://www.recall704.com/cloud/taint-and-toleration/</link>
       <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/taint-and-toleration/</guid>
+      <guid>http://www.recall704.com/cloud/taint-and-toleration/</guid>
       <description>之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
  一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
 kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：

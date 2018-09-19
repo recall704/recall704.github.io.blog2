@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Service on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/service/</link>
+    <link>http://www.recall704.com/tags/service/</link>
     <description>Recent content in Service on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 14 Aug 2018 22:55:42 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/service/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/service/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s nodeport 端口范围</title>
-      <link>http://localhost:1313/cloud/k8s-nodeport-range/</link>
+      <link>http://www.recall704.com/cloud/k8s-nodeport-range/</link>
       <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-nodeport-range/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-nodeport-range/</guid>
       <description>k8s 的 nodeport 默认范围是 30000-32767，那这个端口范围到底是半开半闭区间，还是开区间，还是闭区间呢？ 而且能不能是不连续的呢？ 能不能像（80，443， 30000-32767）这样呢？
 在 k8s 源码中搜索 32767，在
 gopath/src/k8s.io/kubernetes/cmd/kube-apiserver/app/options/options.go 存在代码

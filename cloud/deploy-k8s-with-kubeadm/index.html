@@ -34,7 +34,7 @@ node2： 192.168.88.51
 二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld 2. sysctl 配置 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system 3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn 4. 启用 epel yum install -y epel-release 5. 禁用虚拟内存 swapoff -a 6. 设置 hostname node1 上执行
 hostnamectl set-hostname node1 node2 上执行
 hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemctl enable docker &amp;amp;&amp;amp; systemctl start docker 四、安装 kubeadm, kubelet and kubectl cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum." />
-    <meta name="twitter:image" content="http://localhost:1313/img/avatar.jpg" />
+    <meta name="twitter:image" content="http://www.recall704.com/img/avatar.jpg" />
   
 
   
@@ -46,8 +46,8 @@ node2： 192.168.88.51
 二、环境预处理在两台机器上都执行下面的命令 1. 关闭防火墙 systemctl stop firewalld 2. sysctl 配置 cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/sysctl.d/k8s.conf net.bridge.bridge-nf-call-ip6tables = 1 net.bridge.bridge-nf-call-iptables = 1 EOF sysctl --system 3. 时间同步 yum install -y ntpdate ntpdate cn.ntp.org.cn 4. 启用 epel yum install -y epel-release 5. 禁用虚拟内存 swapoff -a 6. 设置 hostname node1 上执行
 hostnamectl set-hostname node1 node2 上执行
 hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemctl enable docker &amp;amp;&amp;amp; systemctl start docker 四、安装 kubeadm, kubelet and kubectl cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum." />
-  <meta property="og:url" content="http://localhost:1313/cloud/deploy-k8s-with-kubeadm/" />
-  <meta property="og:image" content="http://localhost:1313/img/avatar.jpg" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" />
+  <meta property="og:image" content="http://www.recall704.com/img/avatar.jpg" />
 
 
 
@@ -55,7 +55,7 @@ hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemc
 <meta name="generator" content="Hugo 0.41" />
 
 
-<link rel="canonical" href="http://localhost:1313/cloud/deploy-k8s-with-kubeadm/" />
+<link rel="canonical" href="http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/" />
 
 <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -79,18 +79,18 @@ hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemc
 <meta name='msapplication-navbutton-color' content="#5fbf5e" />
 <meta name="msapplication-TileColor" content="#5fbf5e" />
 <meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
-<link rel="icon" href="http://localhost:1313/img/favicon.ico" />
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/img/favicon-16x16.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/img/favicon-32x32.png" />
-<link rel="icon" sizes="192x192" href="http://localhost:1313/img/touch-icon-android.png" />
-<link rel="apple-touch-icon" href="http://localhost:1313/img/touch-icon-apple.png" />
-<link rel="mask-icon" href="http://localhost:1313/img/safari-pinned-tab.svg" color="#5fbf5e" />
+<link rel="icon" href="http://www.recall704.com/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://www.recall704.com/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://www.recall704.com/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://www.recall704.com/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://www.recall704.com/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://www.recall704.com/img/safari-pinned-tab.svg" color="#5fbf5e" />
 
 
 
 <link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
 
-<link rel="stylesheet" href="http://localhost:1313/css/bundle.6271cf88a8.css" />
+<link rel="stylesheet" href="http://www.recall704.com/css/bundle.6271cf88a8.css" />
 
 
   
@@ -123,7 +123,7 @@ hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemc
     
     
   <header class="site-header">
-  <img class="avatar" src="http://localhost:1313/img/bio.jpg" alt="Avatar">
+  <img class="avatar" src="http://www.recall704.com/img/bio.jpg" alt="Avatar">
   
   <h2 class="title">Recall&#39;s blog</h2>
   
@@ -144,42 +144,42 @@ hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemc
             
               is-active
             ">
-            <a href="http://localhost:1313/">Home</a>
+            <a href="http://www.recall704.com/">Home</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/tags/">Tags</a>
+            <a href="http://www.recall704.com/tags/">Tags</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/categories/">Categories</a>
+            <a href="http://www.recall704.com/categories/">Categories</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/series/">series</a>
+            <a href="http://www.recall704.com/series/">series</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/links/">友情链接</a>
+            <a href="http://www.recall704.com/links/">友情链接</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="http://localhost:1313/about/">初恋</a>
+            <a href="http://www.recall704.com/about/">初恋</a>
           </li>
       
     </ul>
@@ -227,7 +227,7 @@ hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemc
       
 
       <li class="social-item">
-        <a href="http://localhost:1313/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+        <a href="http://www.recall704.com/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
       </li>
 
       
@@ -239,7 +239,7 @@ hostnamectl set-hostname node2 三、安装 docker yum install -y docker systemc
       
 
       <li class="social-item">
-        <a rel="alternate" type="application/rss+xml" href="http://localhost:1313/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+        <a rel="alternate" type="application/rss+xml" href="http://www.recall704.com/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
       </li>
 
     </ul>
@@ -340,11 +340,11 @@ systemctl enable kubelet <span style="color:#f92672">&amp;&amp;</span> systemctl
       
       <ul class="post-tags">
         
-          <li><a href="http://localhost:1313/tags/kubernetes"><span class="tag">Kubernetes</span></a></li>
+          <li><a href="http://www.recall704.com/tags/kubernetes"><span class="tag">Kubernetes</span></a></li>
         
-          <li><a href="http://localhost:1313/tags/deploy"><span class="tag">Deploy</span></a></li>
+          <li><a href="http://www.recall704.com/tags/deploy"><span class="tag">Deploy</span></a></li>
         
-          <li><a href="http://localhost:1313/tags/kubeadm"><span class="tag">Kubeadm</span></a></li>
+          <li><a href="http://www.recall704.com/tags/kubeadm"><span class="tag">Kubeadm</span></a></li>
         
       </ul>
       
@@ -388,7 +388,7 @@ systemctl enable kubelet <span style="color:#f92672">&amp;&amp;</span> systemctl
   });
 </script>
 
-<script src="http://localhost:1313/js/bundle.fb61ec41f8.js"></script>
+<script src="http://www.recall704.com/js/bundle.fb61ec41f8.js"></script>
 
 
 

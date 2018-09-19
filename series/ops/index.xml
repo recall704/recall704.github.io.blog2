@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Ops on Recall&#39;s blog</title>
-    <link>http://localhost:1313/series/ops/</link>
+    <link>http://www.recall704.com/series/ops/</link>
     <description>Recent content in Ops on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Sat, 21 Oct 2017 16:56:20 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/series/ops/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/series/ops/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>debian 安装指定版本的 docker</title>
-      <link>http://localhost:1313/ops/install-docker-on-debian/</link>
+      <link>http://www.recall704.com/ops/install-docker-on-debian/</link>
       <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
       
-      <guid>http://localhost:1313/ops/install-docker-on-debian/</guid>
+      <guid>http://www.recall704.com/ops/install-docker-on-debian/</guid>
       <description>1. 加入软件源 cat &amp;gt;&amp;gt; /etc/apt/sources.list &amp;lt;&amp;lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
 apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.</description>
     </item>
     
     <item>
       <title>centos 安装指定版本的 docker</title>
-      <link>http://localhost:1313/ops/install-docker-on-centos/</link>
+      <link>http://www.recall704.com/ops/install-docker-on-centos/</link>
       <pubDate>Sat, 21 Oct 2017 16:56:06 +0800</pubDate>
       
-      <guid>http://localhost:1313/ops/install-docker-on-centos/</guid>
+      <guid>http://www.recall704.com/ops/install-docker-on-centos/</guid>
       <description>增加 docker 源
 cat &amp;gt;/etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-EOF [docker-main-repo] name=Docker main Repository baseurl=https://yum.dockerproject.org/repo/main/centos/7 enabled=1 gpgcheck=1 gpgkey=https://yum.dockerproject.org/gpg EOF  yum install epel-release yum makecache  列出所有版本：
 # yum list docker-engine --showduplicates | sort -r Loaded plugins: langpacks Installed Packages docker-engine.x86_64 1.9.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.9.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.3-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.2-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.8.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.1-1.el7.centos docker-main-repo docker-engine.x86_64 17.03.0.ce-1.el7.centos docker-main-repo docker-engine.x86_64 1.7.0-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos docker-main-repo docker-engine.x86_64 1.13.1-1.el7.centos @docker-main-repo docker-engine.x86_64 1.</description>

@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rabc on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/rabc/</link>
+    <link>http://www.recall704.com/tags/rabc/</link>
     <description>Recent content in Rabc on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Sat, 21 Oct 2017 14:39:44 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/rabc/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/rabc/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>权限、RBAC 和 ObjectPermission</title>
-      <link>http://localhost:1313/developer/permission-rbac-and-objectpermission/</link>
+      <link>http://www.recall704.com/developer/permission-rbac-and-objectpermission/</link>
       <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
       
-      <guid>http://localhost:1313/developer/permission-rbac-and-objectpermission/</guid>
+      <guid>http://www.recall704.com/developer/permission-rbac-and-objectpermission/</guid>
       <description>一. 从简单权限控制到 RBAC 1. 只有一个权限 在系统初期，我们的用户是这样的
    id 用户名 密码 是否管理员     1 admin 123456 True   2 test1 123123 False   3 test2 123123 False    系统只有两类用户，管理员和普通用户，判断用户权限的时候，代码如下
 def func(): user = User.objects.get(id=1) if user.is_admin: do_someting() else: pass 2. 少量权限 再后来，我们的系统需要三个权限，发布文章，修改文章，删除文章。

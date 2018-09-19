@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Token on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/token/</link>
+    <link>http://www.recall704.com/tags/token/</link>
     <description>Recent content in Token on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Wed, 11 Apr 2018 14:22:03 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/token/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/token/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>创建 client （一）： token 方式访问 k8s API</title>
-      <link>http://localhost:1313/cloud/k8s-authentication-with-token/</link>
+      <link>http://www.recall704.com/cloud/k8s-authentication-with-token/</link>
       <pubDate>Wed, 11 Apr 2018 14:22:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/k8s-authentication-with-token/</guid>
+      <guid>http://www.recall704.com/cloud/k8s-authentication-with-token/</guid>
       <description>0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
 1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
 2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。

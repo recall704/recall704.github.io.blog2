@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Debian on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/debian/</link>
+    <link>http://www.recall704.com/tags/debian/</link>
     <description>Recent content in Debian on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Wed, 14 Mar 2018 14:22:53 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/debian/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/debian/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>apt 常用的几个命令</title>
-      <link>http://localhost:1313/linux/apt-usage/</link>
+      <link>http://www.recall704.com/linux/apt-usage/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/linux/apt-usage/</guid>
+      <guid>http://www.recall704.com/linux/apt-usage/</guid>
       <description>一、安装软件 apt install &amp;lt;package_name&amp;gt;  二、删除软件 apt remove &amp;lt;package_name&amp;gt;  三、查找软件 apt-cache search &amp;lt;package_name&amp;gt;  四、显示软件版本 apt-cache policy vim vim: Installed: 2:7.4.488-7+deb8u2 Candidate: 2:7.4.488-7+deb8u3 Version table: 2:7.4.488-7+deb8u3 0 500 http://mirrordirector.raspbian.org/raspbian/ jessie/main armhf Packages *** 2:7.4.488-7+deb8u2 0 100 /var/lib/dpkg/status  使用 debian 系列系统安装软件的时候，经常会出现下面类似的错误：
 flex : 依赖: m4 但是它将不会被安装 依赖: libfl-dev (= 2.5.35-10ubuntu3) 但是它将不会被安装 libc6 : 依赖: libc-bin (= 2.15-0ubuntu10) 但是 2.15-0ubuntu10.3 正要被安装 libc6-dev : 依赖: libc6 (= 2.15-0ubuntu10.3) 但是 2.15-0ubuntu10 正要被安装  如果是显示依赖的版本不对，我们就可以通过指定版本来解决对应的依赖问题。</description>
     </item>
     
     <item>
       <title>debian 安装指定版本的 docker</title>
-      <link>http://localhost:1313/ops/install-docker-on-debian/</link>
+      <link>http://www.recall704.com/ops/install-docker-on-debian/</link>
       <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
       
-      <guid>http://localhost:1313/ops/install-docker-on-debian/</guid>
+      <guid>http://www.recall704.com/ops/install-docker-on-debian/</guid>
       <description>1. 加入软件源 cat &amp;gt;&amp;gt; /etc/apt/sources.list &amp;lt;&amp;lt;-EOF deb [arch=amd64] https://apt.dockerproject.org/repo debian-jessie main EOF  不能连接 https 时
 apt install apt-transport-https  2. 更新 metadata apt update  3. 列出可选版本 apt-cache policy docker-engine docker-engine: Installed: 1.13.1-0~debian-jessie Candidate: 1.13.1-0~debian-jessie Version table: *** 1.13.1-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 100 /var/lib/dpkg/status 1.13.0-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.6-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.12.5-0~debian-jessie 0 500 https://apt.dockerproject.org/repo/ debian-jessie/main amd64 Packages 1.</description>
     </item>

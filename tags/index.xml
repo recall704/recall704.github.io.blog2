@@ -2,490 +2,490 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>http://www.recall704.com/tags/</link>
     <description>Recent content in Tags on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Sat, 21 Oct 2017 14:08:35 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About</title>
-      <link>http://localhost:1313/tags/about/</link>
+      <link>http://www.recall704.com/tags/about/</link>
       <pubDate>Sat, 21 Oct 2017 14:08:35 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/about/</guid>
+      <guid>http://www.recall704.com/tags/about/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Alpine</title>
-      <link>http://localhost:1313/tags/alpine/</link>
+      <link>http://www.recall704.com/tags/alpine/</link>
       <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/alpine/</guid>
+      <guid>http://www.recall704.com/tags/alpine/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ansible</title>
-      <link>http://localhost:1313/tags/ansible/</link>
+      <link>http://www.recall704.com/tags/ansible/</link>
       <pubDate>Fri, 03 Nov 2017 11:08:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/ansible/</guid>
+      <guid>http://www.recall704.com/tags/ansible/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Apk</title>
-      <link>http://localhost:1313/tags/apk/</link>
+      <link>http://www.recall704.com/tags/apk/</link>
       <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/apk/</guid>
+      <guid>http://www.recall704.com/tags/apk/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Apt</title>
-      <link>http://localhost:1313/tags/apt/</link>
+      <link>http://www.recall704.com/tags/apt/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/apt/</guid>
+      <guid>http://www.recall704.com/tags/apt/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Authenticate</title>
-      <link>http://localhost:1313/tags/authenticate/</link>
+      <link>http://www.recall704.com/tags/authenticate/</link>
       <pubDate>Wed, 22 Nov 2017 11:14:50 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/authenticate/</guid>
+      <guid>http://www.recall704.com/tags/authenticate/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Basic</title>
-      <link>http://localhost:1313/tags/basic/</link>
+      <link>http://www.recall704.com/tags/basic/</link>
       <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/basic/</guid>
+      <guid>http://www.recall704.com/tags/basic/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Centos</title>
-      <link>http://localhost:1313/tags/centos/</link>
+      <link>http://www.recall704.com/tags/centos/</link>
       <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/centos/</guid>
+      <guid>http://www.recall704.com/tags/centos/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Clair</title>
-      <link>http://localhost:1313/tags/clair/</link>
+      <link>http://www.recall704.com/tags/clair/</link>
       <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/clair/</guid>
+      <guid>http://www.recall704.com/tags/clair/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Client</title>
-      <link>http://localhost:1313/tags/client/</link>
+      <link>http://www.recall704.com/tags/client/</link>
       <pubDate>Sun, 15 Apr 2018 22:39:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/client/</guid>
+      <guid>http://www.recall704.com/tags/client/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Config</title>
-      <link>http://localhost:1313/tags/config/</link>
+      <link>http://www.recall704.com/tags/config/</link>
       <pubDate>Sun, 15 Apr 2018 22:12:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/config/</guid>
+      <guid>http://www.recall704.com/tags/config/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Debian</title>
-      <link>http://localhost:1313/tags/debian/</link>
+      <link>http://www.recall704.com/tags/debian/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/debian/</guid>
+      <guid>http://www.recall704.com/tags/debian/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Deploy</title>
-      <link>http://localhost:1313/tags/deploy/</link>
+      <link>http://www.recall704.com/tags/deploy/</link>
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/deploy/</guid>
+      <guid>http://www.recall704.com/tags/deploy/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Django</title>
-      <link>http://localhost:1313/tags/django/</link>
+      <link>http://www.recall704.com/tags/django/</link>
       <pubDate>Mon, 14 Mar 2016 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/django/</guid>
+      <guid>http://www.recall704.com/tags/django/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Docker</title>
-      <link>http://localhost:1313/tags/docker/</link>
+      <link>http://www.recall704.com/tags/docker/</link>
       <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/docker/</guid>
+      <guid>http://www.recall704.com/tags/docker/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Epel</title>
-      <link>http://localhost:1313/tags/epel/</link>
+      <link>http://www.recall704.com/tags/epel/</link>
       <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/epel/</guid>
+      <guid>http://www.recall704.com/tags/epel/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Harbor</title>
-      <link>http://localhost:1313/tags/harbor/</link>
+      <link>http://www.recall704.com/tags/harbor/</link>
       <pubDate>Tue, 19 Dec 2017 18:45:17 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/harbor/</guid>
+      <guid>http://www.recall704.com/tags/harbor/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Install</title>
-      <link>http://localhost:1313/tags/install/</link>
+      <link>http://www.recall704.com/tags/install/</link>
       <pubDate>Sat, 21 Oct 2017 16:56:20 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/install/</guid>
+      <guid>http://www.recall704.com/tags/install/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Job</title>
-      <link>http://localhost:1313/tags/job/</link>
+      <link>http://www.recall704.com/tags/job/</link>
       <pubDate>Tue, 19 Dec 2017 18:45:17 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/job/</guid>
+      <guid>http://www.recall704.com/tags/job/</guid>
       <description></description>
     </item>
     
     <item>
       <title>K8s</title>
-      <link>http://localhost:1313/tags/k8s/</link>
+      <link>http://www.recall704.com/tags/k8s/</link>
       <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/k8s/</guid>
+      <guid>http://www.recall704.com/tags/k8s/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Kubeadm</title>
-      <link>http://localhost:1313/tags/kubeadm/</link>
+      <link>http://www.recall704.com/tags/kubeadm/</link>
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/kubeadm/</guid>
+      <guid>http://www.recall704.com/tags/kubeadm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Kubelet</title>
-      <link>http://localhost:1313/tags/kubelet/</link>
+      <link>http://www.recall704.com/tags/kubelet/</link>
       <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/kubelet/</guid>
+      <guid>http://www.recall704.com/tags/kubelet/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Kubernetes</title>
-      <link>http://localhost:1313/tags/kubernetes/</link>
+      <link>http://www.recall704.com/tags/kubernetes/</link>
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/kubernetes/</guid>
+      <guid>http://www.recall704.com/tags/kubernetes/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Node</title>
-      <link>http://localhost:1313/tags/node/</link>
+      <link>http://www.recall704.com/tags/node/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/node/</guid>
+      <guid>http://www.recall704.com/tags/node/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Nodeport</title>
-      <link>http://localhost:1313/tags/nodeport/</link>
+      <link>http://www.recall704.com/tags/nodeport/</link>
       <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/nodeport/</guid>
+      <guid>http://www.recall704.com/tags/nodeport/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Operator</title>
-      <link>http://localhost:1313/tags/operator/</link>
+      <link>http://www.recall704.com/tags/operator/</link>
       <pubDate>Fri, 13 Apr 2018 10:03:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/operator/</guid>
+      <guid>http://www.recall704.com/tags/operator/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Permission</title>
-      <link>http://localhost:1313/tags/permission/</link>
+      <link>http://www.recall704.com/tags/permission/</link>
       <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/permission/</guid>
+      <guid>http://www.recall704.com/tags/permission/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Persistentvoume</title>
-      <link>http://localhost:1313/tags/persistentvoume/</link>
+      <link>http://www.recall704.com/tags/persistentvoume/</link>
       <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/persistentvoume/</guid>
+      <guid>http://www.recall704.com/tags/persistentvoume/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Pod</title>
-      <link>http://localhost:1313/tags/pod/</link>
+      <link>http://www.recall704.com/tags/pod/</link>
       <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/pod/</guid>
+      <guid>http://www.recall704.com/tags/pod/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Python</title>
-      <link>http://localhost:1313/tags/python/</link>
+      <link>http://www.recall704.com/tags/python/</link>
       <pubDate>Mon, 14 Mar 2016 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/python/</guid>
+      <guid>http://www.recall704.com/tags/python/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Rabc</title>
-      <link>http://localhost:1313/tags/rabc/</link>
+      <link>http://www.recall704.com/tags/rabc/</link>
       <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/rabc/</guid>
+      <guid>http://www.recall704.com/tags/rabc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Range</title>
-      <link>http://localhost:1313/tags/range/</link>
+      <link>http://www.recall704.com/tags/range/</link>
       <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/range/</guid>
+      <guid>http://www.recall704.com/tags/range/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Raspberry</title>
-      <link>http://localhost:1313/tags/raspberry/</link>
+      <link>http://www.recall704.com/tags/raspberry/</link>
       <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/raspberry/</guid>
+      <guid>http://www.recall704.com/tags/raspberry/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Registry</title>
-      <link>http://localhost:1313/tags/registry/</link>
+      <link>http://www.recall704.com/tags/registry/</link>
       <pubDate>Sat, 28 Oct 2017 20:46:54 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/registry/</guid>
+      <guid>http://www.recall704.com/tags/registry/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Replicaset</title>
-      <link>http://localhost:1313/tags/replicaset/</link>
+      <link>http://www.recall704.com/tags/replicaset/</link>
       <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/replicaset/</guid>
+      <guid>http://www.recall704.com/tags/replicaset/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Roles</title>
-      <link>http://localhost:1313/tags/roles/</link>
+      <link>http://www.recall704.com/tags/roles/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/roles/</guid>
+      <guid>http://www.recall704.com/tags/roles/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Rs</title>
-      <link>http://localhost:1313/tags/rs/</link>
+      <link>http://www.recall704.com/tags/rs/</link>
       <pubDate>Thu, 26 Apr 2018 15:32:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/rs/</guid>
+      <guid>http://www.recall704.com/tags/rs/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Scan</title>
-      <link>http://localhost:1313/tags/scan/</link>
+      <link>http://www.recall704.com/tags/scan/</link>
       <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/scan/</guid>
+      <guid>http://www.recall704.com/tags/scan/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Scheduler</title>
-      <link>http://localhost:1313/tags/scheduler/</link>
+      <link>http://www.recall704.com/tags/scheduler/</link>
       <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/scheduler/</guid>
+      <guid>http://www.recall704.com/tags/scheduler/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Service</title>
-      <link>http://localhost:1313/tags/service/</link>
+      <link>http://www.recall704.com/tags/service/</link>
       <pubDate>Tue, 14 Aug 2018 22:55:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/service/</guid>
+      <guid>http://www.recall704.com/tags/service/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Taint</title>
-      <link>http://localhost:1313/tags/taint/</link>
+      <link>http://www.recall704.com/tags/taint/</link>
       <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/taint/</guid>
+      <guid>http://www.recall704.com/tags/taint/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Template</title>
-      <link>http://localhost:1313/tags/template/</link>
+      <link>http://www.recall704.com/tags/template/</link>
       <pubDate>Fri, 03 Nov 2017 11:08:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/template/</guid>
+      <guid>http://www.recall704.com/tags/template/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Token</title>
-      <link>http://localhost:1313/tags/token/</link>
+      <link>http://www.recall704.com/tags/token/</link>
       <pubDate>Wed, 11 Apr 2018 14:22:03 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/token/</guid>
+      <guid>http://www.recall704.com/tags/token/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Toleration</title>
-      <link>http://localhost:1313/tags/toleration/</link>
+      <link>http://www.recall704.com/tags/toleration/</link>
       <pubDate>Sun, 11 Mar 2018 22:36:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/toleration/</guid>
+      <guid>http://www.recall704.com/tags/toleration/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ubuntu</title>
-      <link>http://localhost:1313/tags/ubuntu/</link>
+      <link>http://www.recall704.com/tags/ubuntu/</link>
       <pubDate>Wed, 14 Mar 2018 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/ubuntu/</guid>
+      <guid>http://www.recall704.com/tags/ubuntu/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Update</title>
-      <link>http://localhost:1313/tags/update/</link>
+      <link>http://www.recall704.com/tags/update/</link>
       <pubDate>Thu, 18 Jan 2018 17:54:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/update/</guid>
+      <guid>http://www.recall704.com/tags/update/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Volume</title>
-      <link>http://localhost:1313/tags/volume/</link>
+      <link>http://www.recall704.com/tags/volume/</link>
       <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/volume/</guid>
+      <guid>http://www.recall704.com/tags/volume/</guid>
       <description></description>
     </item>
     
     <item>
       <title>云计算</title>
-      <link>http://localhost:1313/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</link>
+      <link>http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</link>
       <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</guid>
+      <guid>http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</guid>
       <description></description>
     </item>
     
     <item>
       <title>初恋</title>
-      <link>http://localhost:1313/tags/%E5%88%9D%E6%81%8B/</link>
+      <link>http://www.recall704.com/tags/%E5%88%9D%E6%81%8B/</link>
       <pubDate>Sat, 21 Oct 2017 14:08:35 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/%E5%88%9D%E6%81%8B/</guid>
+      <guid>http://www.recall704.com/tags/%E5%88%9D%E6%81%8B/</guid>
       <description></description>
     </item>
     
     <item>
       <title>容器</title>
-      <link>http://localhost:1313/tags/%E5%AE%B9%E5%99%A8/</link>
+      <link>http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/</link>
       <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/%E5%AE%B9%E5%99%A8/</guid>
+      <guid>http://www.recall704.com/tags/%E5%AE%B9%E5%99%A8/</guid>
       <description></description>
     </item>
     
     <item>
       <title>权限</title>
-      <link>http://localhost:1313/tags/%E6%9D%83%E9%99%90/</link>
+      <link>http://www.recall704.com/tags/%E6%9D%83%E9%99%90/</link>
       <pubDate>Sat, 21 Oct 2017 14:39:44 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/%E6%9D%83%E9%99%90/</guid>
+      <guid>http://www.recall704.com/tags/%E6%9D%83%E9%99%90/</guid>
       <description></description>
     </item>
     
     <item>
       <title>树莓派</title>
-      <link>http://localhost:1313/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</link>
+      <link>http://www.recall704.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</link>
       <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</guid>
+      <guid>http://www.recall704.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</guid>
       <description></description>
     </item>
     
     <item>
       <title>镜像</title>
-      <link>http://localhost:1313/tags/%E9%95%9C%E5%83%8F/</link>
+      <link>http://www.recall704.com/tags/%E9%95%9C%E5%83%8F/</link>
       <pubDate>Wed, 20 Dec 2017 20:24:42 +0800</pubDate>
       
-      <guid>http://localhost:1313/tags/%E9%95%9C%E5%83%8F/</guid>
+      <guid>http://www.recall704.com/tags/%E9%95%9C%E5%83%8F/</guid>
       <description></description>
     </item>
     

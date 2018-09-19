@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pythons on Recall&#39;s blog</title>
-    <link>http://localhost:1313/python/</link>
+    <link>http://www.recall704.com/python/</link>
     <description>Recent content in Pythons on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Mon, 14 Mar 2016 14:22:53 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/python/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/python/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>一些 django 经验分享</title>
-      <link>http://localhost:1313/python/some-django-tips/</link>
+      <link>http://www.recall704.com/python/some-django-tips/</link>
       <pubDate>Mon, 14 Mar 2016 14:22:53 +0800</pubDate>
       
-      <guid>http://localhost:1313/python/some-django-tips/</guid>
+      <guid>http://www.recall704.com/python/some-django-tips/</guid>
       <description>最近在维护一个前同事的 django 项目，维护起来略有蛋疼，在这里，我分享些我的经验。
 1、用 property 代替比较 （模板和视图中）代码存在大量的 obj.status == 1 ，obj.status == 2 可读性非常差，根本不知道 等于 1 和等于 2 是啥意思（特别是模板中而且特么的没有注释，根本不能忍）。 其实我们可以用 property 来代替比较
 @property def is_status_started(self): return self.status == 1 @property def is_status_finished(self): return self.status == 2 这样，我们在调用的时候 直接 obj.is_status_started 我们就能很清楚的知道代码的含义， 而不用再次去查看代码，当我们的每个 app 下的 choices 非常多的时候，阅读起来非常蛋疼。

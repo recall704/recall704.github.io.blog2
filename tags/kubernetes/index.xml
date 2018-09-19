@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kubernetes on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/kubernetes/</link>
+    <link>http://www.recall704.com/tags/kubernetes/</link>
     <description>Recent content in Kubernetes on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Sun, 07 Jan 2018 20:32:40 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Deploy K8s With Kubeadm</title>
-      <link>http://localhost:1313/cloud/deploy-k8s-with-kubeadm/</link>
+      <link>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</link>
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/deploy-k8s-with-kubeadm/</guid>
+      <guid>http://www.recall704.com/cloud/deploy-k8s-with-kubeadm/</guid>
       <description>一、环境准备 两台 centos 7.2 mini 系统，virtualbox 安装的系统，桥接模式，能正常访问网络
 node1： 192.168.88.50
 node2： 192.168.88.51

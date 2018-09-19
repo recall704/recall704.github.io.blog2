@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Persistentvoume on Recall&#39;s blog</title>
-    <link>http://localhost:1313/tags/persistentvoume/</link>
+    <link>http://www.recall704.com/tags/persistentvoume/</link>
     <description>Recent content in Persistentvoume on Recall&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 04 Sep 2018 13:48:09 +0800</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/tags/persistentvoume/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.recall704.com/tags/persistentvoume/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>k8s 学习笔记之存储</title>
-      <link>http://localhost:1313/cloud/volume-of-k8s/</link>
+      <link>http://www.recall704.com/cloud/volume-of-k8s/</link>
       <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
       
-      <guid>http://localhost:1313/cloud/volume-of-k8s/</guid>
+      <guid>http://www.recall704.com/cloud/volume-of-k8s/</guid>
       <description>一、几个存储的概念 1. pv A PersistentVolume is a piece of storage in the cluster that has been provisioned by an administrator.
 2. pvc A PersistentVolumeClaims is a request for storage by a user.
 3. storageclass A storageclass provides a way for administrator to describe the classes of storage they offer.
