@@ -186,7 +186,7 @@
     <item>
       <title>K8s</title>
       <link>http://www.recall704.com/tags/k8s/</link>
-      <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
+      <pubDate>Mon, 24 Sep 2018 22:41:09 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/k8s/</guid>
       <description></description>
@@ -216,6 +216,15 @@
       <pubDate>Sun, 07 Jan 2018 20:32:40 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Matchnodeselector</title>
+      <link>http://www.recall704.com/tags/matchnodeselector/</link>
+      <pubDate>Mon, 24 Sep 2018 22:41:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/matchnodeselector/</guid>
       <description></description>
     </item>
     
@@ -270,6 +279,24 @@
       <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/pod/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Podfitshostports</title>
+      <link>http://www.recall704.com/tags/podfitshostports/</link>
+      <pubDate>Mon, 24 Sep 2018 18:46:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/podfitshostports/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Podfitsresources</title>
+      <link>http://www.recall704.com/tags/podfitsresources/</link>
+      <pubDate>Sat, 22 Sep 2018 22:48:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/podfitsresources/</guid>
       <description></description>
     </item>
     
@@ -357,7 +384,7 @@
     <item>
       <title>Scheduler</title>
       <link>http://www.recall704.com/tags/scheduler/</link>
-      <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
+      <pubDate>Mon, 24 Sep 2018 22:41:09 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/scheduler/</guid>
       <description></description>
@@ -438,7 +465,7 @@
     <item>
       <title>云计算</title>
       <link>http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</link>
-      <pubDate>Tue, 04 Sep 2018 13:48:09 +0800</pubDate>
+      <pubDate>Mon, 24 Sep 2018 22:41:09 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/</guid>
       <description></description>
@@ -477,6 +504,15 @@
       <pubDate>Sat, 21 Oct 2017 17:01:53 +0800</pubDate>
       
       <guid>http://www.recall704.com/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>调度</title>
+      <link>http://www.recall704.com/tags/%E8%B0%83%E5%BA%A6/</link>
+      <pubDate>Mon, 24 Sep 2018 22:41:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/tags/%E8%B0%83%E5%BA%A6/</guid>
       <description></description>
     </item>
     

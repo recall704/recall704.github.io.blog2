@@ -238,6 +238,64 @@
       
         <article class="post-entry">
   <header class="post-header">
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" class="post-link">创建 client （一）： token 方式访问 k8s API</a></h3>
+    <p class="post-meta">@recall704 · Apr 11, 2018 · 2 min read</p>
+  </header>
+  
+  <p class="post-summary">0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
+1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
+2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
+3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
+0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？
+和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
+我们在 rook 的代码中，可以看到下面这样类似的代码</p>
+  <footer class="post-footer">
+    <a class="read-more" href="http://www.recall704.com/cloud/k8s-authentication-with-token/">Read More →</a>
+  </footer>
+</article>
+
+      
+        <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s-node-roles/" class="post-link">k8s 中 node 的 roles</a></h3>
+    <p class="post-meta">@recall704 · Mar 14, 2018 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES
+但是执行命令：
+kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
+那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
+通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&#34;&#34; 和 kubernetes.io/role=&#34;&lt;role&gt;&#34; 来定义角色。
+所以 master 可以这样
+kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
+kubectl label node 192.168.88.201 kubernetes.io/role=master  </p>
+  <footer class="post-footer">
+    <a class="read-more" href="http://www.recall704.com/cloud/k8s-node-roles/">Read More →</a>
+  </footer>
+</article>
+
+      
+        <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/taint-and-toleration/" class="post-link">k8s 中的污染 Taint 与容忍 Toleration</a></h3>
+    <p class="post-meta">@recall704 · Mar 11, 2018 · 2 min read</p>
+  </header>
+  
+  <p class="post-summary">之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
+ 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
+kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
+1. aaa 代表 taint 的 key
+2. bbb 代表 taint 的 value
+3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
+   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。</p>
+  <footer class="post-footer">
+    <a class="read-more" href="http://www.recall704.com/cloud/taint-and-toleration/">Read More →</a>
+  </footer>
+</article>
+
+      
+        <article class="post-entry">
+  <header class="post-header">
     <h3 class="post-title"><a href="http://www.recall704.com/cloud/fix-alpine-update-failed/" class="post-link">Fix Alpine Update Failed</a></h3>
     <p class="post-meta">@recall704 · Jan 18, 2018 · 1 min read</p>
   </header>

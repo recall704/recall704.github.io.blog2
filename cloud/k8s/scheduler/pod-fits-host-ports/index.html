@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>k8s 调度算法分析之 PodFitsHostPorts（三）</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
+  <meta name="description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsHostPorts
+二、代码分析 // PodFitsHostPorts checks if a node has free ports for the requested pod ports. func PodFitsHostPorts(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { var wantPorts map[string]bool if predicateMeta, ok := meta.(*predicateMetadata); ok { wantPorts = predicateMeta.podPorts } else { // We couldn&amp;#39;t parse metadata - fallback to computing it. 	wantPorts = schedutil.GetUsedPorts(pod) } if len(wantPorts) == 0 { return true, nil, nil } existingPorts := nodeInfo." />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="k8s 调度算法分析之 PodFitsHostPorts（三）" />
+    <meta name="twitter:description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsHostPorts
+二、代码分析 // PodFitsHostPorts checks if a node has free ports for the requested pod ports. func PodFitsHostPorts(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { var wantPorts map[string]bool if predicateMeta, ok := meta.(*predicateMetadata); ok { wantPorts = predicateMeta.podPorts } else { // We couldn&amp;#39;t parse metadata - fallback to computing it. 	wantPorts = schedutil.GetUsedPorts(pod) } if len(wantPorts) == 0 { return true, nil, nil } existingPorts := nodeInfo." />
+    <meta name="twitter:image" content="http://www.recall704.com/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="k8s 调度算法分析之 PodFitsHostPorts（三）" />
+  <meta property="og:description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsHostPorts
+二、代码分析 // PodFitsHostPorts checks if a node has free ports for the requested pod ports. func PodFitsHostPorts(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { var wantPorts map[string]bool if predicateMeta, ok := meta.(*predicateMetadata); ok { wantPorts = predicateMeta.podPorts } else { // We couldn&amp;#39;t parse metadata - fallback to computing it. 	wantPorts = schedutil.GetUsedPorts(pod) } if len(wantPorts) == 0 { return true, nil, nil } existingPorts := nodeInfo." />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-host-ports/" />
+  <meta property="og:image" content="http://www.recall704.com/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.41" />
+
+
+<link rel="canonical" href="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-host-ports/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://www.recall704.com/img/bio.jpg" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://www.recall704.com/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://www.recall704.com/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://www.recall704.com/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://www.recall704.com/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://www.recall704.com/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://www.recall704.com/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="http://www.recall704.com/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://www.recall704.com/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://www.recall704.com/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://www.recall704.com/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">k8s 调度算法分析之 PodFitsHostPorts（三）</h1>
+      <p class="post-meta">@recall704 · Sep 24, 2018 · 2 min read</p>
+    </header>
+
+    
+
+    <article class="post-content">
+
+<h1 id="一-概述">一、概述</h1>
+
+<p>之前的文章有简要分析 k8s 的调度过程，主要就是<br />
+1. 节点筛选（选取可用的节点）<br />
+2. 节点排序（选取最优节点）</p>
+
+<p>今天我们来详细分析其中的一个筛选算法 <code>PodFitsHostPorts</code></p>
+
+<h1 id="二-代码分析">二、代码分析</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// PodFitsHostPorts checks if a node has free ports for the requested pod ports.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">PodFitsHostPorts</span>(<span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">meta</span> <span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateMetadata</span>, <span style="color:#a6e22e">nodeInfo</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">schedulercache</span>.<span style="color:#a6e22e">NodeInfo</span>) (<span style="color:#66d9ef">bool</span>, []<span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateFailureReason</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">wantPorts</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">bool</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">predicateMeta</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">meta</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">predicateMetadata</span>); <span style="color:#a6e22e">ok</span> {
+		<span style="color:#a6e22e">wantPorts</span> = <span style="color:#a6e22e">predicateMeta</span>.<span style="color:#a6e22e">podPorts</span>
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#75715e">// We couldn&#39;t parse metadata - fallback to computing it.
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">wantPorts</span> = <span style="color:#a6e22e">schedutil</span>.<span style="color:#a6e22e">GetUsedPorts</span>(<span style="color:#a6e22e">pod</span>)
+	}
+	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">wantPorts</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>
+	}
+
+	<span style="color:#a6e22e">existingPorts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">UsedPorts</span>()
+
+	<span style="color:#75715e">// try to see whether existingPorts and  wantPorts will conflict or not
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">portsConflict</span>(<span style="color:#a6e22e">existingPorts</span>, <span style="color:#a6e22e">wantPorts</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, []<span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateFailureReason</span>{<span style="color:#a6e22e">ErrPodNotFitsHostPorts</span>}, <span style="color:#66d9ef">nil</span>
+	}
+
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
+<p>这段代码比较简短，我们主要关心 wantPorts 的结构即可。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">//</span> <span style="color:#a6e22e">PodFitsHostPorts</span> <span style="color:#a6e22e">checks</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">a</span> <span style="color:#a6e22e">node</span> <span style="color:#a6e22e">has</span> <span style="color:#a6e22e">free</span> <span style="color:#a6e22e">ports</span> <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">requested</span> <span style="color:#a6e22e">pod</span> <span style="color:#a6e22e">ports</span>.</code></pre></div>
+<p>PodFitsHostPorts 检查节点上 pod 请求的 端口是否已经被占用。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">podPorts</span>      <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">bool</span></code></pre></div>
+<p>端口的结构是一个 map，key 为字符串，value 为布尔型。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">n</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">NodeInfo</span>) <span style="color:#a6e22e">updateUsedPorts</span>(<span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">used</span> <span style="color:#66d9ef">bool</span>) {
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Containers</span> {
+		<span style="color:#a6e22e">container</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Containers</span>[<span style="color:#a6e22e">j</span>]
+		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Ports</span> {
+			<span style="color:#a6e22e">podPort</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Ports</span>[<span style="color:#a6e22e">k</span>]
+			<span style="color:#75715e">// &#34;0&#34; is explicitly ignored in PodFitsHostPorts,
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// which is the only function that uses this value.
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">podPort</span>.<span style="color:#a6e22e">HostPort</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+				<span style="color:#75715e">// user does not explicitly set protocol, default is tcp
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">portProtocol</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">podPort</span>.<span style="color:#a6e22e">Protocol</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">podPort</span>.<span style="color:#a6e22e">Protocol</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+					<span style="color:#a6e22e">portProtocol</span> = <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ProtocolTCP</span>
+				}
+
+				<span style="color:#75715e">// user does not explicitly set hostIP, default is 0.0.0.0
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">portHostIP</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">podPort</span>.<span style="color:#a6e22e">HostIP</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">podPort</span>.<span style="color:#a6e22e">HostIP</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+					<span style="color:#a6e22e">portHostIP</span> = <span style="color:#a6e22e">util</span>.<span style="color:#a6e22e">DefaultBindAllHostIP</span>
+				}
+
+				<span style="color:#a6e22e">str</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;%s/%s/%d&#34;</span>, <span style="color:#a6e22e">portProtocol</span>, <span style="color:#a6e22e">portHostIP</span>, <span style="color:#a6e22e">podPort</span>.<span style="color:#a6e22e">HostPort</span>)
+
+				<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">used</span> {
+					<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">usedPorts</span>[<span style="color:#a6e22e">str</span>] = <span style="color:#a6e22e">used</span>
+				} <span style="color:#66d9ef">else</span> {
+					delete(<span style="color:#a6e22e">n</span>.<span style="color:#a6e22e">usedPorts</span>, <span style="color:#a6e22e">str</span>)
+				}
+
+			}
+		}
+	}
+}</code></pre></div>
+<p>这里可以看到 key 是 <code>str := fmt.Sprintf(&quot;%s/%s/%d&quot;, portProtocol, portHostIP, podPort.HostPort)</code>，例如
+<code>TCP/0.0.0.0/60000</code></p>
+
+<h1 id="三-总结">三、总结</h1>
+
+<p>这里，我们可以看到对比的是 pod 请求的端口和当前 node 上 pod 占用的端口。<br />
+这里我们先挖一个坑： 如果节点上有某个程序占用了端口（非 pod 运行），那么在调度期间这个问题能被发现吗？</p>
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="http://www.recall704.com/tags/k8s"><span class="tag">K8s</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97"><span class="tag">云计算</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/%E8%B0%83%E5%BA%A6"><span class="tag"> 调度</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/scheduler"><span class="tag">Scheduler</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/podfitshostports"><span class="tag">PodFitsHostPorts</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://www.recall704.com/js/bundle.fb61ec41f8.js"></script>
+
+
+
+
+  </body>
+</html>

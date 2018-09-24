@@ -7,17 +7,59 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Tue, 14 Aug 2018 23:06:42 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 Sep 2018 22:41:09 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/tags/scheduler/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>k8s pod 调度</title>
-      <link>http://www.recall704.com/cloud/k8s-scheduler/</link>
+      <title>k8s 调度算法分析之 MatchNodeSelector（四）</title>
+      <link>http://www.recall704.com/cloud/k8s/scheduler/pod-match-node-selector/</link>
+      <pubDate>Mon, 24 Sep 2018 22:41:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s/scheduler/pod-match-node-selector/</guid>
+      <description>一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 MatchNodeSelector
+二、代码分析 MatchNodeSelector 对应的函数为 PodMatchNodeSelector
+// PodMatchNodeSelector checks if a pod node selector matches the node label. func PodMatchNodeSelector(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { node := nodeInfo.Node() if node == nil { return false, nil, fmt.Errorf(&amp;#34;node not found&amp;#34;) } if podMatchesNodeLabels(pod, node) { return true, nil, nil } return false, []algorithm.PredicateFailureReason{ErrNodeSelectorNotMatch}, nil } 这个函数看起来超级简单，但内部其实分为两个部分的。
+1. selector</description>
+    </item>
+    
+    <item>
+      <title>k8s 调度算法分析之 PodFitsHostPorts（三）</title>
+      <link>http://www.recall704.com/cloud/k8s/scheduler/pod-fits-host-ports/</link>
+      <pubDate>Mon, 24 Sep 2018 18:46:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s/scheduler/pod-fits-host-ports/</guid>
+      <description>一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsHostPorts
+二、代码分析 // PodFitsHostPorts checks if a node has free ports for the requested pod ports. func PodFitsHostPorts(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { var wantPorts map[string]bool if predicateMeta, ok := meta.(*predicateMetadata); ok { wantPorts = predicateMeta.podPorts } else { // We couldn&amp;#39;t parse metadata - fallback to computing it. 	wantPorts = schedutil.GetUsedPorts(pod) } if len(wantPorts) == 0 { return true, nil, nil } existingPorts := nodeInfo.</description>
+    </item>
+    
+    <item>
+      <title>k8s 调度算法分析之 PodFitsResources（二）</title>
+      <link>http://www.recall704.com/cloud/k8s/scheduler/pod-fits-resource/</link>
+      <pubDate>Sat, 22 Sep 2018 22:48:09 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/cloud/k8s/scheduler/pod-fits-resource/</guid>
+      <description>一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsResources
+二、代码分析 只贴代码是没有任何意义的，我们来逐行分析
+// PodFitsResources checks if a node has sufficient resources, such as cpu, memory, gpu, opaque int resources etc to run a pod. // First return value indicates whether a node has sufficient resources to run a pod while the second return value indicates the // predicate failure reasons if the node has insufficient resources to run the pod.</description>
+    </item>
+    
+    <item>
+      <title>k8s pod 调度分析（零）</title>
+      <link>http://www.recall704.com/cloud/k8s/scheduler/k8s-scheduler/</link>
       <pubDate>Tue, 14 Aug 2018 23:06:42 +0800</pubDate>
       
-      <guid>http://www.recall704.com/cloud/k8s-scheduler/</guid>
+      <guid>http://www.recall704.com/cloud/k8s/scheduler/k8s-scheduler/</guid>
       <description>一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
 二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
 我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度

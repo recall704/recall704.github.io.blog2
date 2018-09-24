@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>k8s 调度算法分析之 PodFitsResources（二）</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
+  <meta name="description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsResources
+二、代码分析 只贴代码是没有任何意义的，我们来逐行分析
+// PodFitsResources checks if a node has sufficient resources, such as cpu, memory, gpu, opaque int resources etc to run a pod. // First return value indicates whether a node has sufficient resources to run a pod while the second return value indicates the // predicate failure reasons if the node has insufficient resources to run the pod." />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="k8s 调度算法分析之 PodFitsResources（二）" />
+    <meta name="twitter:description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsResources
+二、代码分析 只贴代码是没有任何意义的，我们来逐行分析
+// PodFitsResources checks if a node has sufficient resources, such as cpu, memory, gpu, opaque int resources etc to run a pod. // First return value indicates whether a node has sufficient resources to run a pod while the second return value indicates the // predicate failure reasons if the node has insufficient resources to run the pod." />
+    <meta name="twitter:image" content="http://www.recall704.com/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="k8s 调度算法分析之 PodFitsResources（二）" />
+  <meta property="og:description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsResources
+二、代码分析 只贴代码是没有任何意义的，我们来逐行分析
+// PodFitsResources checks if a node has sufficient resources, such as cpu, memory, gpu, opaque int resources etc to run a pod. // First return value indicates whether a node has sufficient resources to run a pod while the second return value indicates the // predicate failure reasons if the node has insufficient resources to run the pod." />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-resource/" />
+  <meta property="og:image" content="http://www.recall704.com/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.41" />
+
+
+<link rel="canonical" href="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-resource/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://www.recall704.com/img/bio.jpg" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://www.recall704.com/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://www.recall704.com/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://www.recall704.com/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://www.recall704.com/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://www.recall704.com/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://www.recall704.com/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="http://www.recall704.com/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://www.recall704.com/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://www.recall704.com/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://www.recall704.com/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">k8s 调度算法分析之 PodFitsResources（二）</h1>
+      <p class="post-meta">@recall704 · Sep 22, 2018 · 3 min read</p>
+    </header>
+
+    
+
+    <article class="post-content">
+
+<h1 id="一-概述">一、概述</h1>
+
+<p>之前的文章有简要分析 k8s 的调度过程，主要就是<br />
+1. 节点筛选（选取可用的节点）<br />
+2. 节点排序（选取最优节点）</p>
+
+<p>今天我们来详细分析其中的一个筛选算法 <code>PodFitsResources</code></p>
+
+<h1 id="二-代码分析">二、代码分析</h1>
+
+<p>只贴代码是没有任何意义的，我们来逐行分析</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// PodFitsResources checks if a node has sufficient resources, such as cpu, memory, gpu, opaque int resources etc to run a pod.
+</span><span style="color:#75715e">// First return value indicates whether a node has sufficient resources to run a pod while the second return value indicates the
+</span><span style="color:#75715e"></span><span style="color:#f92672">//</span> <span style="color:#a6e22e">predicate</span> <span style="color:#a6e22e">failure</span> <span style="color:#a6e22e">reasons</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">node</span> <span style="color:#a6e22e">has</span> <span style="color:#a6e22e">insufficient</span> <span style="color:#a6e22e">resources</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">run</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">pod</span>.</code></pre></div>
+<p>PodFitsResources 检查节点是否有足够的资源（CPU、memory、GPU 等资源），第一个返回值(bool)表示该节点是否有足够的资源来运行 pod，第二个返回值是一个列表，当节点没有足够的资源来运行时，这个列表里是失败的原因。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">PodFitsResources</span>(<span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">meta</span> <span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateMetadata</span>, <span style="color:#a6e22e">nodeInfo</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">schedulercache</span>.<span style="color:#a6e22e">NodeInfo</span>) (<span style="color:#66d9ef">bool</span>, []<span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateFailureReason</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#75715e">// node =&gt; *v1.Node
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">node</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">Node</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">node</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;node not found&#34;</span>)
+	}
+
+    <span style="color:#75715e">// 定义保存失败原因的 slice，来存储失败原因
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">predicateFails</span> []<span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateFailureReason</span>
+	
+	<span style="color:#75715e">//  节点允许的 pod 数量，其值为
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// Node.Status.Allocatable.Pods().Value()
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">allowedPodNumber</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">AllowedPodNumber</span>()
+	
+	<span style="color:#75715e">// 当前节点 pod 数量等于节点允许的 pod 数量，该节点不满足，返回
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">Pods</span>())<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> &gt; <span style="color:#a6e22e">allowedPodNumber</span> {
+		<span style="color:#a6e22e">predicateFails</span> = append(<span style="color:#a6e22e">predicateFails</span>, 
+			<span style="color:#a6e22e">NewInsufficientResourceError</span>(
+				<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ResourcePods</span>,                <span style="color:#75715e">// 资源类型， 这里是 pod
+</span><span style="color:#75715e"></span>				<span style="color:#ae81ff">1</span>,                              <span style="color:#75715e">// 请求数量
+</span><span style="color:#75715e"></span>				int64(len(<span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">Pods</span>())),    <span style="color:#75715e">// 已使用，当前节点 pod 数量
+</span><span style="color:#75715e"></span>				int64(<span style="color:#a6e22e">allowedPodNumber</span>)))       <span style="color:#75715e">// 容量，按照默认配置，应该是 110
+</span><span style="color:#75715e"></span>	}</code></pre></div>
+<p>判断资源请求是否为零，如果为零且没有其它错误，那这个节点已经满足了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">podRequest</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">schedulercache</span>.<span style="color:#a6e22e">Resource</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">predicateMeta</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">meta</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">predicateMetadata</span>); <span style="color:#a6e22e">ok</span> {
+		<span style="color:#a6e22e">podRequest</span> = <span style="color:#a6e22e">predicateMeta</span>.<span style="color:#a6e22e">podRequest</span>
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#75715e">// We couldn&#39;t parse metadata - fallback to computing it.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 获取 pod Container 和 InitContainer 的资源请求值
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">podRequest</span> = <span style="color:#a6e22e">GetResourceRequest</span>(<span style="color:#a6e22e">pod</span>)
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">MilliCPU</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span>
+		<span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">Memory</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span>
+		<span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">NvidiaGPU</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span>
+		<span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">EphemeralStorage</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span>
+		len(<span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">ScalarResources</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+		<span style="color:#75715e">// 如果请求值都为零，这种情况应该是 k8s --admission-control
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 没有配置 ResourceQuota，
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 不用为 pod 设置资源请求值
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> len(<span style="color:#a6e22e">predicateFails</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">predicateFails</span>, <span style="color:#66d9ef">nil</span>
+	}</code></pre></div>
+<p>可分配资源判断</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#a6e22e">allocatable</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">AllocatableResource</span>()
+	<span style="color:#75715e">// 可用 cpu              &lt;  pod 请求的 cpu       当前节点已经存在的 pods 的请求 cpu 之和
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">MilliCPU</span> &lt; <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">MilliCPU</span><span style="color:#f92672">+</span><span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">MilliCPU</span> {
+		<span style="color:#a6e22e">predicateFails</span> = append(<span style="color:#a6e22e">predicateFails</span>,
+			<span style="color:#a6e22e">NewInsufficientResourceError</span>(
+				<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ResourceCPU</span>,                        <span style="color:#75715e">// 资源类型，这里是 CPU
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">MilliCPU</span>,                   <span style="color:#75715e">// 请求 cpu 大小
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">MilliCPU</span>, <span style="color:#75715e">// 已经使用的 cpu
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">MilliCPU</span>))                 <span style="color:#75715e">// 可分配 cpu
+</span><span style="color:#75715e"></span>	}
+	<span style="color:#75715e">// 下面的同理
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">Memory</span> &lt; <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">Memory</span><span style="color:#f92672">+</span><span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">Memory</span> {
+		<span style="color:#a6e22e">predicateFails</span> = append(<span style="color:#a6e22e">predicateFails</span>, <span style="color:#a6e22e">NewInsufficientResourceError</span>(<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ResourceMemory</span>, <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">Memory</span>, <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">Memory</span>, <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">Memory</span>))
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">NvidiaGPU</span> &lt; <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">NvidiaGPU</span><span style="color:#f92672">+</span><span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">NvidiaGPU</span> {
+		<span style="color:#a6e22e">predicateFails</span> = append(<span style="color:#a6e22e">predicateFails</span>, <span style="color:#a6e22e">NewInsufficientResourceError</span>(<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ResourceNvidiaGPU</span>, <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">NvidiaGPU</span>, <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">NvidiaGPU</span>, <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">NvidiaGPU</span>))
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">EphemeralStorage</span> &lt; <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">EphemeralStorage</span><span style="color:#f92672">+</span><span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">EphemeralStorage</span> {
+		<span style="color:#a6e22e">predicateFails</span> = append(<span style="color:#a6e22e">predicateFails</span>, <span style="color:#a6e22e">NewInsufficientResourceError</span>(<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">ResourceEphemeralStorage</span>, <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">EphemeralStorage</span>, <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">EphemeralStorage</span>, <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">EphemeralStorage</span>))
+	}</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">rName</span>, <span style="color:#a6e22e">rQuant</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">ScalarResources</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">ScalarResources</span>[<span style="color:#a6e22e">rName</span>] &lt; <span style="color:#a6e22e">rQuant</span><span style="color:#f92672">+</span><span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">ScalarResources</span>[<span style="color:#a6e22e">rName</span>] {
+			<span style="color:#a6e22e">predicateFails</span> = append(<span style="color:#a6e22e">predicateFails</span>, <span style="color:#a6e22e">NewInsufficientResourceError</span>(<span style="color:#a6e22e">rName</span>, <span style="color:#a6e22e">podRequest</span>.<span style="color:#a6e22e">ScalarResources</span>[<span style="color:#a6e22e">rName</span>], <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">RequestedResource</span>().<span style="color:#a6e22e">ScalarResources</span>[<span style="color:#a6e22e">rName</span>], <span style="color:#a6e22e">allocatable</span>.<span style="color:#a6e22e">ScalarResources</span>[<span style="color:#a6e22e">rName</span>]))
+		}
+	}</code></pre></div>
+<p>上面这段暂时还不确定是什么，应该是下面这些数值</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#75715e">// Services, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceServices</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;services&#34;</span>
+	<span style="color:#75715e">// ReplicationControllers, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceReplicationControllers</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;replicationcontrollers&#34;</span>
+	<span style="color:#75715e">// ResourceQuotas, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceQuotas</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;resourcequotas&#34;</span>
+	<span style="color:#75715e">// ResourceSecrets, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceSecrets</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;secrets&#34;</span>
+	<span style="color:#75715e">// ResourceConfigMaps, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceConfigMaps</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;configmaps&#34;</span>
+	<span style="color:#75715e">// ResourcePersistentVolumeClaims, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourcePersistentVolumeClaims</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;persistentvolumeclaims&#34;</span>
+	<span style="color:#75715e">// ResourceServicesNodePorts, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceServicesNodePorts</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;services.nodeports&#34;</span>
+	<span style="color:#75715e">// ResourceServicesLoadBalancers, number
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ResourceServicesLoadBalancers</span> <span style="color:#a6e22e">ResourceName</span> = <span style="color:#e6db74">&#34;services.loadbalancers&#34;</span></code></pre></div>
+<p>剩下就是返回了，这段就不用分析了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">glog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">10</span>) {
+		<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">predicateFails</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+			<span style="color:#75715e">// We explicitly don&#39;t do glog.V(10).Infof() to avoid computing all the parameters if this is
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// not logged. There is visible performance gain from it.
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">glog</span>.<span style="color:#a6e22e">Infof</span>(<span style="color:#e6db74">&#34;Schedule Pod %+v on Node %+v is allowed, Node is running only %v out of %v Pods.&#34;</span>,
+				<span style="color:#a6e22e">podName</span>(<span style="color:#a6e22e">pod</span>), <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">Name</span>, len(<span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">Pods</span>()), <span style="color:#a6e22e">allowedPodNumber</span>)
+		}
+	}
+	<span style="color:#66d9ef">return</span> len(<span style="color:#a6e22e">predicateFails</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">predicateFails</span>, <span style="color:#66d9ef">nil</span></code></pre></div></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="http://www.recall704.com/tags/k8s"><span class="tag">K8s</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97"><span class="tag">云计算</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/%E8%B0%83%E5%BA%A6"><span class="tag"> 调度</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/scheduler"><span class="tag">Scheduler</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/podfitsresources"><span class="tag">PodFitsResources</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://www.recall704.com/js/bundle.fb61ec41f8.js"></script>
+
+
+
+
+  </body>
+</html>

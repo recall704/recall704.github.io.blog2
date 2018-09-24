@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>k8s 调度算法分析之 MatchNodeSelector（四）</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
+  <meta name="description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 MatchNodeSelector
+二、代码分析 MatchNodeSelector 对应的函数为 PodMatchNodeSelector
+// PodMatchNodeSelector checks if a pod node selector matches the node label. func PodMatchNodeSelector(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { node := nodeInfo.Node() if node == nil { return false, nil, fmt.Errorf(&amp;#34;node not found&amp;#34;) } if podMatchesNodeLabels(pod, node) { return true, nil, nil } return false, []algorithm.PredicateFailureReason{ErrNodeSelectorNotMatch}, nil } 这个函数看起来超级简单，但内部其实分为两个部分的。
+1. selector" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="k8s 调度算法分析之 MatchNodeSelector（四）" />
+    <meta name="twitter:description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 MatchNodeSelector
+二、代码分析 MatchNodeSelector 对应的函数为 PodMatchNodeSelector
+// PodMatchNodeSelector checks if a pod node selector matches the node label. func PodMatchNodeSelector(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { node := nodeInfo.Node() if node == nil { return false, nil, fmt.Errorf(&amp;#34;node not found&amp;#34;) } if podMatchesNodeLabels(pod, node) { return true, nil, nil } return false, []algorithm.PredicateFailureReason{ErrNodeSelectorNotMatch}, nil } 这个函数看起来超级简单，但内部其实分为两个部分的。
+1. selector" />
+    <meta name="twitter:image" content="http://www.recall704.com/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="k8s 调度算法分析之 MatchNodeSelector（四）" />
+  <meta property="og:description" content="一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 MatchNodeSelector
+二、代码分析 MatchNodeSelector 对应的函数为 PodMatchNodeSelector
+// PodMatchNodeSelector checks if a pod node selector matches the node label. func PodMatchNodeSelector(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { node := nodeInfo.Node() if node == nil { return false, nil, fmt.Errorf(&amp;#34;node not found&amp;#34;) } if podMatchesNodeLabels(pod, node) { return true, nil, nil } return false, []algorithm.PredicateFailureReason{ErrNodeSelectorNotMatch}, nil } 这个函数看起来超级简单，但内部其实分为两个部分的。
+1. selector" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s/scheduler/pod-match-node-selector/" />
+  <meta property="og:image" content="http://www.recall704.com/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.41" />
+
+
+<link rel="canonical" href="http://www.recall704.com/cloud/k8s/scheduler/pod-match-node-selector/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://www.recall704.com/img/bio.jpg" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://www.recall704.com/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://www.recall704.com/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://www.recall704.com/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://www.recall704.com/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://www.recall704.com/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://www.recall704.com/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="http://www.recall704.com/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://www.recall704.com/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://www.recall704.com/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://www.recall704.com/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">k8s 调度算法分析之 MatchNodeSelector（四）</h1>
+      <p class="post-meta">@recall704 · Sep 24, 2018 · 2 min read</p>
+    </header>
+
+    
+
+    <article class="post-content">
+
+<h1 id="一-概述">一、概述</h1>
+
+<p>之前的文章有简要分析 k8s 的调度过程，主要就是<br />
+1. 节点筛选（选取可用的节点）<br />
+2. 节点排序（选取最优节点）</p>
+
+<p>今天我们来详细分析其中的一个筛选算法 <code>MatchNodeSelector</code></p>
+
+<h1 id="二-代码分析">二、代码分析</h1>
+
+<p>MatchNodeSelector 对应的函数为 <code>PodMatchNodeSelector</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// PodMatchNodeSelector checks if a pod node selector matches the node label.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">PodMatchNodeSelector</span>(<span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">meta</span> <span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateMetadata</span>, <span style="color:#a6e22e">nodeInfo</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">schedulercache</span>.<span style="color:#a6e22e">NodeInfo</span>) (<span style="color:#66d9ef">bool</span>, []<span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateFailureReason</span>, <span style="color:#66d9ef">error</span>) {
+	<span style="color:#a6e22e">node</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nodeInfo</span>.<span style="color:#a6e22e">Node</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">node</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;node not found&#34;</span>)
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">podMatchesNodeLabels</span>(<span style="color:#a6e22e">pod</span>, <span style="color:#a6e22e">node</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, []<span style="color:#a6e22e">algorithm</span>.<span style="color:#a6e22e">PredicateFailureReason</span>{<span style="color:#a6e22e">ErrNodeSelectorNotMatch</span>}, <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
+<p>这个函数看起来超级简单，但内部其实分为两个部分的。<br />
+1. selector<br />
+2. affinity</p>
+
+<p>我们先来看看 selector 部分</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// The pod can only schedule onto nodes that satisfy requirements in both NodeAffinity and nodeSelector.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">podMatchesNodeLabels</span>(<span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">node</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Node</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#75715e">// Check if node.Labels match pod.Spec.NodeSelector.
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">NodeSelector</span>) &gt; <span style="color:#ae81ff">0</span> {
+		<span style="color:#a6e22e">selector</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">labels</span>.<span style="color:#a6e22e">SelectorFromSet</span>(<span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">NodeSelector</span>)
+		<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">selector</span>.<span style="color:#a6e22e">Matches</span>(<span style="color:#a6e22e">labels</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">Labels</span>)) {
+			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
+		}
+	}</code></pre></div>
+<p>上面的代码很简单，pod 要求的 labels，node 上一定要有（node 上的 labels 多余或等于 pod 要求的 labels）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#75715e">// 1. nil NodeSelector matches all nodes (i.e. does not filter out any nodes)
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// 2. nil []NodeSelectorTerm (equivalent to non-nil empty NodeSelector) matches no nodes
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// 3. zero-length non-nil []NodeSelectorTerm matches no nodes also, just for simplicity
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// 4. nil []NodeSelectorRequirement (equivalent to non-nil empty NodeSelectorTerm) matches no nodes
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// 5. zero-length non-nil []NodeSelectorRequirement matches no nodes also, just for simplicity
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// 6. non-nil empty NodeSelectorRequirement is not allowed
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">nodeAffinityMatches</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">true</span>
+	<span style="color:#a6e22e">affinity</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">Affinity</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">affinity</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">affinity</span>.<span style="color:#a6e22e">NodeAffinity</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">nodeAffinity</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">affinity</span>.<span style="color:#a6e22e">NodeAffinity</span>
+		<span style="color:#75715e">// if no required NodeAffinity requirements, will do no-op, means select all nodes.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// TODO: Replace next line with subsequent commented-out line when implement RequiredDuringSchedulingRequiredDuringExecution.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nodeAffinity</span>.<span style="color:#a6e22e">RequiredDuringSchedulingIgnoredDuringExecution</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#75715e">// if nodeAffinity.RequiredDuringSchedulingRequiredDuringExecution == nil &amp;&amp; nodeAffinity.RequiredDuringSchedulingIgnoredDuringExecution == nil {
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+		}
+
+		<span style="color:#75715e">// Match node selector for requiredDuringSchedulingRequiredDuringExecution.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// TODO: Uncomment this block when implement RequiredDuringSchedulingRequiredDuringExecution.
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// if nodeAffinity.RequiredDuringSchedulingRequiredDuringExecution != nil {
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 	nodeSelectorTerms := nodeAffinity.RequiredDuringSchedulingRequiredDuringExecution.NodeSelectorTerms
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 	glog.V(10).Infof(&#34;Match for RequiredDuringSchedulingRequiredDuringExecution node selector terms %+v&#34;, nodeSelectorTerms)
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 	nodeAffinityMatches = nodeMatchesNodeSelectorTerms(node, nodeSelectorTerms)
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// }
+</span><span style="color:#75715e"></span>
+		<span style="color:#75715e">// Match node selector for requiredDuringSchedulingIgnoredDuringExecution.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nodeAffinity</span>.<span style="color:#a6e22e">RequiredDuringSchedulingIgnoredDuringExecution</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#a6e22e">nodeSelectorTerms</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nodeAffinity</span>.<span style="color:#a6e22e">RequiredDuringSchedulingIgnoredDuringExecution</span>.<span style="color:#a6e22e">NodeSelectorTerms</span>
+			<span style="color:#a6e22e">glog</span>.<span style="color:#a6e22e">V</span>(<span style="color:#ae81ff">10</span>).<span style="color:#a6e22e">Infof</span>(<span style="color:#e6db74">&#34;Match for RequiredDuringSchedulingIgnoredDuringExecution node selector terms %+v&#34;</span>, <span style="color:#a6e22e">nodeSelectorTerms</span>)
+			<span style="color:#a6e22e">nodeAffinityMatches</span> = <span style="color:#a6e22e">nodeAffinityMatches</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">nodeMatchesNodeSelectorTerms</span>(<span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">nodeSelectorTerms</span>)
+		}
+
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nodeAffinityMatches</span>
+}</code></pre></div>
+<p>k8s 的 <code>Affinity</code> 有三种，分别是 <code>NodeAffinity</code>、<code>PodAffinity</code>、<code>PodAntiAffinity</code>，这里只判断 <code>NodeAffinity</code>。</p>
+
+<p>NodeAffinity 又分为两种，分别是<br />
+1. <code>RequiredDuringSchedulingIgnoredDuringExecution</code>，意思是条件必须满足，否则不调度到该节点<br />
+2. <code>PreferredDuringSchedulingIgnoredDuringExecution</code>，意思是优先运行在满足的节点上。</p>
+
+<p>这里的 <code>IgnoredDuringExecution</code> 意思是说，pod 调度运行之后，如果条件发生了变化，不再满足，pod 也会继续运行。</p>
+
+<p>上面的代码只判断了 <code>RequiredDuringSchedulingIgnoredDuringExecution</code>，而 <code>PreferredDuringSchedulingIgnoredDuringExecution</code> 应该会在下一步 (节点排序) 中处理。</p>
+
+<h1 id="三-总结">三、总结</h1>
+
+<p>这里我们分析了 <code>selector</code> 和 <code>affinity</code>，这里我再提出一个问题给大家思考。<br />
+为什么 pod 有 <code>PodAffinity</code> 和 <code>PodAntiAffinity</code>， 而没有 <code>NodeAntiAffinity</code> 呢？</p>
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="http://www.recall704.com/tags/k8s"><span class="tag">K8s</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/%E4%BA%91%E8%AE%A1%E7%AE%97"><span class="tag">云计算</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/%E8%B0%83%E5%BA%A6"><span class="tag"> 调度</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/scheduler"><span class="tag">Scheduler</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/matchnodeselector"><span class="tag">MatchNodeSelector</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://www.recall704.com/js/bundle.fb61ec41f8.js"></script>
+
+
+
+
+  </body>
+</html>

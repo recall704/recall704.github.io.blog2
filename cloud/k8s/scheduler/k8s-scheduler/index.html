@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>k8s pod 调度分析（零）</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="recall704" />
+  <meta name="description" content="一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。" />
+
+  
+  
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="k8s pod 调度分析（零）" />
+    <meta name="twitter:description" content="一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。" />
+    <meta name="twitter:image" content="http://www.recall704.com/img/avatar.jpg" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="k8s pod 调度分析（零）" />
+  <meta property="og:description" content="一、k8s 基础架构 在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构
+二、k8s pod 调度相关的参数 当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候， k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器， 那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？ 有哪些因数会影响 pod 的调度呢？
+我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度
+1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
+2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。" />
+  <meta property="og:url" content="http://www.recall704.com/cloud/k8s/scheduler/k8s-scheduler/" />
+  <meta property="og:image" content="http://www.recall704.com/img/avatar.jpg" />
+
+
+
+
+<meta name="generator" content="Hugo 0.41" />
+
+
+<link rel="canonical" href="http://www.recall704.com/cloud/k8s/scheduler/k8s-scheduler/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+
+
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Recall&#39;s blog" />
+<meta name="msapplication-tooltip" content="Recall&#39;s blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://www.recall704.com/img/bio.jpg" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://www.recall704.com/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://www.recall704.com/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://www.recall704.com/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://www.recall704.com/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://www.recall704.com/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://www.recall704.com/css/bundle.6271cf88a8.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="http://www.recall704.com/img/bio.jpg" alt="Avatar">
+  
+  <h2 class="title">Recall&#39;s blog</h2>
+  
+  <p class="subtitle">学无先后，达者为师</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://www.recall704.com/">Home</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/tags/">Tags</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/categories/">Categories</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/series/">series</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/links/">友情链接</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://www.recall704.com/about/">初恋</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:tk657309822@gmail.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/recall704" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://www.recall704.com/img/vx.png" title="Wechat"><span class="icon icon-wechat"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a rel="alternate" type="application/rss+xml" href="http://www.recall704.com/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">k8s pod 调度分析（零）</h1>
+      <p class="post-meta">@recall704 · Aug 14, 2018 · 2 min read</p>
+    </header>
+
+    
+    <div class="post-toc">
+        <hr />
+          <nav id="TableOfContents">
+<ul>
+<li><a href="#一-k8s-基础架构">一、k8s 基础架构</a></li>
+<li><a href="#二-k8s-pod-调度相关的参数">二、k8s pod 调度相关的参数</a>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-nodename">1. NodeName</a></li>
+<li><a href="#2-nodeselector">2. NodeSelector</a></li>
+<li><a href="#3-affinity">3. Affinity</a></li>
+<li><a href="#4-tolerations">4. Tolerations</a></li>
+<li><a href="#5-priorityclassname">5. PriorityClassName</a></li>
+<li><a href="#6-priority">6. Priority</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#1-nodename-1">1. nodeName</a></li>
+<li><a href="#2-priority">2. Priority</a></li>
+<li><a href="#3-priorityclass">3. PriorityClass</a></li>
+<li><a href="#4-其它">4. 其它</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#三-k8s-调度之节点的筛选">三、k8s 调度之节点的筛选</a></li>
+<li><a href="#四-k8s-调度之节点的排序">四、k8s 调度之节点的排序</a></li>
+<li><a href="#五-kubelet-实例化-pod-为容器">五、 kubelet 实例化 pod 为容器</a></li>
+</ul>
+</nav>
+        <hr />
+    </div>
+    
+
+    <article class="post-content">
+
+<h1 id="一-k8s-基础架构">一、k8s 基础架构</h1>
+
+<p>在分析 k8s pod 调度之前，我们先来回顾一下 k8s 的架构</p>
+
+<p><img src="http://www.recall704.com/static/images/15343017406612.jpg" alt="" /></p>
+
+<h1 id="二-k8s-pod-调度相关的参数">二、k8s pod 调度相关的参数</h1>
+
+<p>当用户通过 kubectl 或者 api 创建了一个 deployment 或者 其它 workload 的时候，
+k8s 会创建对应的 pod 信息，pod 信息最终会传递给 kubelet，实例化成具体的 docker 容器，
+那么 k8s 是根据什么条件，怎么把 pod “安排”到 node 上去的呢？
+有哪些因数会影响 pod 的调度呢？</p>
+
+<p>我找了一下 pod 的参数，大概会有以下几个参数影响 pod 的调度</p>
+
+<h5 id="1-nodename">1. NodeName</h5>
+
+<h5 id="2-nodeselector">2. NodeSelector</h5>
+
+<h5 id="3-affinity">3. Affinity</h5>
+
+<h5 id="4-tolerations">4. Tolerations</h5>
+
+<h5 id="5-priorityclassname">5. PriorityClassName</h5>
+
+<h5 id="6-priority">6. Priority</h5>
+
+<h3 id="1-nodename-1">1. nodeName</h3>
+
+<p>一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了</p>
+
+<h3 id="2-priority">2. Priority</h3>
+
+<p>pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。</p>
+
+<h3 id="3-priorityclass">3. PriorityClass</h3>
+
+<p>和 Priority 类似，PriorityClass 只是定义了一个名字而已，这样可以多个 pod 公用一个 优先级。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: scheduling.k8s.io/v1alpha1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: <span style="color:#ae81ff">1000000</span>
+globalDefault: <span style="color:#66d9ef">false</span>
+description: <span style="color:#e6db74">&#34;This priority class should be used for XYZ service pods only.&#34;</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  priorityClassName: high-priority</code></pre></div>
+<h3 id="4-其它">4. 其它</h3>
+
+<p>其它的请参考 阳总的文章</p>
+
+<p><a href="https://blog.qikqiak.com/post/understand-kubernetes-affinity/">https://blog.qikqiak.com/post/understand-kubernetes-affinity/</a></p>
+
+<h1 id="三-k8s-调度之节点的筛选">三、k8s 调度之节点的筛选</h1>
+
+<p>pod 请求的资源都是有一定要求的，比如 cpu 多少， memory 多少，或者存在 nodeSelector 之类的选择器，亲和性参数等等。</p>
+
+<p>我们可以用以下伪代码来描述</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">checkNode</span>(<span style="color:#a6e22e">pod</span> <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>, <span style="color:#a6e22e">node</span> <span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Node</span>) (<span style="color:#66d9ef">bool</span>, <span style="color:#a6e22e">err</span>) {
+    <span style="color:#75715e">// 1. cpu check
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">cpu</span> &gt; <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">availableCPU</span> {
+        <span style="color:#75715e">// 没有足够的 cpu ，该节点不满足
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#75715e">// 2. memory check
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">memory</span> &gt; <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">availableMemory</span> {
+        <span style="color:#75715e">// 没有足够的内存，该节点不满足
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#75715e">// 3. nodeSelector check
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">MatchSelector</span>(<span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">Spec</span>.<span style="color:#a6e22e">NodeSelector</span>) {
+        <span style="color:#75715e">// label 条件不满足
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">nil</span>
+    }
+    <span style="color:#75715e">// ....
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 3. other check
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">// 检查结束，该节点满足
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getFliterdNodeList</span>(<span style="color:#a6e22e">pod</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Pod</span>) ([]<span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Node</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">allNode</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getKubernetesAllNode</span>()
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">filterdNodeList</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Node</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">node</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">allNode</span> {
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ok</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">checkNode</span>(<span style="color:#a6e22e">pod</span>, <span style="color:#a6e22e">node</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+            <span style="color:#75715e">// 报错处理
+</span><span style="color:#75715e"></span>        }
+        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ok</span> {
+            <span style="color:#75715e">// 符合条件，添加到数组中
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">filterdNodeList</span> = append(<span style="color:#a6e22e">filterdNodeList</span>, <span style="color:#a6e22e">node</span>)
+        }
+    }
+
+    <span style="color:#75715e">// 返回筛选后的 node 列表
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">filterdNodeList</span>
+} </code></pre></div>
+<p>经过一轮筛选之后，会留下一些 node，我暂时称之为 filterdNodeList</p>
+
+<h1 id="四-k8s-调度之节点的排序">四、k8s 调度之节点的排序</h1>
+
+<p>我们从多个 node 中筛选出适合 pod 的节点 filterdNodeList 之后，我们要做一个最终选择，
+因为我们的 pod 只能运行在一个节点上，那么到底选谁呢？</p>
+
+<p>那么我们的相亲对象 pod 一定会从众多 node 选择一个最高，最帅，最富，而且还爱自己的 node，这一环节，是众多 node 之间的比拼。</p>
+
+<p>我们用以下伪代码表示</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">NodeList</span> []<span style="color:#a6e22e">v1</span>.<span style="color:#a6e22e">Node</span>
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">nodes</span> <span style="color:#a6e22e">NodeList</span>) <span style="color:#a6e22e">Len</span>() <span style="color:#66d9ef">int</span> { <span style="color:#66d9ef">return</span> len(<span style="color:#a6e22e">nodes</span>) }
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">nodes</span> <span style="color:#a6e22e">NodeList</span>) <span style="color:#a6e22e">Swap</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>){ <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>] }
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">nodes</span> <span style="color:#a6e22e">NodeList</span>) <span style="color:#a6e22e">Less</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> { 
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nodes</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">availableCPU</span> &gt; <span style="color:#a6e22e">nodes</span>[<span style="color:#a6e22e">j</span>].<span style="color:#a6e22e">availableCPU</span> {
+        <span style="color:#75715e">// cpu 资源多，优先级高， pod 优先考虑
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>    }
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nodes</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">availableMemory</span> &gt; <span style="color:#a6e22e">nodes</span>[<span style="color:#a6e22e">j</span>].<span style="color:#a6e22e">availableMemory</span> {
+        <span style="color:#75715e">// memory 资源多，优先级高， pod 优先考虑
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 比较帅，这个也不错
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>    }
+    <span style="color:#75715e">// 其它方面的比较
+</span><span style="color:#75715e"></span>}</code></pre></div>
+<p>我大概总结一下：<br />
+ 1. 节点上可用资源越多，优先级越高 (越有钱越好)<br />
+ 2. 节点 cpu 和 memory 使用比较均衡 (相对帅且有钱，而不是只帅而没有钱的)<br />
+ 3. 亲和性 （比如最好是公务员）<br />
+ 4. 节点上已经存在镜像，且镜像越大越好，这样就能节约拉取镜像的时间 (家里已经买了车了，越贵越好)<br />
+ 5. 其它</p>
+
+<h1 id="五-kubelet-实例化-pod-为容器">五、 kubelet 实例化 pod 为容器</h1>
+
+<p>之前我提到过，kubelet 创建的 pod 有三个来源，分别是<br />
+ 1. 从 apiserver 获取 pod 信息<br />
+ 2. 从 url 获取 pod 信息<br />
+ 3. 从本地文件夹获取 pod 信息，这就是通常我们使用的 manifest</p>
+
+<p>kubelet 获取 pod 信息之后，会通过调用 容器运行时，通常是 docker，将 pod 实例化为具体的容器。</p>
+</article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="http://www.recall704.com/tags/k8s"><span class="tag">K8s</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/scheduler"><span class="tag">Scheduler</span></a></li>
+        
+          <li><a href="http://www.recall704.com/tags/pod"><span class="tag"> Pod</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://www.recall704.com/js/bundle.fb61ec41f8.js"></script>
+
+
+
+
+  </body>
+</html>

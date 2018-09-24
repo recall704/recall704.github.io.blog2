@@ -235,6 +235,60 @@
       
         <article class="post-entry">
   <header class="post-header">
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s/scheduler/pod-match-node-selector/" class="post-link">k8s 调度算法分析之 MatchNodeSelector（四）</a></h3>
+    <p class="post-meta">@recall704 · Sep 24, 2018 · 2 min read</p>
+  </header>
+  
+  <p class="post-summary">一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 MatchNodeSelector
+二、代码分析 MatchNodeSelector 对应的函数为 PodMatchNodeSelector
+// PodMatchNodeSelector checks if a pod node selector matches the node label. func PodMatchNodeSelector(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { node := nodeInfo.Node() if node == nil { return false, nil, fmt.Errorf(&#34;node not found&#34;) } if podMatchesNodeLabels(pod, node) { return true, nil, nil } return false, []algorithm.PredicateFailureReason{ErrNodeSelectorNotMatch}, nil } 这个函数看起来超级简单，但内部其实分为两个部分的。
+1. selector</p>
+  <footer class="post-footer">
+    <a class="read-more" href="http://www.recall704.com/cloud/k8s/scheduler/pod-match-node-selector/">Read More →</a>
+  </footer>
+</article>
+
+      
+        <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-host-ports/" class="post-link">k8s 调度算法分析之 PodFitsHostPorts（三）</a></h3>
+    <p class="post-meta">@recall704 · Sep 24, 2018 · 2 min read</p>
+  </header>
+  
+  <p class="post-summary">一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsHostPorts
+二、代码分析 // PodFitsHostPorts checks if a node has free ports for the requested pod ports. func PodFitsHostPorts(pod *v1.Pod, meta algorithm.PredicateMetadata, nodeInfo *schedulercache.NodeInfo) (bool, []algorithm.PredicateFailureReason, error) { var wantPorts map[string]bool if predicateMeta, ok := meta.(*predicateMetadata); ok { wantPorts = predicateMeta.podPorts } else { // We couldn&#39;t parse metadata - fallback to computing it. 	wantPorts = schedutil.GetUsedPorts(pod) } if len(wantPorts) == 0 { return true, nil, nil } existingPorts := nodeInfo.</p>
+  <footer class="post-footer">
+    <a class="read-more" href="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-host-ports/">Read More →</a>
+  </footer>
+</article>
+
+      
+        <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-resource/" class="post-link">k8s 调度算法分析之 PodFitsResources（二）</a></h3>
+    <p class="post-meta">@recall704 · Sep 22, 2018 · 3 min read</p>
+  </header>
+  
+  <p class="post-summary">一、概述 之前的文章有简要分析 k8s 的调度过程，主要就是
+1. 节点筛选（选取可用的节点）
+2. 节点排序（选取最优节点）
+今天我们来详细分析其中的一个筛选算法 PodFitsResources
+二、代码分析 只贴代码是没有任何意义的，我们来逐行分析
+// PodFitsResources checks if a node has sufficient resources, such as cpu, memory, gpu, opaque int resources etc to run a pod. // First return value indicates whether a node has sufficient resources to run a pod while the second return value indicates the // predicate failure reasons if the node has insufficient resources to run the pod.</p>
+  <footer class="post-footer">
+    <a class="read-more" href="http://www.recall704.com/cloud/k8s/scheduler/pod-fits-resource/">Read More →</a>
+  </footer>
+</article>
+
+      
+        <article class="post-entry">
+  <header class="post-header">
     <h3 class="post-title"><a href="http://www.recall704.com/cloud/volume-of-k8s/" class="post-link">k8s 学习笔记之存储</a></h3>
     <p class="post-meta">@recall704 · Sep 4, 2018 · 6 min read</p>
   </header>
@@ -253,7 +307,7 @@ pv 支持两种方式的 provision，静态和动态
       
         <article class="post-entry">
   <header class="post-header">
-    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s-scheduler/" class="post-link">k8s pod 调度</a></h3>
+    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s/scheduler/k8s-scheduler/" class="post-link">k8s pod 调度分析（零）</a></h3>
     <p class="post-meta">@recall704 · Aug 14, 2018 · 2 min read</p>
   </header>
   
@@ -263,7 +317,7 @@ pv 支持两种方式的 provision，静态和动态
 1. NodeName 2. NodeSelector 3. Affinity 4. Tolerations 5. PriorityClassName 6. Priority 1. nodeName 一旦你在 pod 里指定了 nodeName ,那么 pod 一定会调度到该节点上, 其实 pod 已经跳过了调度过程了
 2. Priority pod 是可以有优先级的，这个优先级是相对于其它 pod 的，也就是说，如果 pod 的优先级高于其它 pod，这个 pod 会被优先调度。</p>
   <footer class="post-footer">
-    <a class="read-more" href="http://www.recall704.com/cloud/k8s-scheduler/">Read More →</a>
+    <a class="read-more" href="http://www.recall704.com/cloud/k8s/scheduler/k8s-scheduler/">Read More →</a>
   </footer>
 </article>
 
@@ -355,64 +409,6 @@ type AuthInfo struct { // LocationOfOrigin indicates where this object came from
 不用向 APIServer 进行注册了而已，deployment controller 会对资源进行监控和处理。</p>
   <footer class="post-footer">
     <a class="read-more" href="http://www.recall704.com/cloud/k8s-operator/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s-authentication-with-token/" class="post-link">创建 client （一）： token 方式访问 k8s API</a></h3>
-    <p class="post-meta">@recall704 · Apr 11, 2018 · 2 min read</p>
-  </header>
-  
-  <p class="post-summary">0x1 概述 k8s 提供了三种认证方式访问 API Server，分别是：
-1. ca 认证 k8s 的各个组件，比如 kubelet, kube-proxy 和 API Server 进行通信的时候，一般都是使用证书的形式，配置在 kubeconfig 文件中。
-2. token 认证 rook （https://github.com/rook/rook） 、dashboard （https://github.com/kubernetes/dashboard） 这些应用，跑在 k8s 集群内，而且需要访问 k8s 的资源， 运行的时候需要指定 ServiceAccount ，ServiceAccount 又配置了指定的角色和权限。
-3. http basic 认证 使用用户名和密码访问 k8s，稍后会有新的文章详细介绍。
-0x2 token 认证详解 像 rook、dashboard 这样的应用，它是怎样通过 ServiceAccount 和 k8s API Server 进行通信的呢？
-和 k8s API Server 通信需要创建 client， 而创建 client 需要对应的 配置信息（包含了 API Server 的地址和端口，以及认证信息）
-我们在 rook 的代码中，可以看到下面这样类似的代码</p>
-  <footer class="post-footer">
-    <a class="read-more" href="http://www.recall704.com/cloud/k8s-authentication-with-token/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="http://www.recall704.com/cloud/k8s-node-roles/" class="post-link">k8s 中 node 的 roles</a></h3>
-    <p class="post-meta">@recall704 · Mar 14, 2018 · 1 min read</p>
-  </header>
-  
-  <p class="post-summary">部署 k8s 之后，get nodes 可能会发现 node 上有个 ROLES
-但是执行命令：
-kubectl get nodes 192.168.88.201 -o yaml  在里面却没有发现有 ROLES 这样的字段？
-那我们如果要给 node 添加对应的 ROLE 到底要怎么做呢？
-通过代码，我们可以知道，k8s 把 label node-role.kubernetes.io/&lt;role&gt;=&#34;&#34; 和 kubernetes.io/role=&#34;&lt;role&gt;&#34; 来定义角色。
-所以 master 可以这样
-kubectl label node 192.168.88.201 node-role.kubernetes.io/master=true  或者
-kubectl label node 192.168.88.201 kubernetes.io/role=master  </p>
-  <footer class="post-footer">
-    <a class="read-more" href="http://www.recall704.com/cloud/k8s-node-roles/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="http://www.recall704.com/cloud/taint-and-toleration/" class="post-link">k8s 中的污染 Taint 与容忍 Toleration</a></h3>
-    <p class="post-meta">@recall704 · Mar 11, 2018 · 2 min read</p>
-  </header>
-  
-  <p class="post-summary">之前的内部分享中我提到过，pod 最终会被调度到某个具体的 node 上运行。那么有没有某种方式，限制 pod，不让它在某些 node 上运行呢？ 或者说，只允许某些 pod 在某些 node 上运行呢？  taint 和 toleration 了解一下。
- 一、 taint （污染） 首先一点，taint 是针对 node 而言的，给 node 增加 taint 的命令如下
-kubectl taint nodes node1 aaa=bbb:NoSchedule  其中：
-1. aaa 代表 taint 的 key
-2. bbb 代表 taint 的 value
-3. NoSchedule 代码这个 taint 对应的影响，它可以有三个值
-   值 含义     NoSchedule 不允许新的 pod 调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   PreferNoSchedule 尽可能不要调度到该 node 上，除非 toleration 条件满足；不影响已经运行在该 node 上的 pod   NoExecute 驱逐该节点上的 pod 到其它节点，除了 toleration 条件满足的 pod；影响已经运行在该 node 上的所有 pod    我们了解到一点，那就是增加了 taint 的 node，pod 就不会调度到它上面运行了。</p>
-  <footer class="post-footer">
-    <a class="read-more" href="http://www.recall704.com/cloud/taint-and-toleration/">Read More →</a>
   </footer>
 </article>
 
