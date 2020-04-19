@@ -40,7 +40,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.41" />
+<meta name="generator" content="Hugo 0.54.0" />
 
 
 <link rel="canonical" href="http://www.recall704.com/ansible/ansible-template-demo/" />
@@ -258,26 +258,26 @@ Wants<span style="color:#f92672">=</span>network-online.target
 
 <span style="color:#f92672">[</span>Service<span style="color:#f92672">]</span>
 Type<span style="color:#f92672">=</span>notify
-<span style="color:#75715e"># the default is not to use systemd for cgroups because the delegate issues still
-</span><span style="color:#75715e"># exists and systemd currently does not support the cgroup feature set required
-</span><span style="color:#75715e"># for containers run by docker
-</span><span style="color:#75715e"></span>ExecStart<span style="color:#f92672">=</span>/usr/bin/dockerd
+<span style="color:#75715e"># the default is not to use systemd for cgroups because the delegate issues still</span>
+<span style="color:#75715e"># exists and systemd currently does not support the cgroup feature set required</span>
+<span style="color:#75715e"># for containers run by docker</span>
+ExecStart<span style="color:#f92672">=</span>/usr/bin/dockerd
 ExecReload<span style="color:#f92672">=</span>/bin/kill -s HUP $MAINPID
-<span style="color:#75715e"># Having non-zero Limit*s causes performance problems due to accounting overhead
-</span><span style="color:#75715e"># in the kernel. We recommend using cgroups to do container-local accounting.
-</span><span style="color:#75715e"></span>LimitNOFILE<span style="color:#f92672">=</span><span style="color:#ae81ff">1048576</span>
+<span style="color:#75715e"># Having non-zero Limit*s causes performance problems due to accounting overhead</span>
+<span style="color:#75715e"># in the kernel. We recommend using cgroups to do container-local accounting.</span>
+LimitNOFILE<span style="color:#f92672">=</span><span style="color:#ae81ff">1048576</span>
 LimitNPROC<span style="color:#f92672">=</span><span style="color:#ae81ff">1048576</span>
 LimitCORE<span style="color:#f92672">=</span>infinity
-<span style="color:#75715e"># Uncomment TasksMax if your systemd version supports it.
-</span><span style="color:#75715e"># Only systemd 226 and above support this version.
-</span><span style="color:#75715e">#TasksMax=infinity
-</span><span style="color:#75715e"></span>TimeoutStartSec<span style="color:#f92672">=</span>1min
-<span style="color:#75715e"># set delegate yes so that systemd does not reset the cgroups of docker containers
-</span><span style="color:#75715e"></span>Delegate<span style="color:#f92672">=</span>yes
-<span style="color:#75715e"># kill only the docker process, not all processes in the cgroup
-</span><span style="color:#75715e"></span>KillMode<span style="color:#f92672">=</span>process
-<span style="color:#75715e"># restart the docker process if it exits prematurely
-</span><span style="color:#75715e"></span>Restart<span style="color:#f92672">=</span>on-failure
+<span style="color:#75715e"># Uncomment TasksMax if your systemd version supports it.</span>
+<span style="color:#75715e"># Only systemd 226 and above support this version.</span>
+<span style="color:#75715e">#TasksMax=infinity</span>
+TimeoutStartSec<span style="color:#f92672">=</span>1min
+<span style="color:#75715e"># set delegate yes so that systemd does not reset the cgroups of docker containers</span>
+Delegate<span style="color:#f92672">=</span>yes
+<span style="color:#75715e"># kill only the docker process, not all processes in the cgroup</span>
+KillMode<span style="color:#f92672">=</span>process
+<span style="color:#75715e"># restart the docker process if it exits prematurely</span>
+Restart<span style="color:#f92672">=</span>on-failure
 StartLimitBurst<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>
 StartLimitInterval<span style="color:#f92672">=</span>60s
 
@@ -328,7 +328,7 @@ WantedBy<span style="color:#f92672">=</span>multi-user.target</code></pre></div>
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>325</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>898</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
@@ -336,7 +336,7 @@ WantedBy<span style="color:#f92672">=</span>multi-user.target</code></pre></div>
     
   </section>
   <footer class="site-footer">
-  <p>© 2017-2018 Recall&#39;s blog</p>
+  <p>© 2017-2020 Recall&#39;s blog</p>
   <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
   
 </footer>

@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Wed, 14 Mar 2018 14:22:53 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 Feb 2019 21:27:53 +0800</lastBuildDate>
     
 	<atom:link href="http://www.recall704.com/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>云主机挖矿木马处理与分析</title>
+      <link>http://www.recall704.com/linux/linux-mining-trojan/</link>
+      <pubDate>Mon, 25 Feb 2019 21:27:53 +0800</pubDate>
+      
+      <guid>http://www.recall704.com/linux/linux-mining-trojan/</guid>
+      <description>一、发现木马 最近登录云主机的时候发现有点卡顿，就装了一个 htop 看了一下，发现有一个进程占用了太多的 CPU。
+root 15753 1 55 Jan06 ? 28-00:39:20 ./sshd64 -c config.json -t  最开始以为是 sshd 的进程，但是我想着我们云主机没有 ipv6（看起来像，其实应该是 linux 64），再登录到其它主机，发现没有该进程。
+二、处理木马 发现病毒的首要事情就是杀掉病毒，然而不是 kill 进程就行了，一般的病毒都有守护进程之类的，保证自己不会被杀死。
+1. 冻结进程 进程占用了太多的 CPU 和 内存，对主机的操作十分卡顿，所以第一步是冻结进程。
+skill -STOP 15753  2. 找到执行文件 冻结进程之后，整个系统马上流畅了很多。 我们发现进程启动的参数是 ./sshd64，那么这个程序到底在哪个目录呢？
+cd /proc/15753  通过进入 /proc/$PID 目录，执行 ls -la
+# ls -la total 0 dr-xr-xr-x 9 root root 0 Jan 8 13:29 . dr-xr-xr-x 98 root root 0 Apr 11 2018 .</description>
+    </item>
     
     <item>
       <title>apt 常用的几个命令</title>
